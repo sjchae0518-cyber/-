@@ -1,0 +1,165 @@
+const handleButtonClick = (option) => {
+    setPressedButton(option);
+    setTimeout(() => setPressedButton(null), 200);
+    
+    if (option === '앱의 전반적인 이용 방법을 알고 싶어요.') {
+      setMessages([...messages, 
+        { type: 'user', content: option },
+        {
+          type: 'bot',
+          content: '다음은 돔돔 앱의 이용방법에 대한 영상입니다.\n시청하시면 많은 정보를 얻으실 수 있습니다.',
+          hasVideo: true,
+          hasQuestion: true,
+          question: '추가적인 도움이 필요하신가요?',
+          options: ['예', '아니오']
+        }
+      ]);
+    } else if (option === '특정한 문제 상황에서 앱의 이용방법을 알고 싶어요') {
+      setMessages([...messages,
+        { type: 'user', content: option },
+        {
+          type: 'bot',
+          content: '다음 중 해당하는 내용을 선택해 주세요.',
+          hasVideo: false,
+          hasQuestion: true,
+          question: '',
+          options: ['import { useState } from 'react';
+import { ChevronLeft } from 'lucide-react';
+
+export default function ChatbotScreen() {
+  const [messages, setMessages] = useState([
+    {
+      type: 'bot',
+      content: '안녕하세요 :) 앱 이용가이드를 설명해주는 챗봇입니다.\n다음 중 필요한 내용을 선택해 주세요.',
+      hasVideo: false,
+      hasQuestion: true,
+      question: '',
+      options: ['앱의 전반적인 이용 방법을 알고 싶어요.', '특정한 문제 상황에서 앱의 이용방법을 알고 싶어요']
+    }
+  ]);
+  const [inputValue, setInputValue] = useState('');
+  const [pressedButton, setPressedButton] = useState(null);
+
+  const handleButtonClick = (option) => {
+    setPressedButton(option);
+    setTimeout(() => setPressedButton(null), 200);
+    
+    if (option === '앱의 전반적인 이용 방법을 알고 싶어요.') {
+      setMessages([...messages, 
+        { type: 'user', content: option },
+        {
+          type: 'bot',
+          content: '다음은 돔돔 앱의 이용방법에 대한 영상입니다.\n시청하시면 많은 정보를 얻으실 수 있습니다.',
+          hasVideo: true,
+          hasQuestion: true,
+          question: '추가적인 도움이 필요하신가요?',
+          options: ['예', '아니오']
+        }
+      ]);
+    } else if (option === '예') {
+      setMessages(prev => [...prev,
+        { type: 'user', content: option },
+        {
+          type: 'bot',
+          content: '안녕하세요 :) 앱 이용가이드를 설명해주는 챗봇입니다.\n다음 중 필요한 내용을 선택해 주세요.',
+          hasVideo: false,
+          hasQuestion: true,
+          question: '',
+          options: ['앱의 전반적인 이용 방법을 알고 싶어요.', '특정한 문제 상황에서 앱의 이용방법을 알고 싶어요']
+        }
+      ]);
+    } else if (option === '아니오') {
+      setMessages(prev => [...prev,
+        { type: 'user', content: option },
+        {
+          type: 'bot',
+          content: '감사합니다! 앱 이용에 도움이 되었으면 좋겠습니다. 궁금한 점이 있으시면 언제든지 물어봐주세요. 😊'
+        }
+      ]);
+    }
+  };
+
+  const handleSendMessage = () => {
+    if (inputValue.trim()) {
+      setMessages([...messages, { type: 'user', content: inputValue }]);
+      setInputValue('');
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-gray-50 flex flex-col">
+      {/* Header */}
+      <div className="border-b border-gray-200 p-4 flex items-center gap-3">
+        <ChevronLeft size={24} className="text-gray-700" />
+        <span className="text-lg font-semibold text-gray-800">돌아가기</span>
+      </div>
+
+      {/* Chat Area */}
+      <div className="flex-1 overflow-y-auto p-6 space-y-4">
+        {messages.map((msg, idx) => (
+          <div key={idx} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+            {msg.type === 'bot' ? (
+              <div className="flex gap-3 max-w-2xl">
+                <div className="w-8 h-8 rounded-full bg-blue-200 flex items-center justify-center flex-shrink-0">
+                  <span className="text-lg">😊</span>
+                </div>
+                <div className="space-y-3 w-full">
+                  <div className="bg-white border border-gray-300 rounded-lg p-4">
+                    <p className="text-gray-800 text-sm whitespace-pre-line">{msg.content}</p>
+                  </div>
+                  {msg.hasVideo && (
+                    <div className="w-full h-40 bg-white border-2 border-gray-300 rounded-lg flex items-center justify-center">
+                      <div className="text-5xl">▶</div>
+                    </div>
+                  )}
+                  {msg.hasQuestion && (
+                    <div className="space-y-2 w-full">
+                      {msg.question && <p className="text-gray-800 text-sm">{msg.question}</p>}
+                      <div className={msg.question ? 'flex gap-2' : 'space-y-2'}>
+                        {msg.options?.map((option, optIdx) => (
+                          <button
+                            key={optIdx}
+                            onClick={() => handleButtonClick(option)}
+                            className={`px-6 py-2 rounded-lg text-sm cursor-pointer transition-all ${
+                              pressedButton === option ? 'bg-blue-400' : 'bg-blue-200 hover:bg-blue-300'
+                            } ${msg.question ? '' : 'w-full text-left'}`}
+                          >
+                            {option}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="bg-blue-300 rounded-lg p-4 max-w-xs">
+                <p className="text-white text-sm">{msg.content}</p>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Input Area */}
+      <div className="border-t border-gray-200 bg-white p-4">
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+            placeholder="Type a message..."
+            className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-400"
+          />
+          <button
+            onClick={handleSendMessage}
+            className="bg-blue-300 text-white px-6 py-2 rounded-lg hover:bg-blue-400 active:bg-blue-500"
+          >
+            Send
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
