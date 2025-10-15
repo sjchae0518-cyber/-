@@ -1,0 +1,628 @@
+import React, { useState, useEffect } from 'react';
+import { Calendar, Edit2, Camera, Gift, Sparkles } from 'lucide-react';
+
+const KoreanQuizApp = () => {
+  const [user, setUser] = useState({
+    name: '학습자',
+    profileEmoji: '🎓',
+    level: 1,
+    exp: 0,
+    streak: 0,
+    totalPoints: 0,
+    lastVisit: null,
+    attendanceHistory: {},
+    quizHistory: {}
+  });
+
+  const [currentQuiz, setCurrentQuiz] = useState(null);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [showResult, setShowResult] = useState(false);
+  const [editingName, setEditingName] = useState(false);
+  const [tempName, setTempName] = useState(user.name);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [showAttendanceCalendar, setShowAttendanceCalendar] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [calendarMonth, setCalendarMonth] = useState(new Date().getMonth());
+  const [calendarYear, setCalendarYear] = useState(new Date().getFullYear());
+
+  const emojis = ['🎓', '😊', '🐱', '🐶', '🦊', '🐻', '🐼', '🦁', '🐯', '🦄', '🌟', '⭐', '💫', '✨', '🎨', '🎮'];
+
+  const quizData = {
+    daily: {
+      beginner: [
+        { id: 1, question: '안녕하세요의 의미는?', answers: ['만났을 때 하는 인사말', '헤어질 때 하는 인사말', '고마움을 표현하는 말', '미안함을 표현하는 말'], correct: 0 },
+        { id: 2, question: '감사합니다는 무슨 뜻일까요?', answers: ['실례를 구할 때 쓰는 말', '고마움을 표현하는 말', '부탁할 때 쓰는 말', '환영할 때 쓰는 말'], correct: 1 },
+        { id: 3, question: '물을 설명하면?', answers: ['음식', '마시는 투명한 액체', '쌀로 만든 음식', '차'], correct: 1 },
+        { id: 4, question: '밥의 의미는?', answers: ['국', '쌀로 지은 음식 또는 식사', '빵', '국수'], correct: 1 },
+        { id: 5, question: '친구는 무슨 뜻일까요?', answers: ['가족', '가까이 지내는 사람', '선생님', '학생'], correct: 1 },
+        { id: 6, question: '학교를 설명하면?', answers: ['배우는 곳', '사는 곳', '놀이터', '물건 사는 곳'], correct: 0 },
+        { id: 7, question: '사랑의 의미는?', answers: ['싫어하는 마음', '좋아하는 마음', '아주 깊이 좋아하는 마음', '화난 감정'], correct: 2 },
+        { id: 8, question: '책을 설명하면?', answers: ['글씨 쓰는 도구', '종이', '글과 그림이 있는 것', '앉는 곳'], correct: 2 },
+      ],
+      intermediate: [
+        { id: 9, question: '약속의 의미는?', answers: ['약', '미리 정한 시간이나 일', '약점', '병원'], correct: 1 },
+        { id: 10, question: '아까워하다는 무슨 뜻일까요?', answers: ['버리기 안타까운 마음', '화나는 마음', '기쁜 마음', '피곤한 마음'], correct: 0 },
+        { id: 11, question: '설레다의 뜻은?', answers: ['슬픈 마음', '기대되어 가슴이 두근거림', '혼란스러운 상태', '졸린 상태'], correct: 1 },
+        { id: 12, question: '부끄럽다는 무슨 뜻일까요?', answers: ['자랑스러운', '창피하거나 쑥스러운', '자신 있는', '용감한'], correct: 1 },
+        { id: 13, question: '그립다의 의미는?', answers: ['그림을 그리다', '보고 싶고 생각나다', '잡다', '보다'], correct: 1 },
+        { id: 14, question: '서운하다는 무슨 뜻일까요?', answers: ['기쁜', '섭섭하고 아쉬운', '신나는', '걱정되는'], correct: 1 },
+        { id: 15, question: '답답하다의 뜻은?', answers: ['막혀서 불편하거나 갑갑한', '편안한', '넓은', '맑은'], correct: 0 },
+      ],
+      advanced: [
+        { id: 16, question: '눈치가 빠르다는 무슨 의미인가요?', answers: ['달리기를 잘함', '상황을 빨리 파악함', '시력이 좋음', '공부를 잘함'], correct: 1 },
+        { id: 17, question: '손이 크다의 관용적 의미는?', answers: ['손의 크기가 큼', '인심이 후하고 베풂이 많음', '힘이 셈', '물건을 잘 떨어뜨림'], correct: 1 },
+        { id: 18, question: '발이 넓다는 무슨 뜻일까요?', answers: ['발의 크기가 큼', '아는 사람이 많고 인맥이 넓음', '키가 큼', '걷는 속도가 빠름'], correct: 1 },
+        { id: 19, question: '귀가 얇다의 의미는?', answers: ['귀가 얇음', '남의 말을 쉽게 믿음', '청력이 좋음', '남의 말을 안 들음'], correct: 1 },
+        { id: 20, question: '입이 무겁다는 무슨 뜻일까요?', answers: ['입술이 무거움', '비밀을 잘 지킴', '말을 많이 함', '입 냄새가 남'], correct: 1 },
+      ]
+    }
+  };
+
+  useEffect(() => {
+    checkAttendance();
+  }, []);
+
+  const checkAttendance = () => {
+    const today = new Date().toDateString();
+    
+    if (user.lastVisit !== today) {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      
+      const newAttendance = { ...user.attendanceHistory };
+      
+      if (user.lastVisit === yesterday.toDateString()) {
+        setUser({...user, streak: user.streak + 1, lastVisit: today, attendanceHistory: newAttendance});
+      } else {
+        setUser({...user, streak: 1, lastVisit: today, attendanceHistory: newAttendance});
+      }
+    }
+  };
+
+  const getStreakReward = (streak) => {
+    if (streak >= 30) return { icon: '🏆', text: '30일 연속 달성!', points: 500 };
+    if (streak >= 14) return { icon: '💎', text: '2주 연속 달성!', points: 200 };
+    if (streak >= 7) return { icon: '⭐', text: '일주일 연속 달성!', points: 100 };
+    if (streak >= 3) return { icon: '🎯', text: '3일 연속 달성!', points: 30 };
+    return null;
+  };
+
+  const getCalendarDays = () => {
+    const firstDay = new Date(calendarYear, calendarMonth, 1);
+    const lastDay = new Date(calendarYear, calendarMonth + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
+    
+    const days = [];
+    
+    // 빈 칸 추가 (이전 달)
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      days.push({ date: null, isEmpty: true });
+    }
+    
+    // 현재 달의 날짜들
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(calendarYear, calendarMonth, day);
+      const dateString = date.toDateString();
+      const today = new Date().toDateString();
+      days.push({
+        date: day,
+        attended: user.attendanceHistory[dateString] || false,
+        isToday: dateString === today,
+        isEmpty: false
+      });
+    }
+    
+    return days;
+  };
+
+  const goToPreviousMonth = () => {
+    if (calendarMonth === 0) {
+      setCalendarMonth(11);
+      setCalendarYear(calendarYear - 1);
+    } else {
+      setCalendarMonth(calendarMonth - 1);
+    }
+  };
+
+  const goToNextMonth = () => {
+    if (calendarMonth === 11) {
+      setCalendarMonth(0);
+      setCalendarYear(calendarYear + 1);
+    } else {
+      setCalendarMonth(calendarMonth + 1);
+    }
+  };
+
+  const getMonthName = (month) => {
+    const months = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
+    return months[month];
+  };
+
+  const startQuiz = (category, difficulty) => {
+    const quizzes = quizData.daily[difficulty];
+    const randomQuiz = quizzes[Math.floor(Math.random() * quizzes.length)];
+    setCurrentQuiz({ ...randomQuiz, category: 'daily', difficulty });
+    setSelectedAnswer(null);
+    setShowResult(false);
+    setSelectedCategory(null);
+  };
+
+  const handleAnswer = (answerIndex) => {
+    setSelectedAnswer(answerIndex);
+  };
+
+  const submitAnswer = () => {
+    if (selectedAnswer === null) return;
+    
+    const isCorrect = selectedAnswer === currentQuiz.correct;
+    const basePoints = currentQuiz.difficulty === 'advanced' ? 15 : currentQuiz.difficulty === 'intermediate' ? 12 : 10;
+    const points = isCorrect ? basePoints : 0;
+    
+    setShowResult(true);
+    
+    if (isCorrect) {
+      const today = new Date().toDateString();
+      const newExp = user.exp + points;
+      const newLevel = Math.floor(newExp / 50) + 1;
+      const newPoints = user.totalPoints + points;
+      const newQuizHistory = { ...user.quizHistory, [today]: true };
+      
+      setUser({
+        ...user,
+        exp: newExp,
+        level: Math.min(newLevel, 10),
+        totalPoints: newPoints,
+        quizHistory: newQuizHistory
+      });
+    }
+  };
+
+  const saveName = () => {
+    if (tempName.trim()) {
+      setUser({ ...user, name: tempName.trim() });
+      setEditingName(false);
+    }
+  };
+
+  const selectEmoji = (emoji) => {
+    setUser({ ...user, profileEmoji: emoji });
+    setShowEmojiPicker(false);
+  };
+
+  const getLevelName = (level) => {
+    if (level >= 9) return '전문가';
+    if (level >= 7) return '고급';
+    if (level >= 5) return '중급';
+    if (level >= 3) return '초급';
+    return '입문';
+  };
+
+  const getProgressPercent = () => {
+    const expInLevel = user.exp % 50;
+    return (expInLevel / 50) * 100;
+  };
+
+  const getDifficultyColor = (difficulty) => {
+    if (difficulty === 'beginner') return 'from-green-400 to-emerald-500';
+    if (difficulty === 'intermediate') return 'from-blue-400 to-sky-500';
+    return 'from-purple-400 to-pink-500';
+  };
+
+  const getDifficultyText = (difficulty) => {
+    if (difficulty === 'beginner') return '초급';
+    if (difficulty === 'intermediate') return '중급';
+    return '상급';
+  };
+
+  if (!currentQuiz && !selectedCategory) {
+    return (
+      <div className="min-h-screen p-4 sm:p-6" style={{ backgroundColor: '#f0f0f0' }}>
+        <div className="max-w-4xl mx-auto">
+          <button
+            onClick={() => window.history.back()}
+            className="mb-6 bg-white px-6 py-3 rounded-2xl font-semibold text-gray-700 hover:bg-gray-50 transition-all flex items-center gap-2"
+          >
+            <span>←</span>
+            <span>돌아가기</span>
+          </button>
+          
+          <div className="bg-white rounded-3xl p-6 mb-6 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-blue-100/50 rounded-full blur-3xl"></div>
+            
+            <div className="flex items-start justify-between relative z-10">
+              <div className="flex items-center gap-4">
+                <div className="relative group cursor-pointer" onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
+                  <div className="w-20 h-20 bg-gradient-to-br from-[#6BA3D4] to-[#5a8cbd] rounded-2xl flex items-center justify-center text-4xl shadow-lg transform group-hover:scale-105 transition-all">
+                    {user.profileEmoji}
+                  </div>
+                                    <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-1.5 shadow-lg">
+                    <Camera size={14} className="text-[#6BA3D4]" />
+                  </div>
+                </div>
+
+                {showEmojiPicker && (
+                  <div className="absolute top-24 left-6 bg-white rounded-2xl shadow-2xl p-4 grid grid-cols-4 gap-2 z-50">
+                    {emojis.map((emoji, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => selectEmoji(emoji)}
+                        className="text-3xl hover:scale-125 transition-transform"
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                <div>
+                  {editingName ? (
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={tempName}
+                        onChange={(e) => setTempName(e.target.value)}
+                        className="border-2 border-[#6BA3D4] rounded-lg px-3 py-1 text-lg font-bold focus:outline-none focus:border-[#5a8cbd]"
+                        autoFocus
+                      />
+                      <button
+                        onClick={saveName}
+                        className="bg-[#6BA3D4] text-white px-3 py-1 rounded-lg font-semibold hover:bg-[#5a8cbd]"
+                      >
+                        저장
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2 group cursor-pointer" onClick={() => { setEditingName(true); setTempName(user.name); }}>
+                      <h2 className="text-2xl font-bold text-gray-800">{user.name}</h2>
+                      <Edit2 size={18} className="text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                  )}
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-[#6BA3D4] font-bold text-lg">{getLevelName(user.level)} Lv.{user.level}</span>
+                    <Sparkles size={16} className="text-yellow-500" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-right">
+                <div className="flex items-center gap-2 justify-end mb-2">
+                  <span className="text-3xl">🔥</span>
+                  <span className="text-2xl font-bold text-orange-500">{user.streak}일</span>
+                </div>
+                <p className="text-sm text-gray-600">연속 출석</p>
+                <p className="text-xs text-gray-500 mt-1">총 {user.totalPoints}점</p>
+              </div>
+            </div>
+
+            <div className="mt-6 relative z-10">
+              <div className="flex justify-between text-sm text-gray-600 mb-2">
+                <span className="font-semibold">경험치</span>
+                <span className="font-bold">{user.exp % 50} / 50</span>
+              </div>
+              <div className="w-full bg-gray-300 rounded-full h-4 overflow-hidden">
+                <div 
+                  className="bg-gradient-to-r from-red-400 via-red-500 to-red-600 h-4 rounded-full transition-all duration-700 ease-out relative"
+                  style={{ width: `${getProgressPercent()}%` }}
+                >
+                  <div className="absolute inset-0 bg-white/30 animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-3xl p-6 mb-6 relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-32 h-32 bg-blue-100/50 rounded-full blur-3xl"></div>
+            
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <Calendar className="text-[#6BA3D4]" size={28} />
+                  <h3 className="text-xl font-bold text-gray-800">출석 체크</h3>
+                </div>
+                <button
+                  onClick={() => setShowAttendanceCalendar(!showAttendanceCalendar)}
+                  className="text-sm text-[#6BA3D4] font-semibold hover:text-[#5a8cbd]"
+                >
+                  {showAttendanceCalendar ? '접기' : '전체보기'}
+                </button>
+              </div>
+
+              <div className="grid grid-cols-7 gap-2 mb-6">
+                {[1, 2, 3, 4, 5, 6, 7].map((day) => (
+                  <div key={day} className="text-center">
+                    <div className={`h-16 rounded-xl flex flex-col items-center justify-center font-bold transition-all transform hover:scale-105 ${
+                      day <= user.streak
+                        ? 'bg-gradient-to-br from-orange-400 to-pink-500 text-white shadow-lg'
+                        : 'bg-gray-100 text-gray-400'
+                    }`}>
+                      <span className="text-2xl mb-1">{day <= user.streak ? '✓' : day}</span>
+                      <span className="text-xs">Day</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {showAttendanceCalendar && (
+                <div className="bg-gray-200/50 rounded-2xl p-4 mb-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <button
+                      onClick={goToPreviousMonth}
+                      className="w-8 h-8 rounded-full bg-[#6BA3D4] hover:bg-[#5a8cbd] flex items-center justify-center transition-all"
+                    >
+                      <span className="text-white font-bold">←</span>
+                    </button>
+                    <h4 className="font-bold text-gray-800 text-lg">{calendarYear}년 {getMonthName(calendarMonth)}</h4>
+                    <button
+                      onClick={goToNextMonth}
+                      className="w-8 h-8 rounded-full bg-[#6BA3D4] hover:bg-[#5a8cbd] flex items-center justify-center transition-all"
+                    >
+                      <span className="text-white font-bold">→</span>
+                    </button>
+                  </div>
+                  
+                  <div className="grid grid-cols-7 gap-3 mb-3">
+                    {['일', '월', '화', '수', '목', '금', '토'].map((day, idx) => (
+                      <div key={idx} className="text-center text-sm font-bold text-gray-600">
+                        {day}
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="grid grid-cols-7 gap-3">
+                    {getCalendarDays().map((day, idx) => (
+                      <div
+                        key={idx}
+                        className="relative aspect-square flex items-center justify-center"
+                      >
+                        {!day.isEmpty && (
+                          <>
+                            <span className={`text-sm font-semibold ${
+                              day.isToday ? 'text-[#6BA3D4]' : 'text-gray-700'
+                            }`}>
+                              {day.date}
+                            </span>
+                            {day.attended && (
+                              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                <span className="text-3xl">✓</span>
+                              </div>
+                            )}
+                            {(() => {
+                              const date = new Date(calendarYear, calendarMonth, day.date);
+                              const dateString = date.toDateString();
+                              const hasQuiz = user.quizHistory[dateString];
+                              return hasQuiz ? (
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                                    <circle cx="20" cy="20" r="18" fill="#ef4444" opacity="0.85"/>
+                                    <path d="M12 20l5 5 11-11" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                                  </svg>
+                                </div>
+                              ) : null;
+                            })()}
+                            {day.isToday && !day.attended && (
+                              <div className="absolute inset-0 rounded-full border-2 border-[#6BA3D4] pointer-events-none"></div>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {getStreakReward(user.streak) && (
+                <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl p-4 flex items-center gap-4">
+                  <span className="text-4xl">{getStreakReward(user.streak).icon}</span>
+                  <div className="flex-1">
+                    <p className="font-bold text-gray-800">{getStreakReward(user.streak).text}</p>
+                    <p className="text-sm text-gray-600">+{getStreakReward(user.streak).points} 보너스 포인트!</p>
+                  </div>
+                  <Gift className="text-orange-500" size={32} />
+                </div>
+              )}
+
+              {!getStreakReward(user.streak) && (
+                <p className="text-center text-sm text-gray-600">
+                  <span className="font-bold text-orange-500">{7 - user.streak}일</span> 더 하면 첫 보상 획득! 🎁
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4">
+            <button
+              onClick={() => setSelectedCategory('daily')}
+              className="bg-white rounded-3xl p-10 hover:scale-105 transition-all group relative overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 w-40 h-40 bg-blue-100/30 rounded-full blur-3xl"></div>
+              <div className="relative z-10 flex items-center justify-between">
+                <div className="flex items-center gap-6">
+                  <div className="text-7xl">📒</div>
+                  <div className="text-left">
+                    <h3 className="text-3xl font-bold text-gray-800 mb-2">한국어 퀴즈</h3>
+                    <p className="text-gray-600 text-base">매일 조금씩, 꾸준히 성장하는 당신을 응원합니다! 💪</p>
+                  </div>
+                </div>
+                <div className="text-[#6BA3D4] text-2xl font-bold">→</div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (selectedCategory && !currentQuiz) {
+    return (
+      <div className="min-h-screen p-4 sm:p-6" style={{ backgroundColor: '#f0f0f0' }}>
+        <div className="max-w-3xl mx-auto">
+          <button
+            onClick={() => setSelectedCategory(null)}
+            className="mb-6 bg-white px-6 py-3 rounded-2xl font-semibold text-gray-700 hover:bg-gray-50 transition-all flex items-center gap-2"
+          >
+            <span>←</span>
+            <span>돌아가기</span>
+          </button>
+
+          <div className="text-center mb-8">
+            <div className="inline-block bg-white/95 backdrop-blur-xl rounded-3xl p-6 relative overflow-hidden">
+              <div className="text-7xl mb-3">💬</div>
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">한국어 퀴즈</h2>
+              <p className="text-gray-600">난이도를 선택하세요!</p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            {['beginner', 'intermediate', 'advanced'].map((difficulty) => (
+              <button
+                key={difficulty}
+                onClick={() => startQuiz('daily', difficulty)}
+                className="w-full bg-white/95 backdrop-blur-xl rounded-3xl p-6 hover:scale-105 transition-all group relative overflow-hidden"
+              >
+                <div className={`absolute top-0 right-0 w-40 h-40 bg-gradient-to-br ${getDifficultyColor(difficulty)}/20 rounded-full blur-3xl`}></div>
+                <div className="relative z-10 flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className={`w-16 h-16 bg-gradient-to-br ${getDifficultyColor(difficulty)} rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-lg`}>
+                      {difficulty === 'beginner' ? '1' : difficulty === 'intermediate' ? '2' : '3'}
+                    </div>
+                    <div className="text-left">
+                      <h3 className="text-xl font-bold text-gray-800">{getDifficultyText(difficulty)}</h3>
+                      <p className="text-sm text-gray-600">
+                        {difficulty === 'beginner' && '기초부터 차근차근'}
+                        {difficulty === 'intermediate' && '실력을 한 단계 올려요'}
+                        {difficulty === 'advanced' && '전문가 레벨 도전!'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-3xl">
+                    {difficulty === 'beginner' && '🌱'}
+                    {difficulty === 'intermediate' && '🌿'}
+                    {difficulty === 'advanced' && '🌳'}
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-[#6BA3D4] via-[#8BB8DD] to-[#f0f0f0] p-4 sm:p-6">
+      <div className="max-w-3xl mx-auto">
+        <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-4 mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-[#6BA3D4] to-[#5a8cbd] rounded-xl flex items-center justify-center text-2xl">
+              {user.profileEmoji}
+            </div>
+            <div>
+              <p className="font-bold text-gray-800">{getLevelName(user.level)} Lv.{user.level}</p>
+              <p className="text-xs text-gray-600">{user.totalPoints}점</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5 text-orange-500">
+              <span className="text-xl">🔥</span>
+              <span className="font-bold">{user.streak}일</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="text-center mb-4">
+          <div className="inline-block bg-white/90 backdrop-blur-xl rounded-2xl shadow-lg px-6 py-3">
+            <p className="text-gray-700 font-semibold flex items-center gap-2">
+              <span className="text-2xl">💪</span>
+              <span>화이팅! 당신은 할 수 있어요!</span>
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-[#6BA3D4]/20 to-[#8BB8DD]/20 rounded-full blur-3xl"></div>
+          
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-6">
+              <span className={`px-4 py-2 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-[#6BA3D4] to-[#5a8cbd]`}>
+                💬 한국어 퀴즈
+              </span>
+              <span className={`px-4 py-2 rounded-xl text-sm font-bold text-white bg-gradient-to-r ${getDifficultyColor(currentQuiz.difficulty)}`}>
+                {getDifficultyText(currentQuiz.difficulty)}
+              </span>
+            </div>
+
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-8 leading-relaxed">
+              {currentQuiz.question}
+            </h2>
+
+            <div className="space-y-3 mb-8">
+              {currentQuiz.answers.map((answer, index) => (
+                <button
+                  key={index}
+                  onClick={() => !showResult && handleAnswer(index)}
+                  disabled={showResult}
+                  className={`w-full p-5 rounded-2xl text-left font-semibold transition-all ${
+                    showResult
+                      ? index === currentQuiz.correct
+                        ? 'bg-gradient-to-r from-green-400 to-emerald-500 text-white shadow-lg'
+                        : index === selectedAnswer
+                        ? 'bg-gradient-to-r from-red-400 to-pink-500 text-white'
+                        : 'bg-gray-100 text-gray-500'
+                      : selectedAnswer === index
+                      ? 'bg-gradient-to-r from-[#6BA3D4] to-[#5a8cbd] text-white shadow-lg'
+                      : 'bg-gray-50 border-2 border-gray-200 text-gray-700 hover:bg-[#6BA3D4]/10 hover:border-[#6BA3D4]/30'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-xl font-bold">{String.fromCharCode(65 + index)}</span>
+                    <span>{answer}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            {!showResult ? (
+              <button
+                onClick={submitAnswer}
+                disabled={selectedAnswer === null}
+                className={`w-full py-4 rounded-2xl font-bold text-white transition-all ${
+                  selectedAnswer === null
+                    ? 'bg-gray-300 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-[#6BA3D4] to-[#5a8cbd] hover:from-[#5a8cbd] hover:to-[#4a7aad] shadow-xl'
+                }`}
+              >
+                답변 제출하기
+              </button>
+            ) : (
+              <div className="text-center">
+                <div className={`mb-6 p-6 rounded-2xl ${
+                  selectedAnswer === currentQuiz.correct
+                    ? 'bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300'
+                    : 'bg-gradient-to-r from-red-50 to-pink-50 border-2 border-red-300'
+                }`}>
+                  <p className="text-3xl font-bold mb-3">
+                    {selectedAnswer === currentQuiz.correct ? '🎉 정답입니다!' : '😅 틀렸습니다'}
+                  </p>
+                  <p className="text-lg">
+                    {selectedAnswer === currentQuiz.correct 
+                      ? `+${currentQuiz.difficulty === 'advanced' ? 15 : currentQuiz.difficulty === 'intermediate' ? 12 : 10} 경험치를 획득했습니다!` 
+                      : `정답: ${currentQuiz.answers[currentQuiz.correct]}`}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setCurrentQuiz(null)}
+                  className="w-full bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-bold py-4 rounded-2xl shadow-xl transition-all"
+                >
+                  메인으로 돌아가기
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default KoreanQuizApp;
