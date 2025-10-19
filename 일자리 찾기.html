@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dom Dom - 일자리 찾기</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f0f0f0;
+            max-width: 430px;
+            margin: 0 auto;
+            overflow-x: hidden;
+            padding-bottom: 20px;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .logo {
+            font-size: 42px;
+            font-weight: 700;
+            color: #6BA3D4;
+            letter-spacing: 1px;
+            font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+        }
+
+        .logo-subtitle {
+            font-size: 12px;
+            color: #6BA3D4;
+            margin-top: 5px;
+        }
+
+        .home-button {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+            background: none;
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .home-button:hover {
+            color: #6BA3D4;
+        }
+
+        .home-button svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .page-info {
+            background-color: #ffffff;
+            padding: 20px;
+            margin: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .page-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .page-description {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+            background-color: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #6BA3D4;
+        }
+
+        .search-section {
+            background-color: #ffffff;
+            padding: 20px;
+            margin: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 45px 14px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #6BA3D4;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6BA3D4;
+            font-size: 20px;
+        }
+
+        .filter-chips {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            padding: 8px 15px;
+            border-radius: 20px;
+            background-color: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .chip:hover {
+            background-color: #e8f4f8;
+            border-color: #6BA3D4;
+        }
+
+        .chip.active {
+            background-color: #6BA3D4;
+            color: white;
+            border-color: #6BA3D4;
+        }
+
+        .filter-section {
+            background-color: #ffffff;
+            padding: 15px 20px;
+            margin: 0 20px 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .filter-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .job-count {
+            background-color: #f8f9fa;
+            padding: 12px 20px;
+            margin: 0 20px 15px 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .job-count strong {
+            color: #6BA3D4;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .job-list {
+            padding: 0 20px;
+        }
+
+        .job-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .job-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .job-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .company-name {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .job-badge {
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .badge-new {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .badge-hot {
+            background-color: #ffc107;
+            color: #333;
+        }
+
+        .badge-urgent {
+            background-color: #6BA3D4;
+            color: white;
+        }
+
+        .job-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .detail-icon {
+            font-size: 14px;
+        }
+
+        .job-salary {
+            font-size: 16px;
+            font-weight: 700;
+            color: #6BA3D4;
+            margin-bottom: 10px;
+        }
+
+        .job-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 5px 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .no-results-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .no-results-text {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .toast.show {
+            opacity: 0.9;
+        }
+
+        .back-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 56px;
+            height: 56px;
+            background-color: #6BA3D4;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(107, 163, 212, 0.4);
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 99;
+        }
+
+        .back-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(107, 163, 212, 0.5);
+        }
+
+        .back-button svg {
+            width: 24px;
+            height: 24px;
+            stroke: white;
+            stroke-width: 3;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            overflow-y: auto;
+        }
+
+        .modal.show {
+            display: block;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            max-width: 430px;
+            margin: 20px auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background-color: #6BA3D4;
+            color: white;
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .modal-company {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .info-section {
+            margin-bottom: 20px;
+        }
+
+        .info-section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-row {
+            display: flex;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-size: 13px;
+            color: #666;
+            min-width: 90px;
+            font-weight: 600;
+        }
+
+        .info-value {
+            font-size: 13px;
+            color: #333;
+            flex: 1;
+        }
+
+        .benefit-list {
+            display: grid;
+            gap: 8px;
+        }
+
+        .benefit-item {
+            padding: 10px 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .benefit-item::before {
+            content: '✓';
+            color: #6BA3D4;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .apply-button {
+            width: 100%;
+            padding: 16px;
+            background-color: #6BA3D4;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .apply-button:hover {
+            background-color: #5a92c3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(107, 163, 212, 0.4);
+        }
+
+        .contact-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .contact-button {
+            padding: 12px;
+            border: 2px solid #6BA3D4;
+            background-color: white;
+            color: #6BA3D4;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .contact-button:hover {
+            background-color: #6BA3D4;
+            color: white;
+        }
+
+        .highlight-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+        .highlight-text {
+            font-size: 13px;
+            color: #856404;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <div class="logo">Dom Dom</div>
+            <div class="logo-subtitle">외국인 노동자 도우미 앱</div>
+        </div>
+        <button class="home-button" onclick="goHome()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span>홈으로</span>
+        </button>
+    </div>
+
+    <div class="page-info">
+        <div class="page-title">
+            <span>💼</span>
+            <span>일자리 찾기</span>
+        </div>
+        <div class="page-description">
+            💡 <strong>안내:</strong> 일자리 이동은 기존 일자리 정리 후에만 이용 가능합니다. 현재 근무 중인 분들은 먼저 정리 절차를 진행해주세요.
+        </div>
+    </div>
+
+    <div class="search-section">
+        <div class="search-box">
+            <input type="text" class="search-input" id="searchInput" placeholder="직종, 지역, 회사명으로 검색하세요">
+            <span class="search-icon">🔍</span>
+        </div>
+        <div class="filter-chips">
+            <div class="chip active" data-category="all">전체</div>
+            <div class="chip" data-category="manufacturing">제조업</div>
+            <div class="chip" data-category="construction">건설업</div>
+            <div class="chip" data-category="service">서비스업</div>
+            <div class="chip" data-category="agriculture">농업</div>
+        </div>
+    </div>
+
+    <div class="filter-section">
+        <div class="filter-title">📍 지역</div>
+        <div class="filter-chips">
+            <div class="chip active" data-region="all">전체</div>
+            <div class="chip" data-region="seoul">서울</div>
+            <div class="chip" data-region="gyeonggi">경기</div>
+            <div class="chip" data-region="incheon">인천</div>
+            <div class="chip" data-region="busan">부산</div>
+        </div>
+    </div>
+
+    <div class="job-count">
+        총 <strong id="jobCount">12</strong>개의 일자리
+    </div>
+
+    <div class="job-list" id="jobList">
+        <!-- 일자리 카드들이 여기에 동적으로 생성됩니다 -->
+    </div>
+
+    <div class="back-button" onclick="goBack()">
+        <svg viewBox="0 0 24 24" fill="none">
+            <path d="M19 12H5M5 12l7 7M5 12l7-7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </div>
+
+    <div class="modal" id="jobModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-title" id="modalTitle"></div>
+                <div class="modal-company" id="modalCompany"></div>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 동적으로 채워질 상세 정보 -->
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const jobs = [
+            {
+                id: 1,
+                title: "생산직 사원 모집",
+                company: "삼성전자 협력사",
+                category: "manufacturing",
+                region: "gyeonggi",
+                salary: "월 250만원",
+                location: "경기도 수원시",
+                type: "정규직",
+                experience: "경력무관",
+                badge: "new",
+                tags: ["숙소제공", "식사제공", "4대보험"],
+                workHours: "주 5일, 08:00-17:00",
+                holidays: "주말 휴무",
+                description: "반도체 부품 조립 및 검사 업무. 친절한 교육 제공.",
+                requirements: "만 18세 이상, 건강한 신체",
+                benefits: ["기숙사 무료 제공", "3끼 식사 제공", "연차/월차 제공", "명절 상여금"],
+                visa: "E-9 비자 가능",
+                deadline: "2025년 11월 15일",
+                contact: "010-1234-5678",
+                recruits: "5명"
+            },
+            {
+                id: 2,
+                title: "용접 기능공",
+                company: "현대건설",
+                category: "construction",
+                region: "seoul",
+                salary: "월 300만원",
+                location: "서울시 강남구",
+                type: "계약직",
+                experience: "경력 1년↑",
+                badge: "hot",
+                tags: ["교통비지원", "상여금", "주휴수당"],
+                workHours: "주 6일, 07:00-18:00",
+                holidays: "일요일 휴무",
+                description: "건축 현장 철골 용접 작업. 안전 교육 필수.",
+                requirements: "용접 기능사 자격증 우대, 경력 1년 이상",
+                benefits: ["교통비 월 20만원", "야근수당 별도", "안전장비 제공", "중식 제공"],
+                visa: "E-9, F-4 비자 가능",
+                deadline: "2025년 10월 30일",
+                contact: "02-3456-7890",
+                recruits: "3명"
+            },
+            {
+                id: 3,
+                title: "식당 주방 보조",
+                company: "맛있는식당",
+                category: "service",
+                region: "seoul",
+                salary: "시급 10,000원",
+                location: "서울시 종로구",
+                type: "파트타임",
+                experience: "경력무관",
+                badge: "urgent",
+                tags: ["식사제공", "유연근무", "주 3일"],
+                workHours: "주 3-4일, 10:00-15:00 또는 17:00-22:00",
+                holidays: "협의 가능",
+                description: "한식당 주방 보조 업무. 설거지, 재료 손질, 간단한 조리.",
+                requirements: "건강한 신체, 성실한 근무 태도",
+                benefits: ["식사 무료 제공", "근무 시간 조정 가능", "주휴수당 지급"],
+                visa: "모든 비자 가능",
+                deadline: "상시 채용",
+                contact: "010-2345-6789",
+                recruits: "2명"
+            },
+            {
+                id: 4,
+                title: "농장 작업자",
+                company: "행복농장",
+                category: "agriculture",
+                region: "gyeonggi",
+                salary: "월 220만원",
+                location: "경기도 이천시",
+                type: "정규직",
+                experience: "경력무관",
+                badge: "new",
+                tags: ["숙소제공", "3개월계약", "교통편제공"],
+                workHours: "주 5일, 06:00-15:00 (여름철 변동 가능)",
+                holidays: "토일 휴무",
+                description: "딸기 농장 파종, 수확, 포장 작업. 계절별 작업 다름.",
+                requirements: "농업 경험 우대, 체력 좋은 분",
+                benefits: ["기숙사 무료", "3끼 식사 제공", "농산물 제공", "계약 갱신 가능"],
+                visa: "E-9 비자 필수",
+                deadline: "2025년 11월 1일",
+                contact: "010-3456-7890",
+                recruits: "4명"
+            },
+            {
+                id: 5,
+                title: "자동차 부품 조립",
+                company: "현대모비스",
+                category: "manufacturing",
+                region: "incheon",
+                salary: "월 280만원",
+                location: "인천시 남동구",
+                type: "정규직",
+                experience: "경력무관",
+                badge: "hot",
+                tags: ["야간수당", "4대보험", "교육지원"],
+                workHours: "2교대, 주간 06:00-14:00 / 야간 14:00-22:00",
+                holidays: "주말 휴무, 월 2회 토요일 근무",
+                description: "자동차 엔진 부품 조립 및 품질 검사. 2주 교육 제공.",
+                requirements: "만 20세 이상, 색맹 아닌 분",
+                benefits: ["야간수당 50% 가산", "기숙사 제공(월 10만원)", "장기근속 포상", "한국어 교육 지원"],
+                visa: "E-9 비자 가능",
+                deadline: "2025년 11월 10일",
+                contact: "032-123-4567",
+                recruits: "10명"
+            },
+            {
+                id: 6,
+                title: "물류센터 포장원",
+                company: "쿠팡 물류센터",
+                category: "service",
+                region: "gyeonggi",
+                salary: "시급 9,860원",
+                location: "경기도 김포시",
+                type: "계약직",
+                experience: "경력무관",
+                badge: "urgent",
+                tags: ["3교대", "주휴수당", "상여금"],
+                workHours: "3교대, 08:00-16:00 / 16:00-24:00 / 24:00-08:00",
+                holidays: "주 5일 근무",
+                description: "상품 포장, 라벨링, 박스 정리 업무. 단순 작업.",
+                requirements: "건강한 신체, 야간 근무 가능한 분",
+                benefits: ["야간수당 추가", "교통비 지원", "중식 제공", "근속 수당"],
+                visa: "모든 비자 가능",
+                deadline: "상시 채용",
+                contact: "010-4567-8901",
+                recruits: "15명"
+            },
+            {
+                id: 7,
+                title: "건축 현장 작업자",
+                company: "대림건설",
+                category: "construction",
+                region: "busan",
+                salary: "일당 12만원",
+                location: "부산시 해운대구",
+                type: "일용직",
+                experience: "경력 6개월↑",
+                badge: "new",
+                tags: ["일급지급", "교통비", "안전장비제공"],
+                workHours: "주 6일, 07:00-17:00 (날씨에 따라 변동)",
+                holidays: "일요일 휴무, 우천시 휴무",
+                description: "아파트 건설 현장 일반 작업. 자재 운반, 정리 등.",
+                requirements: "건설 현장 경험자 우대, 체력 좋은 분",
+                benefits: ["일급 당일 지급", "교통비 별도", "안전화/헬멧 제공", "중식 제공"],
+                visa: "E-9 비자 가능",
+                deadline: "2025년 10월 25일",
+                contact: "051-234-5678",
+                recruits: "8명"
+            },
+            {
+                id: 8,
+                title: "호텔 객실 정리",
+                company: "그랜드 호텔",
+                category: "service",
+                region: "seoul",
+                salary: "월 230만원",
+                location: "서울시 중구",
+                type: "정규직",
+                experience: "경력무관",
+                badge: "hot",
+                tags: ["4대보험", "유니폼제공", "식사제공"],
+                workHours: "주 5일, 09:00-18:00",
+                holidays: "주말 포함 주 2일 휴무 (교대)",
+                description: "호텔 객실 청소 및 정리 업무. 친절 교육 제공.",
+                requirements: "성실하고 깔끔한 분, 서비스 마인드",
+                benefits: ["유니폼 무료 제공", "중식 제공", "명절 보너스", "직원 할인"],
+                visa: "E-9, H-2 비자 가능",
+                deadline: "2025년 11월 5일",
+                contact: "02-5678-9012",
+                recruits: "4명"
+            },
+            {
+                id: 9,
+                title: "전자제품 조립",
+                company: "LG전자 협력사",
+                category: "manufacturing",
+                region: "gyeonggi",
+                salary: "월 260만원",
+                location: "경기도 평택시",
+                type: "정규직",
+                experience: "경력무관",
+                badge: "new",
+                tags: ["기숙사제공", "식대지원", "포상금"],
+                workHours: "주 5일, 08:30-17:30",
+                holidays: "토일 휴무, 연휴 공휴일",
+                description: "TV, 냉장고 부품 조립 및 검사. 간단한 작업.",
+                requirements: "만 18세 이상, 단순 작업 가능한 분",
+                benefits: ["기숙사 무료", "식대 월 30만원", "우수사원 포상", "건강검진"],
+                visa: "E-9 비자 가능",
+                deadline: "2025년 11월 20일",
+                contact: "031-456-7890",
+                recruits: "7명"
+            },
+            {
+                id: 10,
+                title: "편의점 야간 알바",
+                company: "CU 편의점",
+                category: "service",
+                region: "seoul",
+                salary: "시급 11,000원",
+                location: "서울시 마포구",
+                type: "파트타임",
+                experience: "경력무관",
+                badge: "urgent",
+                tags: ["야간수당", "주 4일", "유연근무"],
+                workHours: "주 4일, 22:00-06:00",
+                holidays: "협의 가능",
+                description: "야간 편의점 계산, 진열, 청소 업무.",
+                requirements: "야간 근무 가능, 기본 한국어 소통 가능",
+                benefits: ["야간수당 1.5배", "주휴수당", "근무일 협의 가능"],
+                visa: "모든 비자 가능 (유학생 가능)",
+                deadline: "상시 채용",
+                contact: "010-6789-0123",
+                recruits: "1명"
+            },
+            {
+                id: 11,
+                title: "비닐하우스 관리",
+                company: "신선농원",
+                category: "agriculture",
+                region: "gyeonggi",
+                salary: "월 200만원",
+                location: "경기도 안성시",
+                type: "계약직",
+                experience: "경력무관",
+                badge: "new",
+                tags: ["숙소무료", "식사제공", "6개월계약"],
+                workHours: "주 5일, 07:00-16:00",
+                holidays: "토일 휴무",
+                description: "토마토 재배 보조. 물주기, 순치기, 수확 작업.",
+                requirements: "성실한 근무 태도, 장기 근무 가능한 분",
+                benefits: ["숙소 무료", "3끼 식사 제공", "채소 제공", "계약 연장 가능"],
+                visa: "E-9 비자 필수",
+                deadline: "2025년 10월 28일",
+                contact: "010-7890-1234",
+                recruits: "3명"
+            },
+            {
+                id: 12,
+                title: "배송 보조원",
+                company: "한진택배",
+                category: "service",
+                region: "incheon",
+                salary: "일당 10만원",
+                location: "인천시 계양구",
+                type: "일용직",
+                experience: "경력무관",
+                badge: "hot",
+                tags: ["일급지급", "교통비", "운전면허불필요"],
+                workHours: "주 6일, 08:00-17:00",
+                holidays: "일요일 휴무",
+                description: "택배 상하차 보조, 물품 분류 작업.",
+                requirements: "건강한 체력, 성실한 근무",
+                benefits: ["일급 당일 지급", "중식 제공", "장기 근무시 정규직 전환"],
+                visa: "모든 비자 가능",
+                deadline: "상시 채용",
+                contact: "032-890-1234",
+                recruits: "6명"
+            }
+        ];
+
+        let currentCategory = 'all';
+        let currentRegion = 'all';
+        let searchTerm = '';
+
+        function renderJobs() {
+            const jobList = document.getElementById('jobList');
+            const filteredJobs = jobs.filter(job => {
+                const matchCategory = currentCategory === 'all' || job.category === currentCategory;
+                const matchRegion = currentRegion === 'all' || job.region === currentRegion;
+                const matchSearch = searchTerm === '' || 
+                    job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    job.location.toLowerCase().includes(searchTerm.toLowerCase());
+                
+                return matchCategory && matchRegion && matchSearch;
+            });
+
+            document.getElementById('jobCount').textContent = filteredJobs.length;
+
+            if (filteredJobs.length === 0) {
+                jobList.innerHTML = `
+                    <div class="no-results">
+                        <div class="no-results-icon">😕</div>
+                        <div class="no-results-text">검색 결과가 없습니다</div>
+                    </div>
+                `;
+                return;
+            }
+
+            jobList.innerHTML = filteredJobs.map(job => {
+                const badgeClass = `badge-${job.badge}`;
+                const badgeText = {
+                    'new': 'NEW',
+                    'hot': 'HOT',
+                    'urgent': '급구'
+                }[job.badge];
+
+                return `
+                    <div class="job-card" onclick="viewJob(${job.id})">
+                        <div class="job-header">
+                            <div>
+                                <div class="job-title">${job.title}</div>
+                                <div class="company-name">${job.company}</div>
+                            </div>
+                            <div class="job-badge ${badgeClass}">${badgeText}</div>
+                        </div>
+                        <div class="job-salary">${job.salary}</div>
+                        <div class="job-details">
+                            <div class="detail-item">
+                                <span class="detail-icon">📍</span>
+                                <span>${job.location}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-icon">💼</span>
+                                <span>${job.type}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-icon">📊</span>
+                                <span>${job.experience}</span>
+                            </div>
+                        </div>
+                        <div class="job-tags">
+                            ${job.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        function viewJob(jobId) {
+            const job = jobs.find(j => j.id === jobId);
+            if (!job) return;
+
+            document.getElementById('modalTitle').textContent = job.title;
+            document.getElementById('modalCompany').textContent = job.company;
+
+            const badgeText = {
+                'new': 'NEW',
+                'hot': 'HOT',
+                'urgent': '급구'
+            }[job.badge];
+
+            document.getElementById('modalBody').innerHTML = `
+                <div class="highlight-box">
+                    <div class="highlight-text">📌 모집 인원: ${job.recruits} | 마감일: ${job.deadline}</div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-section-title">💰 급여 및 근무 조건</div>
+                    <div class="info-row">
+                        <div class="info-label">급여</div>
+                        <div class="info-value" style="color: #6BA3D4; font-weight: 700; font-size: 16px;">${job.salary}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">근무시간</div>
+                        <div class="info-value">${job.workHours}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">휴무일</div>
+                        <div class="info-value">${job.holidays}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">고용형태</div>
+                        <div class="info-value">${job.type}</div>
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-section-title">📋 업무 내용</div>
+                    <div class="info-row">
+                        <div class="info-value">${job.description}</div>
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-section-title">✅ 지원 자격</div>
+                    <div class="info-row">
+                        <div class="info-label">경력</div>
+                        <div class="info-value">${job.experience}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">요구사항</div>
+                        <div class="info-value">${job.requirements}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">비자</div>
+                        <div class="info-value">${job.visa}</div>
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-section-title">🎁 복리후생</div>
+                    <div class="benefit-list">
+                        ${job.benefits.map(benefit => `
+                            <div class="benefit-item">${benefit}</div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-section-title">📞 연락처</div>
+                    <div class="info-row">
+                        <div class="info-label">담당자</div>
+                        <div class="info-value">${job.contact}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">근무지</div>
+                        <div class="info-value">${job.location}</div>
+                    </div>
+                </div>
+
+                <button class="apply-button" onclick="applyJob(${job.id})">
+                    ✉️ 지원하기
+                </button>
+
+                <div class="contact-buttons">
+                    <button class="contact-button" onclick="makeCall('${job.contact}')">
+                        📞 전화하기
+                    </button>
+                    <button class="contact-button" onclick="sendMessage(${job.id})">
+                        💬 문의하기
+                    </button>
+                </div>
+            `;
+
+            document.getElementById('jobModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('jobModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        function applyJob(jobId) {
+            closeModal();
+            showToast('상호평가제 실시 이후 지원이 가능합니다');
+        }
+
+        function sendMessage(jobId) {
+            const job = jobs.find(j => j.id === jobId);
+            closeModal();
+            showToast(`${job.company}에 문의 메시지를 보냅니다`);
+        }
+
+        function makeCall(number) {
+            showToast(`${number}로 전화를 겁니다`);
+        }
+
+        function goBack() {
+            showToast('이전 페이지로 돌아갑니다');
+        }
+
+        function goHome() {
+            showToast('홈 페이지로 이동합니다');
+        }
+
+        // 모달 외부 클릭시 닫기
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('jobModal');
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+        });
+
+        // 이벤트 리스너 설정
+        document.addEventListener('DOMContentLoaded', function() {
+            renderJobs();
+
+            // 카테고리 필터
+            document.querySelectorAll('[data-category]').forEach(chip => {
+                chip.addEventListener('click', function() {
+                    document.querySelectorAll('[data-category]').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    currentCategory = this.getAttribute('data-category');
+                    renderJobs();
+                });
+            });
+
+            // 지역 필터
+            document.querySelectorAll('[data-region]').forEach(chip => {
+                chip.addEventListener('click', function() {
+                    document.querySelectorAll('[data-region]').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    currentRegion = this.getAttribute('data-region');
+                    renderJobs();
+                });
+            });
+
+            // 검색
+            document.getElementById('searchInput').addEventListener('input', function(e) {
+                searchTerm = e.target.value;
+                renderJobs();
+            });
+        });
+    </script>
+</body>
+</html>
