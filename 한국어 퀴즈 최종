@@ -1,0 +1,763 @@
+import React, { useState, useEffect } from 'react';
+import { Calendar, Edit2, Camera, Gift, Sparkles } from 'lucide-react';
+
+const KoreanQuizApp = () => {
+  const [user, setUser] = useState({
+    name: '학습자',
+    profileEmoji: '🎓',
+    level: 1,
+    exp: 0,
+    streak: 0,
+    totalPoints: 0,
+    lastVisit: null,
+    attendanceHistory: {},
+    quizHistory: {}
+  });
+
+  const [currentQuiz, setCurrentQuiz] = useState(null);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [showResult, setShowResult] = useState(false);
+  const [editingName, setEditingName] = useState(false);
+  const [tempName, setTempName] = useState(user.name);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [showAttendanceCalendar, setShowAttendanceCalendar] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [calendarMonth, setCalendarMonth] = useState(new Date().getMonth());
+  const [calendarYear, setCalendarYear] = useState(new Date().getFullYear());
+
+  const emojis = ['🎓', '😊', '🐱', '🐶', '🦊', '🐻', '🐼', '🦁', '🐯', '🦄', '🌟', '⭐', '💫', '✨', '🎨', '🎮'];
+
+  const quizData = {
+    daily: {
+      beginner: [
+        { id: 1, question: '안녕하세요의 의미는?', answers: ['만났을 때 하는 인사말', '헤어질 때 하는 인사말', '고마움을 표현하는 말', '미안함을 표현하는 말'], correct: 0 },
+        { id: 2, question: '감사합니다는 무슨 뜻일까요?', answers: ['실례를 구할 때 쓰는 말', '고마움을 표현하는 말', '부탁할 때 쓰는 말', '환영할 때 쓰는 말'], correct: 1 },
+        { id: 3, question: '물을 설명하면?', answers: ['음식', '마시는 투명한 액체', '쌀로 만든 음식', '차'], correct: 1 },
+        { id: 4, question: '밥의 의미는?', answers: ['국', '쌀로 지은 음식 또는 식사', '빵', '국수'], correct: 1 },
+        { id: 5, question: '친구는 무슨 뜻일까요?', answers: ['가족', '가까이 지내는 사람', '선생님', '학생'], correct: 1 },
+        { id: 6, question: '학교를 설명하면?', answers: ['배우는 곳', '사는 곳', '놀이터', '물건 사는 곳'], correct: 0 },
+        { id: 7, question: '사랑의 의미는?', answers: ['싫어하는 마음', '좋아하는 마음', '아주 깊이 좋아하는 마음', '화난 감정'], correct: 2 },
+        { id: 8, question: '책을 설명하면?', answers: ['글씨 쓰는 도구', '종이', '글과 그림이 있는 것', '앉는 곳'], correct: 2 },
+      ],
+      intermediate: [
+        { id: 9, question: '약속의 의미는?', answers: ['약', '미리 정한 시간이나 일', '약점', '병원'], correct: 1 },
+        { id: 10, question: '아까워하다는 무슨 뜻일까요?', answers: ['버리기 안타까운 마음', '화나는 마음', '기쁜 마음', '피곤한 마음'], correct: 0 },
+        { id: 11, question: '설레다의 뜻은?', answers: ['슬픈 마음', '기대되어 가슴이 두근거림', '혼란스러운 상태', '졸린 상태'], correct: 1 },
+        { id: 12, question: '부끄럽다는 무슨 뜻일까요?', answers: ['자랑스러운', '창피하거나 쑥스러운', '자신 있는', '용감한'], correct: 1 },
+        { id: 13, question: '그립다의 의미는?', answers: ['그림을 그리다', '보고 싶고 생각나다', '잡다', '보다'], correct: 1 },
+        { id: 14, question: '서운하다는 무슨 뜻일까요?', answers: ['기쁜', '섭섭하고 아쉬운', '신나는', '걱정되는'], correct: 1 },
+        { id: 15, question: '답답하다의 뜻은?', answers: ['막혀서 불편하거나 갑갑한', '편안한', '넓은', '맑은'], correct: 0 },
+      ],
+      advanced: [
+        { id: 16, question: '눈치가 빠르다는 무슨 의미인가요?', answers: ['달리기를 잘함', '상황을 빨리 파악함', '시력이 좋음', '공부를 잘함'], correct: 1 },
+        { id: 17, question: '손이 크다의 관용적 의미는?', answers: ['손의 크기가 큼', '인심이 후하고 베풂이 많음', '힘이 셈', '물건을 잘 떨어뜨림'], correct: 1 },
+        { id: 18, question: '발이 넓다는 무슨 뜻일까요?', answers: ['발의 크기가 큼', '아는 사람이 많고 인맥이 넓음', '키가 큼', '걷는 속도가 빠름'], correct: 1 },
+        { id: 19, question: '귀가 얇다의 의미는?', answers: ['귀가 얇음', '남의 말을 쉽게 믿음', '청력이 좋음', '남의 말을 안 들음'], correct: 1 },
+        { id: 20, question: '입이 무겁다는 무슨 뜻일까요?', answers: ['입술이 무거움', '비밀을 잘 지킴', '말을 많이 함', '입 냄새가 남'], correct: 1 },
+      ]
+    }
+  };
+
+  useEffect(() => {
+    checkAttendance();
+  }, []);
+
+  const checkAttendance = () => {
+    const today = new Date().toDateString();
+    
+    if (user.lastVisit !== today) {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      
+      const newAttendance = { ...user.attendanceHistory };
+      newAttendance[today] = true;
+      
+      if (user.lastVisit === yesterday.toDateString()) {
+        setUser({...user, streak: user.streak + 1, lastVisit: today, attendanceHistory: newAttendance});
+      } else {
+        setUser({...user, streak: 1, lastVisit: today, attendanceHistory: newAttendance});
+      }
+    }
+  };
+
+  const getStreakReward = (streak) => {
+    if (streak >= 30) return { icon: '🏆', text: '30일 연속 달성!', points: 500 };
+    if (streak >= 14) return { icon: '💎', text: '2주 연속 달성!', points: 200 };
+    if (streak >= 7) return { icon: '⭐', text: '일주일 연속 달성!', points: 100 };
+    if (streak >= 3) return { icon: '🎯', text: '3일 연속 달성!', points: 30 };
+    return null;
+  };
+
+  const getCalendarDays = () => {
+    const firstDay = new Date(calendarYear, calendarMonth, 1);
+    const lastDay = new Date(calendarYear, calendarMonth + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
+    
+    const days = [];
+    
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      days.push({ date: null, isEmpty: true });
+    }
+    
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(calendarYear, calendarMonth, day);
+      const dateString = date.toDateString();
+      const today = new Date().toDateString();
+      days.push({
+        date: day,
+        attended: user.attendanceHistory[dateString] || false,
+        isToday: dateString === today,
+        isEmpty: false
+      });
+    }
+    
+    return days;
+  };
+
+  const goToPreviousMonth = () => {
+    if (calendarMonth === 0) {
+      setCalendarMonth(11);
+      setCalendarYear(calendarYear - 1);
+    } else {
+      setCalendarMonth(calendarMonth - 1);
+    }
+  };
+
+  const goToNextMonth = () => {
+    if (calendarMonth === 11) {
+      setCalendarMonth(0);
+      setCalendarYear(calendarYear + 1);
+    } else {
+      setCalendarMonth(calendarMonth + 1);
+    }
+  };
+
+  const getMonthName = (month) => {
+    const months = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
+    return months[month];
+  };
+
+  const startQuiz = (category, difficulty) => {
+    const quizzes = quizData.daily[difficulty];
+    const randomQuiz = quizzes[Math.floor(Math.random() * quizzes.length)];
+    setCurrentQuiz({ ...randomQuiz, category: 'daily', difficulty });
+    setSelectedAnswer(null);
+    setShowResult(false);
+    setSelectedCategory(null);
+  };
+
+  const handleAnswer = (answerIndex) => {
+    setSelectedAnswer(answerIndex);
+  };
+
+  const submitAnswer = () => {
+    if (selectedAnswer === null) return;
+    
+    const isCorrect = selectedAnswer === currentQuiz.correct;
+    const basePoints = currentQuiz.difficulty === 'advanced' ? 15 : currentQuiz.difficulty === 'intermediate' ? 12 : 10;
+    const points = isCorrect ? basePoints : 0;
+    
+    setShowResult(true);
+    
+    if (isCorrect) {
+      const today = new Date().toDateString();
+      const newExp = user.exp + points;
+      const newLevel = Math.floor(newExp / 50) + 1;
+      const newPoints = user.totalPoints + points;
+      const newQuizHistory = { ...user.quizHistory, [today]: true };
+      
+      setUser({
+        ...user,
+        exp: newExp,
+        level: Math.min(newLevel, 10),
+        totalPoints: newPoints,
+        quizHistory: newQuizHistory
+      });
+    }
+  };
+
+  const saveName = () => {
+    if (tempName.trim()) {
+      setUser({ ...user, name: tempName.trim() });
+      setEditingName(false);
+    }
+  };
+
+  const selectEmoji = (emoji) => {
+    setUser({ ...user, profileEmoji: emoji });
+    setShowEmojiPicker(false);
+  };
+
+  const getLevelName = (level) => {
+    if (level >= 9) return '전문가';
+    if (level >= 7) return '고급';
+    if (level >= 5) return '중급';
+    if (level >= 3) return '초급';
+    return '입문';
+  };
+
+  const getProgressPercent = () => {
+    const expInLevel = user.exp % 50;
+    return (expInLevel / 50) * 100;
+  };
+
+  const getDifficultyText = (difficulty) => {
+    if (difficulty === 'beginner') return '초급';
+    if (difficulty === 'intermediate') return '중급';
+    return '상급';
+  };
+
+  if (!currentQuiz && !selectedCategory) {
+    return (
+      <div style={{ backgroundColor: '#f0f0f0', minHeight: '100vh', fontFamily: "'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif" }}>
+        <div style={{ maxWidth: '430px', margin: '0 auto' }}>
+          {/* 헤더 */}
+          <div style={{ backgroundColor: '#ffffff', padding: '20px', textAlign: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+            <div style={{ fontSize: '42px', fontWeight: '700', color: '#6BA3D4', letterSpacing: '1px', fontFamily: "'Arial Rounded MT Bold', Arial, sans-serif" }}>
+              Dom Dom
+            </div>
+            <div style={{ fontSize: '12px', color: '#6BA3D4', marginTop: '5px' }}>
+              외국인 노동자 도우미 앱
+            </div>
+          </div>
+
+          {/* 뒤로가기 버튼 */}
+          <div style={{ backgroundColor: '#ffffff', display: 'flex', padding: '15px 20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+            <button
+              onClick={() => window.history.back()}
+              style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', color: '#333', fontSize: '14px', fontWeight: '600', background: 'none', border: 'none' }}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '24px', height: '24px' }}>
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+              <span>홈으로</span>
+            </button>
+          </div>
+
+          {/* 프로필 카드 */}
+          <div style={{ backgroundColor: '#ffffff', padding: '20px', margin: '20px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+            <div style={{ display: 'flex', alignItems: 'start', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                <div style={{ position: 'relative', cursor: 'pointer' }} onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
+                  <div style={{ width: '70px', height: '70px', background: 'linear-gradient(135deg, #6BA3D4 0%, #5a8cbd 100%)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '36px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+                    {user.profileEmoji}
+                  </div>
+                  <div style={{ position: 'absolute', bottom: '-2px', right: '-2px', backgroundColor: 'white', borderRadius: '50%', padding: '4px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                    <Camera size={12} color="#6BA3D4" />
+                  </div>
+                </div>
+
+                {showEmojiPicker && (
+                  <div style={{ position: 'absolute', top: '160px', left: '40px', backgroundColor: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', padding: '15px', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', zIndex: 50 }}>
+                    {emojis.map((emoji, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => selectEmoji(emoji)}
+                        style={{ fontSize: '28px', background: 'none', border: 'none', cursor: 'pointer', padding: '5px' }}
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                <div>
+                  {editingName ? (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <input
+                        type="text"
+                        value={tempName}
+                        onChange={(e) => setTempName(e.target.value)}
+                        style={{ border: '2px solid #6BA3D4', borderRadius: '8px', padding: '6px 10px', fontSize: '16px', fontWeight: '700' }}
+                        autoFocus
+                      />
+                      <button
+                        onClick={saveName}
+                        style={{ backgroundColor: '#6BA3D4', color: 'white', padding: '6px 12px', borderRadius: '8px', fontWeight: '600', border: 'none', cursor: 'pointer' }}
+                      >
+                        저장
+                      </button>
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }} onClick={() => { setEditingName(true); setTempName(user.name); }}>
+                      <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#333', margin: 0 }}>{user.name}</h2>
+                      <Edit2 size={16} color="#999" />
+                    </div>
+                  )}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px' }}>
+                    <span style={{ color: '#6BA3D4', fontWeight: '700', fontSize: '14px' }}>{getLevelName(user.level)} Lv.{user.level}</span>
+                    <Sparkles size={14} color="#fbbf24" />
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', justifyContent: 'flex-end', marginBottom: '4px' }}>
+                  <span style={{ fontSize: '24px' }}>🔥</span>
+                  <span style={{ fontSize: '20px', fontWeight: '700', color: '#f97316' }}>{user.streak}일</span>
+                </div>
+                <p style={{ fontSize: '12px', color: '#666', margin: '4px 0 0 0' }}>연속 출석</p>
+                <p style={{ fontSize: '11px', color: '#999', margin: '2px 0 0 0' }}>총 {user.totalPoints}점</p>
+              </div>
+            </div>
+
+            <div style={{ marginTop: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#666', marginBottom: '8px' }}>
+                <span style={{ fontWeight: '600' }}>경험치</span>
+                <span style={{ fontWeight: '700' }}>{user.exp % 50} / 50</span>
+              </div>
+              <div style={{ width: '100%', backgroundColor: '#e5e7eb', borderRadius: '999px', height: '12px', overflow: 'hidden' }}>
+                <div 
+                  style={{ 
+                    background: 'linear-gradient(to right, #f87171, #ef4444, #dc2626)', 
+                    height: '12px', 
+                    borderRadius: '999px', 
+                    width: `${getProgressPercent()}%`,
+                    transition: 'width 0.7s ease-out'
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* 출석 체크 카드 */}
+          <div style={{ backgroundColor: '#ffffff', padding: '20px', margin: '20px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Calendar color="#6BA3D4" size={24} />
+                <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#333', margin: 0 }}>출석 체크</h3>
+              </div>
+              <button
+                onClick={() => setShowAttendanceCalendar(!showAttendanceCalendar)}
+                style={{ fontSize: '12px', color: '#6BA3D4', fontWeight: '600', background: 'none', border: 'none', cursor: 'pointer' }}
+              >
+                {showAttendanceCalendar ? '접기' : '전체보기'}
+              </button>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px', marginBottom: '20px' }}>
+              {[1, 2, 3, 4, 5, 6, 7].map((day) => (
+                <div key={day} style={{ textAlign: 'center' }}>
+                  <div style={{
+                    height: '60px',
+                    borderRadius: '10px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: '700',
+                    background: day <= user.streak ? 'linear-gradient(135deg, #fb923c 0%, #ec4899 100%)' : '#f3f4f6',
+                    color: day <= user.streak ? 'white' : '#9ca3af',
+                    boxShadow: day <= user.streak ? '0 2px 8px rgba(251, 146, 60, 0.3)' : 'none'
+                  }}>
+                    <span style={{ fontSize: '20px', marginBottom: '2px' }}>{day <= user.streak ? '✓' : day}</span>
+                    <span style={{ fontSize: '10px' }}>Day</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {showAttendanceCalendar && (
+              <div style={{ backgroundColor: '#f8f9fa', borderRadius: '12px', padding: '15px', marginBottom: '15px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '15px' }}>
+                  <button
+                    onClick={goToPreviousMonth}
+                    style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#6BA3D4', border: 'none', cursor: 'pointer', color: 'white', fontWeight: '700' }}
+                  >
+                    ←
+                  </button>
+                  <h4 style={{ fontWeight: '700', color: '#333', fontSize: '16px', margin: 0 }}>{calendarYear}년 {getMonthName(calendarMonth)}</h4>
+                  <button
+                    onClick={goToNextMonth}
+                    style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#6BA3D4', border: 'none', cursor: 'pointer', color: 'white', fontWeight: '700' }}
+                  >
+                    →
+                  </button>
+                </div>
+                
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '10px', marginBottom: '10px' }}>
+                  {['일', '월', '화', '수', '목', '금', '토'].map((day, idx) => (
+                    <div key={idx} style={{ textAlign: 'center', fontSize: '12px', fontWeight: '700', color: '#666' }}>
+                      {day}
+                    </div>
+                  ))}
+                </div>
+                
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '10px' }}>
+                  {getCalendarDays().map((day, idx) => (
+                    <div
+                      key={idx}
+                      style={{ 
+                        position: 'relative', 
+                        aspectRatio: '1', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        borderRadius: '50%',
+                        backgroundColor: (() => {
+                          if (day.isEmpty) return 'transparent';
+                          const date = new Date(calendarYear, calendarMonth, day.date);
+                          const dateString = date.toDateString();
+                          const hasQuiz = user.quizHistory[dateString];
+                          if (hasQuiz) return '#ef4444';
+                          if (day.attended) return '#6BA3D4';
+                          return 'transparent';
+                        })()
+                      }}
+                    >
+                      {!day.isEmpty && (
+                        <>
+                          <span style={{ 
+                            fontSize: '12px', 
+                            fontWeight: '600', 
+                            color: (() => {
+                              const date = new Date(calendarYear, calendarMonth, day.date);
+                              const dateString = date.toDateString();
+                              const hasQuiz = user.quizHistory[dateString];
+                              if (hasQuiz || day.attended) return 'white';
+                              if (day.isToday) return '#6BA3D4';
+                              return '#333';
+                            })()
+                          }}>
+                            {day.date}
+                          </span>
+                          {day.isToday && !day.attended && !user.quizHistory[new Date(calendarYear, calendarMonth, day.date).toDateString()] && (
+                            <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: '2px solid #6BA3D4', pointerEvents: 'none' }}></div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {getStreakReward(user.streak) && (
+              <div style={{ background: 'linear-gradient(to right, #fef3c7, #fed7aa)', borderRadius: '12px', padding: '15px', display: 'flex', alignItems: 'center', gap: '15px' }}>
+                <span style={{ fontSize: '32px' }}>{getStreakReward(user.streak).icon}</span>
+                <div style={{ flex: 1 }}>
+                  <p style={{ fontWeight: '700', color: '#333', margin: '0 0 4px 0' }}>{getStreakReward(user.streak).text}</p>
+                  <p style={{ fontSize: '12px', color: '#666', margin: 0 }}>+{getStreakReward(user.streak).points} 보너스 포인트!</p>
+                </div>
+                <Gift color="#f97316" size={28} />
+              </div>
+            )}
+
+            {!getStreakReward(user.streak) && (
+              <p style={{ textAlign: 'center', fontSize: '12px', color: '#666', margin: 0 }}>
+                <span style={{ fontWeight: '700', color: '#f97316' }}>{7 - user.streak}일</span> 더 하면 첫 보상 획득! 🎁
+              </p>
+            )}
+          </div>
+
+          {/* 한국어 퀴즈 버튼 */}
+          <div style={{ padding: '0 20px 30px 20px' }}>
+            <button
+              onClick={() => setSelectedCategory('daily')}
+              style={{ 
+                width: '100%',
+                backgroundColor: '#ffffff',
+                borderRadius: '12px',
+                padding: '25px 20px',
+                border: 'none',
+                cursor: 'pointer',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                transition: 'all 0.3s'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                  <div style={{ fontSize: '50px' }}>📒</div>
+                  <div style={{ textAlign: 'left' }}>
+                    <h3 style={{ fontSize: '22px', fontWeight: '700', color: '#333', margin: '0 0 8px 0' }}>한국어 퀴즈</h3>
+                    <p style={{ color: '#666', fontSize: '13px', margin: 0 }}>매일 조금씩, 꾸준히 성장! 💪</p>
+                  </div>
+                </div>
+                <div style={{ fontSize: '20px', color: '#6BA3D4', fontWeight: '700' }}>→</div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (selectedCategory && !currentQuiz) {
+    return (
+      <div style={{ backgroundColor: '#f0f0f0', minHeight: '100vh', fontFamily: "'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif" }}>
+        <div style={{ maxWidth: '430px', margin: '0 auto' }}>
+          {/* 헤더 */}
+          <div style={{ backgroundColor: '#ffffff', padding: '20px', textAlign: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+            <div style={{ fontSize: '42px', fontWeight: '700', color: '#6BA3D4', letterSpacing: '1px', fontFamily: "'Arial Rounded MT Bold', Arial, sans-serif" }}>
+              Dom Dom
+            </div>
+            <div style={{ fontSize: '12px', color: '#6BA3D4', marginTop: '5px' }}>
+              외국인 노동자 도우미 앱
+            </div>
+          </div>
+
+          {/* 뒤로가기 버튼 */}
+          <div style={{ backgroundColor: '#ffffff', display: 'flex', padding: '15px 20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+            <button
+              onClick={() => setSelectedCategory(null)}
+              style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', color: '#333', fontSize: '14px', fontWeight: '600', background: 'none', border: 'none' }}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '24px', height: '24px' }}>
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+              <span>돌아가기</span>
+            </button>
+          </div>
+
+          {/* 제목 */}
+          <div style={{ backgroundColor: '#ffffff', padding: '20px', margin: '20px', borderRadius: '12px', textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+            <div style={{ fontSize: '56px', marginBottom: '10px' }}>💬</div>
+            <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#333', margin: '0 0 8px 0' }}>한국어 퀴즈</h2>
+            <p style={{ color: '#666', fontSize: '13px', margin: 0 }}>난이도를 선택하세요!</p>
+          </div>
+
+          {/* 난이도 선택 */}
+          <div style={{ padding: '0 20px 30px 20px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+            {['beginner', 'intermediate', 'advanced'].map((difficulty) => (
+              <button
+                key={difficulty}
+                onClick={() => startQuiz('daily', difficulty)}
+                style={{
+                  backgroundColor: '#ffffff',
+                  borderRadius: '12px',
+                  padding: '20px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                  transition: 'all 0.3s'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                    <div style={{
+                      width: '60px',
+                      height: '60px',
+                      background: difficulty === 'beginner' ? 'linear-gradient(135deg, #4ade80, #10b981)' : difficulty === 'intermediate' ? 'linear-gradient(135deg, #60a5fa, #3b82f6)' : 'linear-gradient(135deg, #a78bfa, #ec4899)',
+                      borderRadius: '12px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'white',
+                      fontSize: '24px',
+                      fontWeight: '700',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                    }}>
+                      {difficulty === 'beginner' ? '1' : difficulty === 'intermediate' ? '2' : '3'}
+                    </div>
+                    <div style={{ textAlign: 'left' }}>
+                      <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#333', margin: '0 0 4px 0' }}>{getDifficultyText(difficulty)}</h3>
+                      <p style={{ fontSize: '12px', color: '#666', margin: 0 }}>
+                        {difficulty === 'beginner' && '기초부터 차근차근'}
+                        {difficulty === 'intermediate' && '실력을 한 단계 올려요'}
+                        {difficulty === 'advanced' && '전문가 레벨 도전!'}
+                      </p>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: '32px' }}>
+                    {difficulty === 'beginner' && '🌱'}
+                    {difficulty === 'intermediate' && '🌿'}
+                    {difficulty === 'advanced' && '🌳'}
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ backgroundColor: '#f0f0f0', minHeight: '100vh', fontFamily: "'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif" }}>
+      <div style={{ maxWidth: '430px', margin: '0 auto' }}>
+        {/* 헤더 */}
+        <div style={{ backgroundColor: '#ffffff', padding: '20px', textAlign: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+          <div style={{ fontSize: '42px', fontWeight: '700', color: '#6BA3D4', letterSpacing: '1px', fontFamily: "'Arial Rounded MT Bold', Arial, sans-serif" }}>
+            Dom Dom
+          </div>
+          <div style={{ fontSize: '12px', color: '#6BA3D4', marginTop: '5px' }}>
+            외국인 노동자 도우미 앱
+          </div>
+        </div>
+
+        {/* 유저 정보 바 */}
+        <div style={{ backgroundColor: '#ffffff', padding: '15px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{
+              width: '48px',
+              height: '48px',
+              background: 'linear-gradient(135deg, #6BA3D4, #5a8cbd)',
+              borderRadius: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '24px'
+            }}>
+              {user.profileEmoji}
+            </div>
+            <div>
+              <p style={{ fontWeight: '700', color: '#333', margin: 0, fontSize: '13px' }}>{getLevelName(user.level)} Lv.{user.level}</p>
+              <p style={{ fontSize: '11px', color: '#666', margin: '2px 0 0 0' }}>{user.totalPoints}점</p>
+            </div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#f97316' }}>
+            <span style={{ fontSize: '18px' }}>🔥</span>
+            <span style={{ fontWeight: '700', fontSize: '14px' }}>{user.streak}일</span>
+          </div>
+        </div>
+
+        {/* 응원 메시지 */}
+        <div style={{ textAlign: 'center', padding: '20px' }}>
+          <div style={{ display: 'inline-block', backgroundColor: 'white', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', padding: '12px 20px' }}>
+            <p style={{ color: '#333', fontWeight: '600', margin: 0, fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '20px' }}>💪</span>
+              <span>화이팅! 당신은 할 수 있어요!</span>
+            </p>
+          </div>
+        </div>
+
+        {/* 퀴즈 카드 */}
+        <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '25px 20px', margin: '0 20px 30px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+            <span style={{
+              padding: '8px 14px',
+              borderRadius: '10px',
+              fontSize: '12px',
+              fontWeight: '700',
+              color: 'white',
+              background: 'linear-gradient(135deg, #6BA3D4, #5a8cbd)'
+            }}>
+              💬 한국어 퀴즈
+            </span>
+            <span style={{
+              padding: '8px 14px',
+              borderRadius: '10px',
+              fontSize: '12px',
+              fontWeight: '700',
+              color: 'white',
+              background: currentQuiz.difficulty === 'beginner' ? 'linear-gradient(135deg, #4ade80, #10b981)' : currentQuiz.difficulty === 'intermediate' ? 'linear-gradient(135deg, #60a5fa, #3b82f6)' : 'linear-gradient(135deg, #a78bfa, #ec4899)'
+            }}>
+              {getDifficultyText(currentQuiz.difficulty)}
+            </span>
+          </div>
+
+          <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#333', marginBottom: '25px', lineHeight: '1.5' }}>
+            {currentQuiz.question}
+          </h2>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '25px' }}>
+            {currentQuiz.answers.map((answer, index) => (
+              <button
+                key={index}
+                onClick={() => !showResult && handleAnswer(index)}
+                disabled={showResult}
+                style={{
+                  width: '100%',
+                  padding: '16px',
+                  borderRadius: '12px',
+                  textAlign: 'left',
+                  fontWeight: '600',
+                  fontSize: '14px',
+                  border: showResult ? 'none' : selectedAnswer === index ? '2px solid #6BA3D4' : '2px solid #e5e7eb',
+                  background: showResult
+                    ? index === currentQuiz.correct
+                      ? 'linear-gradient(135deg, #4ade80, #10b981)'
+                      : index === selectedAnswer
+                      ? 'linear-gradient(135deg, #f87171, #ec4899)'
+                      : '#f3f4f6'
+                    : selectedAnswer === index
+                    ? '#6BA3D4'
+                    : '#ffffff',
+                  color: showResult
+                    ? index === currentQuiz.correct || index === selectedAnswer
+                      ? 'white'
+                      : '#9ca3af'
+                    : selectedAnswer === index
+                    ? 'white'
+                    : '#333',
+                  cursor: showResult ? 'default' : 'pointer',
+                  boxShadow: selectedAnswer === index && !showResult ? '0 2px 8px rgba(107, 163, 212, 0.3)' : 'none',
+                  transition: 'all 0.3s'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span style={{ fontSize: '16px', fontWeight: '700' }}>{String.fromCharCode(65 + index)}</span>
+                  <span>{answer}</span>
+                </div>
+              </button>
+            ))}
+          </div>
+
+          {!showResult ? (
+            <button
+              onClick={submitAnswer}
+              disabled={selectedAnswer === null}
+              style={{
+                width: '100%',
+                padding: '16px',
+                borderRadius: '12px',
+                fontWeight: '700',
+                fontSize: '15px',
+                color: 'white',
+                border: 'none',
+                cursor: selectedAnswer === null ? 'not-allowed' : 'pointer',
+                background: selectedAnswer === null ? '#d1d5db' : 'linear-gradient(135deg, #6BA3D4, #5a8cbd)',
+                boxShadow: selectedAnswer === null ? 'none' : '0 2px 8px rgba(107, 163, 212, 0.3)',
+                transition: 'all 0.3s'
+              }}
+            >
+              답변 제출하기
+            </button>
+          ) : (
+            <div style={{ textAlign: 'center' }}>
+              <div style={{
+                marginBottom: '20px',
+                padding: '20px',
+                borderRadius: '12px',
+                background: selectedAnswer === currentQuiz.correct
+                  ? 'linear-gradient(to right, #d1fae5, #a7f3d0)'
+                  : 'linear-gradient(to right, #fee2e2, #fecaca)',
+                border: selectedAnswer === currentQuiz.correct ? '2px solid #10b981' : '2px solid #ef4444'
+              }}>
+                <p style={{ fontSize: '28px', fontWeight: '700', marginBottom: '10px' }}>
+                  {selectedAnswer === currentQuiz.correct ? '🎉 정답입니다!' : '😅 틀렸습니다'}
+                </p>
+                <p style={{ fontSize: '14px', margin: 0 }}>
+                  {selectedAnswer === currentQuiz.correct 
+                    ? `+${currentQuiz.difficulty === 'advanced' ? 15 : currentQuiz.difficulty === 'intermediate' ? 12 : 10} 경험치를 획득했습니다!` 
+                    : `정답: ${currentQuiz.answers[currentQuiz.correct]}`}
+                </p>
+              </div>
+              <button
+                onClick={() => setCurrentQuiz(null)}
+                style={{
+                  width: '100%',
+                  background: 'linear-gradient(135deg, #6b7280, #4b5563)',
+                  color: 'white',
+                  fontWeight: '700',
+                  padding: '16px',
+                  borderRadius: '12px',
+                  fontSize: '15px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                  transition: 'all 0.3s'
+                }}
+              >
+                메인으로 돌아가기
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default KoreanQuizApp;
