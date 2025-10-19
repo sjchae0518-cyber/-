@@ -1,0 +1,368 @@
+import React, { useState } from 'react';
+import { Plus } from 'lucide-react';
+
+export default function VerificationPage() {
+  const [employerName, setEmployerName] = useState('');
+  const [workerName, setWorkerName] = useState('');
+  const [currentOrganization, setCurrentOrganization] = useState('');
+  const [workerPhone, setWorkerPhone] = useState('');
+  const [employerPhone, setEmployerPhone] = useState('');
+  const [verificationCode, setVerificationCode] = useState('');
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const [surveyType, setSurveyType] = useState('');
+  
+  const employerCanvasRef = React.useRef(null);
+  const workerCanvasRef = React.useRef(null);
+  const [isDrawingEmployer, setIsDrawingEmployer] = useState(false);
+  const [isDrawingWorker, setIsDrawingWorker] = useState(false);
+
+  const startDrawing = (canvasRef, setIsDrawing) => (e) => {
+    setIsDrawing(true);
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    const rect = canvas.getBoundingClientRect();
+    ctx.beginPath();
+    ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+  };
+
+  const draw = (canvasRef, isDrawing) => (e) => {
+    if (!isDrawing) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    const rect = canvas.getBoundingClientRect();
+    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+  };
+
+  const stopDrawing = (setIsDrawing) => () => {
+    setIsDrawing(false);
+  };
+
+  const clearCanvas = (canvasRef) => () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  };
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setUploadedFile(file);
+    }
+  };
+
+  React.useEffect(() => {
+    [employerCanvasRef, workerCanvasRef].forEach(ref => {
+      if (ref.current) {
+        const canvas = ref.current;
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+      }
+    });
+  }, []);
+
+  return (
+    <div style={{ backgroundColor: '#f0f0f0', minHeight: '100vh', fontFamily: "'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif" }}>
+      <div style={{ maxWidth: '430px', margin: '0 auto' }}>
+        {/* 헤더 */}
+        <div style={{ backgroundColor: '#ffffff', padding: '20px', textAlign: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+          <div style={{ fontSize: '42px', fontWeight: '700', color: '#6BA3D4', letterSpacing: '1px', fontFamily: "'Arial Rounded MT Bold', Arial, sans-serif" }}>
+            Dom Dom
+          </div>
+          <div style={{ fontSize: '12px', color: '#6BA3D4', marginTop: '5px' }}>
+            외국인 노동자 도우미 앱
+          </div>
+        </div>
+
+        {/* 뒤로가기 버튼 */}
+        <div style={{ backgroundColor: '#ffffff', display: 'flex', padding: '15px 20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+          <button
+            onClick={() => window.history.back()}
+            style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', color: '#333', fontSize: '14px', fontWeight: '600', background: 'none', border: 'none' }}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '24px', height: '24px' }}>
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span>돌아가기</span>
+          </button>
+        </div>
+
+        {/* 페이지 제목 */}
+        <div style={{ backgroundColor: '#ffffff', padding: '20px', margin: '20px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+          <h1 style={{ fontSize: '18px', fontWeight: '700', color: '#333', margin: '0 0 12px 0', lineHeight: '1.6' }}>
+            🔄 상호평가제는 근무지를 변경할 경우 필수적으로 실시해야 하는 사항입니다.
+          </h1>
+          <p style={{ fontSize: '13px', color: '#666', margin: 0, lineHeight: '1.6' }}>
+            근무지 변경 여부 확인 절차 이후 이용 가능합니다.
+            <br />
+            📝 다음 질문에 답해주십시오.
+          </p>
+        </div>
+
+        {/* 메인 폼 카드 */}
+        <div style={{ backgroundColor: '#ffffff', padding: '20px', margin: '0 20px 20px 20px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+          {/* 고용주 이름 */}
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ fontSize: '13px', fontWeight: '600', color: '#333', display: 'block', marginBottom: '6px' }}>
+              고용주 이름
+            </label>
+            <input
+              type="text"
+              value={employerName}
+              onChange={(e) => setEmployerName(e.target.value)}
+              style={{ width: '100%', backgroundColor: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: '8px', padding: '10px 12px', fontSize: '14px', outline: 'none' }}
+              placeholder="이름을 입력하세요"
+            />
+          </div>
+
+          {/* 노동자 이름 */}
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ fontSize: '13px', fontWeight: '600', color: '#333', display: 'block', marginBottom: '6px' }}>
+              노동자 이름
+            </label>
+            <input
+              type="text"
+              value={workerName}
+              onChange={(e) => setWorkerName(e.target.value)}
+              style={{ width: '100%', backgroundColor: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: '8px', padding: '10px 12px', fontSize: '14px', outline: 'none' }}
+              placeholder="이름을 입력하세요"
+            />
+          </div>
+
+          {/* 현재 근무지 주소 */}
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ fontSize: '13px', fontWeight: '600', color: '#333', display: 'block', marginBottom: '6px' }}>
+              현재 근무지 주소
+            </label>
+            <input
+              type="text"
+              value={currentOrganization}
+              onChange={(e) => setCurrentOrganization(e.target.value)}
+              style={{ width: '100%', backgroundColor: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: '8px', padding: '10px 12px', fontSize: '14px', outline: 'none' }}
+              placeholder="주소를 입력하세요"
+            />
+          </div>
+
+          {/* 파일 업로드 */}
+          <div style={{ marginBottom: '20px' }}>
+            <p style={{ fontSize: '12px', color: '#666', marginBottom: '8px' }}>📄 노동계약서 파일을 업로드 해주세요.</p>
+            <input
+              type="file"
+              id="fileUpload"
+              accept=".pdf,.png,.jpg,.jpeg,.gif"
+              onChange={handleFileUpload}
+              style={{ display: 'none' }}
+            />
+            <label
+              htmlFor="fileUpload"
+              style={{ 
+                border: '2px dashed #d1d5db', 
+                borderRadius: '12px', 
+                padding: '20px', 
+                display: 'flex', 
+                flexDirection: 'column', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                cursor: 'pointer',
+                backgroundColor: uploadedFile ? '#f9fafb' : '#ffffff',
+                transition: 'all 0.3s'
+              }}
+            >
+              {uploadedFile ? (
+                <div style={{ textAlign: 'center' }}>
+                  <p style={{ fontSize: '14px', fontWeight: '600', color: '#333', margin: '0 0 4px 0' }}>{uploadedFile.name}</p>
+                  <p style={{ fontSize: '12px', color: '#666', margin: 0 }}>클릭하여 다른 파일 선택</p>
+                </div>
+              ) : (
+                <>
+                  <Plus size={28} color="#9ca3af" style={{ marginBottom: '8px' }} />
+                  <p style={{ fontSize: '12px', color: '#9ca3af', margin: 0 }}>PDF, 이미지 파일 업로드</p>
+                </>
+              )}
+            </label>
+          </div>
+
+          {/* 전화번호 */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '20px' }}>
+            <div>
+              <label style={{ fontSize: '12px', fontWeight: '600', color: '#333', display: 'block', marginBottom: '6px' }}>
+                📞 고용주 전화번호
+              </label>
+              <input
+                type="tel"
+                value={employerPhone}
+                onChange={(e) => setEmployerPhone(e.target.value)}
+                style={{ width: '100%', backgroundColor: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: '8px', padding: '10px 12px', fontSize: '13px', outline: 'none' }}
+                placeholder="전화번호"
+              />
+            </div>
+            <div>
+              <label style={{ fontSize: '12px', fontWeight: '600', color: '#333', display: 'block', marginBottom: '6px' }}>
+                📞 노동자 전화번호
+              </label>
+              <input
+                type="tel"
+                value={workerPhone}
+                onChange={(e) => setWorkerPhone(e.target.value)}
+                style={{ width: '100%', backgroundColor: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: '8px', padding: '10px 12px', fontSize: '13px', outline: 'none' }}
+                placeholder="전화번호"
+              />
+            </div>
+          </div>
+
+          {/* 인증번호 */}
+          <div style={{ backgroundColor: '#f8f9fa', padding: '15px', borderRadius: '12px', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+              <span style={{ fontSize: '13px', fontWeight: '600', color: '#333' }}>💬 확인 문자 보내기</span>
+              <span style={{ fontSize: '11px', color: '#666' }}>(전송된 문자의 숫자를 입력해주세요)</span>
+            </div>
+            <input
+              type="text"
+              value={verificationCode}
+              onChange={(e) => setVerificationCode(e.target.value)}
+              style={{ width: '100%', backgroundColor: '#ffffff', border: '1px solid #e5e7eb', borderRadius: '8px', padding: '10px 12px', fontSize: '14px', outline: 'none' }}
+              placeholder="인증번호 입력"
+            />
+          </div>
+
+          {/* 서명 안내 */}
+          <div style={{ marginBottom: '15px' }}>
+            <p style={{ fontSize: '13px', color: '#333', fontWeight: '500', margin: 0 }}>
+              ✨ 근무지 변경이 사실이라면 아래 서명하시오.
+            </p>
+          </div>
+
+          {/* 서명 캔버스 */}
+          <div style={{ marginBottom: '15px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                  <label style={{ fontSize: '12px', fontWeight: '600', color: '#333' }}>고용주</label>
+                  <button
+                    onClick={clearCanvas(employerCanvasRef)}
+                    style={{ fontSize: '11px', color: '#6BA3D4', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer' }}
+                  >
+                    지우기
+                  </button>
+                </div>
+                <canvas
+                  ref={employerCanvasRef}
+                  onMouseDown={startDrawing(employerCanvasRef, setIsDrawingEmployer)}
+                  onMouseMove={draw(employerCanvasRef, isDrawingEmployer)}
+                  onMouseUp={stopDrawing(setIsDrawingEmployer)}
+                  onMouseLeave={stopDrawing(setIsDrawingEmployer)}
+                  style={{ border: '2px solid #e5e7eb', borderRadius: '12px', width: '100%', height: '120px', backgroundColor: '#ffffff', cursor: 'crosshair', touchAction: 'none' }}
+                />
+              </div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                  <label style={{ fontSize: '12px', fontWeight: '600', color: '#333' }}>노동자</label>
+                  <button
+                    onClick={clearCanvas(workerCanvasRef)}
+                    style={{ fontSize: '11px', color: '#6BA3D4', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer' }}
+                  >
+                    지우기
+                  </button>
+                </div>
+                <canvas
+                  ref={workerCanvasRef}
+                  onMouseDown={startDrawing(workerCanvasRef, setIsDrawingWorker)}
+                  onMouseMove={draw(workerCanvasRef, isDrawingWorker)}
+                  onMouseUp={stopDrawing(setIsDrawingWorker)}
+                  onMouseLeave={stopDrawing(setIsDrawingWorker)}
+                  style={{ border: '2px solid #e5e7eb', borderRadius: '12px', width: '100%', height: '120px', backgroundColor: '#ffffff', cursor: 'crosshair', touchAction: 'none' }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* 확인 버튼 */}
+          <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+            <button style={{ 
+              padding: '10px 24px', 
+              border: '2px solid #6BA3D4', 
+              borderRadius: '20px', 
+              backgroundColor: '#ffffff', 
+              color: '#6BA3D4', 
+              fontSize: '14px', 
+              fontWeight: '600', 
+              cursor: 'pointer',
+              transition: 'all 0.3s'
+            }}>
+              확인
+            </button>
+          </div>
+
+          {/* 설문 유형 선택 */}
+          <div style={{ marginBottom: '20px' }}>
+            <p style={{ fontSize: '14px', fontWeight: '600', color: '#333', textAlign: 'center', marginBottom: '12px' }}>
+              설문 유형을 선택해주세요
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <button
+                onClick={() => setSurveyType('worker')}
+                style={{
+                  padding: '14px',
+                  borderRadius: '12px',
+                  border: surveyType === 'worker' ? '2px solid #6BA3D4' : '2px solid #e5e7eb',
+                  backgroundColor: surveyType === 'worker' ? '#6BA3D4' : '#ffffff',
+                  color: surveyType === 'worker' ? '#ffffff' : '#333',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s'
+                }}
+              >
+                노동자 설문하기
+              </button>
+              <button
+                onClick={() => setSurveyType('employer')}
+                style={{
+                  padding: '14px',
+                  borderRadius: '12px',
+                  border: surveyType === 'employer' ? '2px solid #6BA3D4' : '2px solid #e5e7eb',
+                  backgroundColor: surveyType === 'employer' ? '#6BA3D4' : '#ffffff',
+                  color: surveyType === 'employer' ? '#ffffff' : '#333',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s'
+                }}
+              >
+                고용주 설문하기
+              </button>
+            </div>
+          </div>
+
+          {/* 다음 버튼 */}
+          <div style={{ textAlign: 'center' }}>
+            <button
+              disabled={!surveyType}
+              style={{
+                padding: '14px 40px',
+                borderRadius: '20px',
+                border: 'none',
+                backgroundColor: surveyType ? '#6BA3D4' : '#d1d5db',
+                color: '#ffffff',
+                fontSize: '15px',
+                fontWeight: '700',
+                cursor: surveyType ? 'pointer' : 'not-allowed',
+                boxShadow: surveyType ? '0 2px 8px rgba(107, 163, 212, 0.3)' : 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                transition: 'all 0.3s'
+              }}
+            >
+              다음
+              <span>→</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
