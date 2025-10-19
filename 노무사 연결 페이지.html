@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dom Dom - 노무사/변호사 연결</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f0f0f0;
+            max-width: 430px;
+            margin: 0 auto;
+            overflow-x: hidden;
+            padding-bottom: 30px;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 42px;
+            font-weight: 700;
+            color: #6BA3D4;
+            letter-spacing: 1px;
+            font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+        }
+
+        .logo-subtitle {
+            font-size: 12px;
+            color: #6BA3D4;
+            margin-top: 5px;
+        }
+
+        .icon-bar {
+            background-color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .back-button:hover {
+            color: #6BA3D4;
+        }
+
+        .back-arrow {
+            width: 24px;
+            height: 24px;
+        }
+
+        .page-title {
+            background-color: #ffffff;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .page-title h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .filter-section {
+            padding: 0 20px;
+            margin-bottom: 15px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .filter-buttons::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .filter-buttons::-webkit-scrollbar-thumb {
+            background-color: #6BA3D4;
+            border-radius: 2px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #6BA3D4;
+            background-color: #ffffff;
+            color: #6BA3D4;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            background-color: #f0f8ff;
+        }
+
+        .filter-btn.active {
+            background-color: #6BA3D4;
+            color: white;
+        }
+
+        .lawyer-list {
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .lawyer-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .lawyer-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .lawyer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .lawyer-info {
+            flex: 1;
+        }
+
+        .lawyer-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .lawyer-title {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .lawyer-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background-color: #6BA3D4;
+            color: white;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .lawyer-rating {
+            text-align: right;
+        }
+
+        .rating-stars {
+            color: #ffc107;
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+
+        .rating-number {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .lawyer-specialties {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .specialty-tag {
+            padding: 4px 10px;
+            background-color: #f8f9fa;
+            color: #333;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .lawyer-description {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .lawyer-stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #6BA3D4;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .lawyer-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .action-btn.primary {
+            background-color: #6BA3D4;
+            color: white;
+        }
+
+        .action-btn.primary:hover {
+            background-color: #5a92c3;
+        }
+
+        .action-btn.secondary {
+            background-color: #f8f9fa;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .action-btn.secondary:hover {
+            background-color: #e9ecef;
+        }
+
+        .emergency-banner {
+            margin: 0 20px 15px 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+            cursor: pointer;
+        }
+
+        .emergency-icon {
+            font-size: 28px;
+        }
+
+        .emergency-text {
+            flex: 1;
+        }
+
+        .emergency-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .emergency-number {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+            white-space: pre-line;
+            text-align: center;
+        }
+
+        .toast.show {
+            opacity: 0.9;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            overflow-y: auto;
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 20px;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            max-width: 390px;
+            width: calc(100% - 40px);
+            margin: auto;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            overflow: hidden;
+            animation: slideUp 0.3s ease-out;
+            max-height: 95vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #6BA3D4 0%, #5a92c3 100%);
+            color: white;
+            padding: 15px 20px 15px 20px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 26px;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .profile-avatar {
+            width: 60px;
+            height: 60px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .profile-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .profile-title {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 6px;
+        }
+
+        .profile-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .modal-body {
+            padding: 20px;
+            max-height: 70vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .modal-body.consult-form {
+            max-height: 80vh;
+            padding: 15px 20px;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background-color: #6BA3D4;
+            border-radius: 3px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background-color: #f0f0f0;
+        }
+
+        .profile-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-content {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .section-content ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .section-content li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .section-content li:last-child {
+            border-bottom: none;
+        }
+
+        .language-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .language-tag {
+            padding: 6px 12px;
+            background-color: #6BA3D4;
+            color: white;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .case-item {
+            background-color: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .case-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .case-desc {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .contact-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .modal-footer {
+            padding: 12px 20px 15px 20px;
+            background-color: #f8f9fa;
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .modal-action-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .modal-action-btn.primary {
+            background-color: #6BA3D4;
+            color: white;
+        }
+
+        .modal-action-btn.primary:hover {
+            background-color: #5a92c3;
+        }
+
+        .consult-form {
+            padding: 0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group:last-of-type {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .form-label .required {
+            color: #dc3545;
+            margin-left: 2px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #6BA3D4;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: inherit;
+            background-color: white;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #6BA3D4;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: inherit;
+            min-height: 80px;
+            resize: vertical;
+            transition: border-color 0.3s;
+            line-height: 1.5;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: #6BA3D4;
+        }
+
+        .form-help {
+            font-size: 10px;
+            color: #666;
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 13px;
+            background-color: #6BA3D4;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 5px;
+        }
+
+        .submit-btn:hover {
+            background-color: #5a92c3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(107, 163, 212, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">Dom Dom</div>
+        <div class="logo-subtitle">외국인 노동자 도우미 앱</div>
+    </div>
+
+    <div class="icon-bar">
+        <div class="back-button" onclick="goBack()">
+            <svg class="back-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span>홈으로</span>
+        </div>
+    </div>
+
+    <div class="page-title">
+        <h1>⚖️ 노무사/변호사 연결</h1>
+        <p>노동 문제 전문가와 무료 상담을 받아보세요. 외국인 노동자 지원 경험이 풍부한 전문가들입니다.</p>
+    </div>
+
+    <div class="emergency-banner" onclick="callEmergency()">
+        <div class="emergency-icon">🚨</div>
+        <div class="emergency-text">
+            <div class="emergency-title">긴급 상담 필요하신가요?</div>
+            <div class="emergency-number">☎ 1350 (24시간)</div>
+        </div>
+    </div>
+
+    <div class="filter-section">
+        <div class="filter-buttons">
+            <button class="filter-btn active" onclick="filterLawyers('all', event)">전체</button>
+            <button class="filter-btn" onclick="filterLawyers('wage', event)">임금체불</button>
+            <button class="filter-btn" onclick="filterLawyers('accident', event)">산업재해</button>
+            <button class="filter-btn" onclick="filterLawyers('contract', event)">계약문제</button>
+            <button class="filter-btn" onclick="filterLawyers('harassment', event)">폭행/성희롱</button>
+            <button class="filter-btn" onclick="filterLawyers('immigration', event)">체류문제</button>
+        </div>
+    </div>
+
+    <div class="lawyer-list" id="lawyerList">
+        <div class="lawyer-card" data-specialty="wage accident contract">
+            <div class="lawyer-header">
+                <div class="lawyer-info">
+                    <div class="lawyer-name">김민수 노무사</div>
+                    <div class="lawyer-title">민수 노무법인 대표</div>
+                    <span class="lawyer-badge">외국인 전문</span>
+                </div>
+                <div class="lawyer-rating">
+                    <div class="rating-stars">★★★★★</div>
+                    <div class="rating-number">4.9 (127건)</div>
+                </div>
+            </div>
+            
+            <div class="lawyer-specialties">
+                <span class="specialty-tag">💸 임금체불</span>
+                <span class="specialty-tag">🏥 산업재해</span>
+                <span class="specialty-tag">📝 근로계약</span>
+            </div>
+            
+            <div class="lawyer-description">
+                10년 이상 외국인 노동자 권익 보호 활동. 영어, 중국어, 베트남어 상담 가능. 무료 초기 상담 제공.
+            </div>
+            
+            <div class="lawyer-stats">
+                <div class="stat-item">
+                    <div class="stat-value">350+</div>
+                    <div class="stat-label">해결 건수</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">95%</div>
+                    <div class="stat-label">승소율</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">24H</div>
+                    <div class="stat-label">답변 시간</div>
+                </div>
+            </div>
+            
+            <div class="lawyer-actions">
+                <button class="action-btn secondary" onclick="showProfile('김민수')">프로필 보기</button>
+                <button class="action-btn primary" onclick="requestConsult('김민수')">상담 신청</button>
+            </div>
+        </div>
+
+        <div class="lawyer-card" data-specialty="harassment immigration">
+            <div class="lawyer-header">
+                <div class="lawyer-info">
+                    <div class="lawyer-name">이서연 변호사</div>
+                    <div class="lawyer-title">정의 법률사무소</div>
+                    <span class="lawyer-badge">인권 전문</span>
+                </div>
+                <div class="lawyer-rating">
+                    <div class="rating-stars">★★★★★</div>
+                    <div class="rating-number">4.8 (89건)</div>
+                </div>
+            </div>
+            
+            <div class="lawyer-specialties">
+                <span class="specialty-tag">🚨 성희롱/폭행</span>
+                <span class="specialty-tag">✈️ 체류문제</span>
+                <span class="specialty-tag">⚖️ 인권침해</span>
+            </div>
+            
+            <div class="lawyer-description">
+                외국인 인권 보호 전문. 성희롱, 폭행 사건 다수 승소. 영어, 필리핀어 상담 가능. 긴급 상황 24시간 대응.
+            </div>
+            
+            <div class="lawyer-stats">
+                <div class="stat-item">
+                    <div class="stat-value">200+</div>
+                    <div class="stat-label">해결 건수</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">92%</div>
+                    <div class="stat-label">승소율</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">1H</div>
+                    <div class="stat-label">긴급 답변</div>
+                </div>
+            </div>
+            
+            <div class="lawyer-actions">
+                <button class="action-btn secondary" onclick="showProfile('이서연')">프로필 보기</button>
+                <button class="action-btn primary" onclick="requestConsult('이서연')">상담 신청</button>
+            </div>
+        </div>
+
+        <div class="lawyer-card" data-specialty="wage contract">
+            <div class="lawyer-header">
+                <div class="lawyer-info">
+                    <div class="lawyer-name">박준혁 노무사</div>
+                    <div class="lawyer-title">노동권익센터 소장</div>
+                    <span class="lawyer-badge">임금 전문</span>
+                </div>
+                <div class="lawyer-rating">
+                    <div class="rating-stars">★★★★☆</div>
+                    <div class="rating-number">4.7 (156건)</div>
+                </div>
+            </div>
+            
+            <div class="lawyer-specialties">
+                <span class="specialty-tag">💸 임금체불</span>
+                <span class="specialty-tag">⏰ 장시간근로</span>
+                <span class="specialty-tag">📝 계약위반</span>
+            </div>
+            
+            <div class="lawyer-description">
+                임금체불 전문. 평균 3주 내 임금 회수. 중국어, 몽골어 상담 가능. 성공 보수제 운영.
+            </div>
+            
+            <div class="lawyer-stats">
+                <div class="stat-item">
+                    <div class="stat-value">420+</div>
+                    <div class="stat-label">해결 건수</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">98%</div>
+                    <div class="stat-label">회수율</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">3주</div>
+                    <div class="stat-label">평균 기간</div>
+                </div>
+            </div>
+            
+            <div class="lawyer-actions">
+                <button class="action-btn secondary" onclick="showProfile('박준혁')">프로필 보기</button>
+                <button class="action-btn primary" onclick="requestConsult('박준혁')">상담 신청</button>
+            </div>
+        </div>
+
+        <div class="lawyer-card" data-specialty="accident contract">
+            <div class="lawyer-header">
+                <div class="lawyer-info">
+                    <div class="lawyer-name">최지은 노무사</div>
+                    <div class="lawyer-title">안전노동법률센터</div>
+                    <span class="lawyer-badge">재해 전문</span>
+                </div>
+                <div class="lawyer-rating">
+                    <div class="rating-stars">★★★★★</div>
+                    <div class="rating-number">4.9 (203건)</div>
+                </div>
+            </div>
+            
+            <div class="lawyer-specialties">
+                <span class="specialty-tag">🏥 산업재해</span>
+                <span class="specialty-tag">💊 요양급여</span>
+                <span class="specialty-tag">💰 보상금</span>
+            </div>
+            
+            <div class="lawyer-description">
+                산업재해 보상 전문. 요양급여, 휴업급여, 장해급여 청구 지원. 영어, 태국어 상담 가능.
+            </div>
+            
+            <div class="lawyer-stats">
+                <div class="stat-item">
+                    <div class="stat-value">500+</div>
+                    <div class="stat-label">해결 건수</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">96%</div>
+                    <div class="stat-label">승인율</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">12H</div>
+                    <div class="stat-label">답변 시간</div>
+                </div>
+            </div>
+            
+            <div class="lawyer-actions">
+                <button class="action-btn secondary" onclick="showProfile('최지은')">프로필 보기</button>
+                <button class="action-btn primary" onclick="requestConsult('최지은')">상담 신청</button>
+            </div>
+        </div>
+
+        <div class="lawyer-card" data-specialty="immigration harassment">
+            <div class="lawyer-header">
+                <div class="lawyer-info">
+                    <div class="lawyer-name">정태민 변호사</div>
+                    <div class="lawyer-title">국제법률사무소 대표</div>
+                    <span class="lawyer-badge">출입국 전문</span>
+                </div>
+                <div class="lawyer-rating">
+                    <div class="rating-stars">★★★★☆</div>
+                    <div class="rating-number">4.6 (74건)</div>
+                </div>
+            </div>
+            
+            <div class="lawyer-specialties">
+                <span class="specialty-tag">✈️ 비자문제</span>
+                <span class="specialty-tag">🪪 체류자격</span>
+                <span class="specialty-tag">📋 행정소송</span>
+            </div>
+            
+            <div class="lawyer-description">
+                출입국 및 체류 문제 전문. 불법체류 자진신고 지원. 영어, 러시아어, 우즈베크어 상담 가능.
+            </div>
+            
+            <div class="lawyer-stats">
+                <div class="stat-item">
+                    <div class="stat-value">180+</div>
+                    <div class="stat-label">해결 건수</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">88%</div>
+                    <div class="stat-label">승소율</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">48H</div>
+                    <div class="stat-label">답변 시간</div>
+                </div>
+            </div>
+            
+            <div class="lawyer-actions">
+                <button class="action-btn secondary" onclick="showProfile('정태민')">프로필 보기</button>
+                <button class="action-btn primary" onclick="requestConsult('정태민')">상담 신청</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="profileModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="modal-close" onclick="closeProfile()">×</button>
+                <div class="profile-avatar" id="profileAvatar">👨‍💼</div>
+                <div class="profile-name" id="profileName">김민수 노무사</div>
+                <div class="profile-title" id="profilePosition">민수 노무법인 대표</div>
+                <span class="profile-badge" id="profileBadge">외국인 전문</span>
+            </div>
+            
+            <div class="modal-body" id="profileBody"></div>
+            
+            <div class="modal-footer">
+                <button class="modal-action-btn primary" onclick="requestConsultFromProfile()">상담 신청하기</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="consultModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="modal-close" onclick="closeConsultForm()">×</button>
+                <div class="profile-avatar">📝</div>
+                <div class="profile-name">상담 신청서</div>
+                <div class="profile-title" id="consultLawyerName">김민수 노무사</div>
+            </div>
+            
+            <div class="modal-body consult-form">
+                <form id="consultForm" onsubmit="submitConsult(event)">
+                    <div class="form-group">
+                        <label class="form-label">이름 <span class="required">*</span></label>
+                        <input type="text" class="form-input" name="name" placeholder="홍길동" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">연락처 <span class="required">*</span></label>
+                        <input type="tel" class="form-input" name="phone" placeholder="010-1234-5678" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">상담 희망 분야 <span class="required">*</span></label>
+                        <select class="form-select" name="category" required>
+                            <option value="">선택해주세요</option>
+                            <option value="wage">💸 임금체불</option>
+                            <option value="accident">🏥 산업재해</option>
+                            <option value="contract">📝 근로계약 문제</option>
+                            <option value="overwork">⏰ 장시간 근로</option>
+                            <option value="harassment">🚨 성희롱/폭행</option>
+                            <option value="passport">🪪 여권/신분증 압수</option>
+                            <option value="immigration">✈️ 체류 문제</option>
+                            <option value="housing">🏚️ 주거 환경</option>
+                            <option value="other">기타</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">상담 내용 <span class="required">*</span></label>
+                        <textarea class="form-textarea" name="content" placeholder="상담받고 싶은 내용을 자세히 작성해주세요.&#10;&#10;예시:&#10;- 3개월 동안 임금을 받지 못했습니다&#10;- 회사에서 여권을 돌려주지 않습니다&#10;- 근로계약서와 다른 일을 시킵니다" required></textarea>
+                        <div class="form-help">가능한 자세히 작성하면 더 정확한 상담을 받을 수 있습니다.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">희망 상담 방법</label>
+                        <select class="form-select" name="method">
+                            <option value="phone">📱 전화 상담</option>
+                            <option value="visit">🏢 방문 상담</option>
+                            <option value="video">💻 화상 상담</option>
+                            <option value="message">💬 메시지 상담</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="submit-btn">상담 신청하기</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const profiles = {
+            '김민수': {
+                avatar: '👨‍💼',
+                position: '민수 노무법인 대표',
+                badge: '외국인 전문',
+                career: [
+                    '현) 민수 노무법인 대표 노무사 (2015~현재)',
+                    '전) 서울지방노동청 근로감독관 (2010~2015)',
+                    '전) 대한노무사회 외국인근로자지원센터 상담위원'
+                ],
+                education: [
+                    '고려대학교 법학과 졸업',
+                    '노무사 자격 취득 (2010)',
+                    '외국인근로자 전문상담사 인증'
+                ],
+                specialties: '임금체불, 산업재해, 근로계약 위반, 부당해고, 근로시간 위반 사건을 주로 다루며, 특히 외국인 노동자의 권리 보호에 전문성을 가지고 있습니다.',
+                languages: ['한국어', '영어', '중국어', '베트남어'],
+                cases: [
+                    {
+                        title: '건설현장 임금체불 사건',
+                        desc: '6개월간 체불된 임금 4,500만원 전액 회수 성공'
+                    },
+                    {
+                        title: '제조업 산업재해 보상',
+                        desc: '손가락 절단 사고 피해 근로자에게 1억 2천만원 보상금 획득'
+                    }
+                ],
+                fee: '초기 상담 무료 / 성공보수제 (회수액의 15%)',
+                phone: '02-1234-5678',
+                email: 'minsu.kim@labor.com'
+            },
+            '이서연': {
+                avatar: '👩‍💼',
+                position: '정의 법률사무소',
+                badge: '인권 전문',
+                career: [
+                    '현) 정의 법률사무소 변호사 (2013~현재)',
+                    '전) 서울시 외국인근로자센터 자문변호사 (2011~2013)',
+                    '전) 법무법인 평등 변호사'
+                ],
+                education: [
+                    '서울대학교 법학전문대학원 졸업',
+                    '변호사 자격 취득 (2011)',
+                    '국제인권법 전문가 과정 수료'
+                ],
+                specialties: '성희롱, 성폭력, 폭행, 차별 등 인권침해 사건과 출입국 관련 법률 문제를 전문으로 다룹니다. 피해자 보호를 최우선으로 합니다.',
+                languages: ['한국어', '영어', '필리핀어', '태국어'],
+                cases: [
+                    {
+                        title: '직장 내 성희롱 사건',
+                        desc: '피해 근로자 보호 및 가해자 처벌, 손해배상 3,000만원 승소'
+                    },
+                    {
+                        title: '불법체류자 인권침해',
+                        desc: '강제추방 방지 및 체류자격 회복 성공'
+                    }
+                ],
+                fee: '초기 상담 무료 / 착수금 50만원 / 성공보수 협의',
+                phone: '02-2345-6789',
+                email: 'seoyeon.lee@justice.com'
+            },
+            '박준혁': {
+                avatar: '👨‍⚖️',
+                position: '노동권익센터 소장',
+                badge: '임금 전문',
+                career: [
+                    '현) 노동권익센터 소장 (2012~현재)',
+                    '전) 근로복지공단 심사위원 (2008~2012)',
+                    '전) 중소기업 인사노무 컨설턴트'
+                ],
+                education: [
+                    '연세대학교 경영학과 졸업',
+                    '노무사 자격 취득 (2008)',
+                    '임금관리사 1급'
+                ],
+                specialties: '임금체불, 퇴직금 미지급, 최저임금 위반 사건에 특화되어 있으며, 평균 3주 내 임금 회수 성공률이 매우 높습니다.',
+                languages: ['한국어', '중국어', '몽골어'],
+                cases: [
+                    {
+                        title: '음식점 임금체불 집단사건',
+                        desc: '15명 외국인 근로자 체불임금 총 8,000만원 회수'
+                    },
+                    {
+                        title: '최저임금 위반 및 야간수당',
+                        desc: '미지급 야간수당 및 최저임금 차액 2,200만원 받아냄'
+                    }
+                ],
+                fee: '초기 상담 무료 / 성공보수제 (회수액의 12%)',
+                phone: '02-3456-7890',
+                email: 'junhyuk.park@labor-center.com'
+            },
+            '최지은': {
+                avatar: '👩‍⚕️',
+                position: '안전노동법률센터',
+                badge: '재해 전문',
+                career: [
+                    '현) 안전노동법률센터 대표 노무사 (2014~현재)',
+                    '전) 근로복지공단 산재보상부 근무 (2009~2014)',
+                    '전) 산업안전보건공단 자문위원'
+                ],
+                education: [
+                    '이화여자대학교 법학과 졸업',
+                    '노무사 자격 취득 (2009)',
+                    '산업안전기사 자격증'
+                ],
+                specialties: '산업재해 인정, 요양급여, 휴업급여, 장해급여, 유족급여 등 산재보상 전반을 다루며, 산재 불승인 재심사 청구에서 높은 승률을 자랑합니다.',
+                languages: ['한국어', '영어', '태국어', '캄보디아어'],
+                cases: [
+                    {
+                        title: '공장 화학물질 중독 사건',
+                        desc: '산재 불승인 → 재심사 청구로 승인, 요양급여 및 장해급여 5,000만원'
+                    },
+                    {
+                        title: '건설현장 추락사고',
+                        desc: '유족에게 총 2억 5천만원 보상금 및 손해배상금 지급'
+                    }
+                ],
+                fee: '초기 상담 무료 / 성공보수제 (보상액의 10%)',
+                phone: '02-4567-8901',
+                email: 'jieun.choi@safety-labor.com'
+            },
+            '정태민': {
+                avatar: '👨‍✈️',
+                position: '국제법률사무소 대표',
+                badge: '출입국 전문',
+                career: [
+                    '현) 국제법률사무소 대표변호사 (2011~현재)',
+                    '전) 법무부 출입국외국인정책본부 자문위원 (2008~2011)',
+                    '전) 외국인력지원센터 법률상담위원'
+                ],
+                education: [
+                    '한국외국어대학교 법학과 졸업',
+                    '변호사 자격 취득 (2008)',
+                    '이민법 전문변호사 인증'
+                ],
+                specialties: '비자 문제, 체류자격 변경, 불법체류 자진신고, 강제퇴거 방지, 귀화 신청 등 출입국 관련 모든 법률 업무를 전문으로 합니다.',
+                languages: ['한국어', '영어', '러시아어', '우즈베크어'],
+                cases: [
+                    {
+                        title: '불법체류 자진신고 지원',
+                        desc: '출국명령으로 전환하여 재입국 금지 기간 최소화 성공'
+                    },
+                    {
+                        title: 'E-9 비자 → F-2 체류자격 변경',
+                        desc: '장기체류자 거주자격 취득 성공 (3건)'
+                    }
+                ],
+                fee: '초기 상담 5만원 / 사건 착수금 70만원~',
+                phone: '02-5678-9012',
+                email: 'taemin.jung@intl-law.com'
+            }
+        };
+
+        let currentProfile = '';
+
+        function goBack() {
+            showToast('홈 페이지로 돌아갑니다.');
+            setTimeout(() => {
+                window.history.back();
+            }, 500);
+        }
+
+        function callEmergency() {
+            showToast('1350으로 전화 연결합니다.');
+        }
+
+        function filterLawyers(category, event) {
+            const cards = document.querySelectorAll('.lawyer-card');
+            const buttons = document.querySelectorAll('.filter-btn');
+            
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (category === 'all') {
+                cards.forEach(card => card.style.display = 'block');
+                showToast('전체 노무사/변호사를 표시합니다.');
+            } else {
+                let count = 0;
+                cards.forEach(card => {
+                    const specialties = card.getAttribute('data-specialty');
+                    if (specialties.includes(category)) {
+                        card.style.display = 'block';
+                        count++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                showToast(count + '명의 전문가를 찾았습니다.');
+            }
+        }
+
+        function showProfile(name) {
+            currentProfile = name;
+            const profile = profiles[name];
+            
+            if (!profile) return;
+            
+            document.getElementById('profileAvatar').textContent = profile.avatar;
+            document.getElementById('profileName').textContent = name;
+            document.getElementById('profilePosition').textContent = profile.position;
+            document.getElementById('profileBadge').textContent = profile.badge;
+            
+            const bodyHTML = `
+                <div class="profile-section">
+                    <div class="section-title">📋 주요 경력</div>
+                    <div class="section-content">
+                        <ul>
+                            ${profile.career.map(item => '<li>' + item + '</li>').join('')}
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="profile-section">
+                    <div class="section-title">🎓 학력 및 자격</div>
+                    <div class="section-content">
+                        <ul>
+                            ${profile.education.map(item => '<li>' + item + '</li>').join('')}
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="profile-section">
+                    <div class="section-title">⚖️ 전문 분야</div>
+                    <div class="section-content">
+                        ${profile.specialties}
+                    </div>
+                </div>
+                
+                <div class="profile-section">
+                    <div class="section-title">🌏 상담 가능 언어</div>
+                    <div class="language-tags">
+                        ${profile.languages.map(lang => '<span class="language-tag">' + lang + '</span>').join('')}
+                    </div>
+                </div>
+                
+                <div class="profile-section">
+                    <div class="section-title">✨ 주요 성공 사례</div>
+                    ${profile.cases.map(c => `
+                        <div class="case-item">
+                            <div class="case-title">${c.title}</div>
+                            <div class="case-desc">${c.desc}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="profile-section">
+                    <div class="section-title">💰 상담 비용</div>
+                    <div class="section-content">
+                        ${profile.fee}
+                    </div>
+                </div>
+                
+                <div class="profile-section">
+                    <div class="section-title">📞 연락처</div>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <span>📱</span>
+                            <span>${profile.phone}</span>
+                        </div>
+                        <div class="contact-item">
+                            <span>📧</span>
+                            <span>${profile.email}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('profileBody').innerHTML = bodyHTML;
+            document.getElementById('profileModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeProfile() {
+            document.getElementById('profileModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        function requestConsult(name) {
+            currentProfile = name;
+            document.getElementById('consultLawyerName').textContent = name;
+            document.getElementById('consultModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function requestConsultFromProfile() {
+            closeProfile();
+            setTimeout(function() {
+                document.getElementById('consultLawyerName').textContent = currentProfile;
+                document.getElementById('consultModal').classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }, 300);
+        }
+
+        function closeConsultForm() {
+            document.getElementById('consultModal').classList.remove('show');
+            document.getElementById('consultForm').reset();
+            document.body.style.overflow = 'auto';
+        }
+
+        function submitConsult(event) {
+            event.preventDefault();
+            
+            closeConsultForm();
+            
+            setTimeout(function() {
+                showToast('✅ ' + currentProfile + '님에게 상담 신청이 완료되었습니다!\n빠른 시일 내에 연락드리겠습니다.');
+            }, 300);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(function() {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        document.addEventListener('click', function(event) {
+            const profileModal = document.getElementById('profileModal');
+            const consultModal = document.getElementById('consultModal');
+            
+            if (event.target === profileModal) {
+                closeProfile();
+            }
+            if (event.target === consultModal) {
+                closeConsultForm();
+            }
+        });
+    </script>
+</body>
+</html>
