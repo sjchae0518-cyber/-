@@ -24,9 +24,7 @@
             padding: 20px;
             text-align: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            position: relative;
         }
 
         .logo {
@@ -43,21 +41,39 @@
             margin-top: 5px;
         }
 
-        .back-button {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #333;
-            transition: all 0.3s;
+        .icon-bar {
+            background-color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        .back-button:hover {
+        .home-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        .home-button:hover {
+            background-color: #f8f9fa;
             color: #6BA3D4;
+        }
+
+        .home-icon {
+            width: 24px;
+            height: 24px;
+            color: currentColor;
         }
 
         .main-content {
@@ -289,9 +305,19 @@
 </head>
 <body>
     <div class="header">
-        <button class="back-button" onclick="goBack()">←</button>
         <div class="logo">Dom Dom</div>
         <div class="logo-subtitle">외국인 노동자 도우미 앱</div>
+    </div>
+
+    <div class="icon-bar">
+        <button class="home-button" onclick="goHome()">
+            <svg class="home-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>홈으로</span>
+        </button>
+        <div style="flex: 1;"></div>
     </div>
 
     <div class="main-content">
@@ -551,11 +577,18 @@
             }, 1500);
         }
 
-        function goBack() {
-            if (confirm('작성 중인 내용이 사라집니다. 돌아가시겠습니까?')) {
-                showToast('이전 페이지로 돌아갑니다.');
+        function goHome() {
+            if (Object.keys(answers).length > 0) {
+                if (confirm('작성 중인 내용이 사라집니다. 홈으로 돌아가시겠습니까?')) {
+                    showToast('홈으로 돌아갑니다.');
+                    setTimeout(() => {
+                        // window.location.href = 'index.html';
+                    }, 1000);
+                }
+            } else {
+                showToast('홈으로 돌아갑니다.');
                 setTimeout(() => {
-                    // window.history.back();
+                    // window.location.href = 'index.html';
                 }, 1000);
             }
         }
