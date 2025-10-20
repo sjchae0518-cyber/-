@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dom Dom - 평가 완료</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f0f0f0;
+            max-width: 430px;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 42px;
+            font-weight: 700;
+            color: #6BA3D4;
+            letter-spacing: 1px;
+            font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+        }
+
+        .logo-subtitle {
+            font-size: 12px;
+            color: #6BA3D4;
+            margin-top: 5px;
+        }
+
+        .icon-bar {
+            background-color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .home-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        .home-button:hover {
+            background-color: #f8f9fa;
+            color: #6BA3D4;
+        }
+
+        .home-icon {
+            width: 24px;
+            height: 24px;
+            color: currentColor;
+        }
+
+        .main-content {
+            padding: 60px 20px 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 200px);
+        }
+
+        .success-icon {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 40px;
+            animation: checkmark 0.8s ease-in-out;
+        }
+
+        @keyframes checkmark {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-circle {
+            fill: none;
+            stroke: #28a745;
+            stroke-width: 3;
+            stroke-linecap: round;
+        }
+
+        .success-check {
+            fill: none;
+            stroke: #28a745;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            animation: draw-check 0.5s ease-in-out 0.3s forwards;
+        }
+
+        @keyframes draw-check {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        .completion-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .completion-subtext {
+            font-size: 15px;
+            color: #666;
+            text-align: center;
+            line-height: 1.6;
+            margin-bottom: 50px;
+        }
+
+        .close-button {
+            background-color: #6BA3D4;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 18px 60px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .close-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            background-color: #5a92c3;
+        }
+
+        .info-box {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .info-value {
+            font-size: 15px;
+            font-weight: 700;
+            color: #6BA3D4;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .toast.show {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">Dom Dom</div>
+        <div class="logo-subtitle">외국인 노동자 도우미 앱</div>
+    </div>
+
+    <div class="icon-bar">
+        <button class="home-button" onclick="goHome()">
+            <svg class="home-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>홈으로</span>
+        </button>
+        <div style="flex: 1;"></div>
+    </div>
+
+    <div class="main-content">
+        <svg class="success-icon" viewBox="0 0 150 150">
+            <circle class="success-circle" cx="75" cy="75" r="70"/>
+            <polyline class="success-check" points="45,75 65,95 105,55"/>
+        </svg>
+
+        <div class="completion-text">응답이 기록되었습니다</div>
+        <div class="completion-subtext">
+            설문에 응해주셔서 감사합니다
+        </div>
+
+        <div class="info-box">
+            <div class="info-item">
+                <span class="info-label">응답 완료일</span>
+                <span class="info-value" id="completionDate"></span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">응답 문항 수</span>
+                <span class="info-value">10개</span>
+            </div>
+        </div>
+
+        <button class="close-button" onclick="closeEvaluation()">
+            닫기
+        </button>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        function goHome() {
+            showToast('홈으로 돌아갑니다.');
+            setTimeout(() => {
+                // window.location.href = 'index.html';
+            }, 1000);
+        }
+
+        function closeEvaluation() {
+            showToast('화면을 닫습니다.');
+            setTimeout(() => {
+                // window.location.href = 'index.html';
+            }, 1000);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        function formatDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            return `${year}.${month}.${day}`;
+        }
+
+        // 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('completionDate').textContent = formatDate();
+        });
+    </script>
+</body>
+</html>
