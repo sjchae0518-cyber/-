@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dom Dom - 설문 동의</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f0f0f0;
+            max-width: 430px;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 42px;
+            font-weight: 700;
+            color: #6BA3D4;
+            letter-spacing: 1px;
+            font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+        }
+
+        .logo-subtitle {
+            font-size: 12px;
+            color: #6BA3D4;
+            margin-top: 5px;
+        }
+
+        .back-button-bar {
+            background-color: #ffffff;
+            display: flex;
+            padding: 15px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+            background: none;
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .back-button:hover {
+            color: #6BA3D4;
+        }
+
+        .main-container {
+            padding: 20px;
+        }
+
+        .info-box {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .info-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .info-text {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        .survey-type-box {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .survey-type-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .survey-type-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .survey-type-button {
+            padding: 16px;
+            border-radius: 12px;
+            border: 2px solid #e5e7eb;
+            background-color: #ffffff;
+            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .survey-type-button:hover {
+            background-color: #f9f9f9;
+        }
+
+        .survey-type-button.selected {
+            border: 2px solid #6BA3D4;
+            background-color: #6BA3D4;
+            color: #ffffff;
+        }
+
+        .consent-box {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .consent-header {
+            font-size: 15px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .consent-item {
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .consent-item:hover {
+            background-color: #e9ecef;
+        }
+
+        .consent-checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .consent-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #6BA3D4;
+        }
+
+        .consent-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .consent-detail {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+            margin-left: 30px;
+            line-height: 1.5;
+            display: none;
+        }
+
+        .consent-item.expanded .consent-detail {
+            display: block;
+        }
+
+        .toggle-icon {
+            color: #6BA3D4;
+            font-size: 18px;
+            transition: transform 0.3s;
+        }
+
+        .consent-item.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .all-consent-box {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 2px solid #6BA3D4;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .action-button {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .action-button.disagree {
+            background-color: #ffffff;
+            color: #333;
+            border: 2px solid #e5e7eb;
+        }
+
+        .action-button.agree {
+            background-color: #6BA3D4;
+            color: #ffffff;
+        }
+
+        .action-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .toast.show {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">Dom Dom</div>
+        <div class="logo-subtitle">외국인 노동자 도우미 앱</div>
+    </div>
+
+    <div class="back-button-bar">
+        <button class="back-button" onclick="window.history.back()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 24px; height: 24px;">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span>돌아가기</span>
+        </button>
+    </div>
+
+    <div class="main-container">
+        <div class="info-box">
+            <h1 class="info-title">📋 사업장 변경 설문조사</h1>
+            <p class="info-text">
+                근무지 변경을 위해서는 상호평가제 설문조사가 필수입니다.<br>
+                설문조사는 약 <strong>5분</strong> 정도 소요되며, 귀하의 응답은 익명으로 처리됩니다.
+            </p>
+        </div>
+
+        <div class="survey-type-box">
+            <div class="survey-type-title">설문 유형을 선택해주세요</div>
+            <div class="survey-type-buttons">
+                <button class="survey-type-button" id="workerBtn" onclick="selectSurveyType('worker')">
+                    노동자 설문
+                </button>
+                <button class="survey-type-button" id="employerBtn" onclick="selectSurveyType('employer')">
+                    고용주 설문
+                </button>
+            </div>
+        </div>
+
+        <div class="consent-box">
+            <div class="consent-header">📌 개인정보 수집 및 이용 동의</div>
+
+            <div class="all-consent-box">
+                <div class="consent-checkbox-wrapper">
+                    <input type="checkbox" id="allConsent" class="consent-checkbox" onchange="toggleAllConsent()">
+                    <label for="allConsent" class="consent-label">전체 동의</label>
+                </div>
+            </div>
+
+            <div class="consent-item" onclick="toggleDetail(this)">
+                <div class="consent-checkbox-wrapper">
+                    <input type="checkbox" class="consent-checkbox individual-consent" id="consent1" onclick="event.stopPropagation(); updateAllConsent()">
+                    <label for="consent1" class="consent-label">개인정보 수집 및 이용 동의 (필수)</label>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="consent-detail">
+                    <strong>수집 항목:</strong> 이름, 전화번호, 사업장 정보<br>
+                    <strong>이용 목적:</strong> 사업장 변경 절차 진행 및 본인 확인<br>
+                    <strong>보유 기간:</strong> 5년 (관련 법령에 따름)
+                </div>
+            </div>
+
+            <div class="consent-item" onclick="toggleDetail(this)">
+                <div class="consent-checkbox-wrapper">
+                    <input type="checkbox" class="consent-checkbox individual-consent" id="consent2" onclick="event.stopPropagation(); updateAllConsent()">
+                    <label for="consent2" class="consent-label">설문조사 참여 동의 (필수)</label>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="consent-detail">
+                    설문조사는 노동 환경 개선을 위한 목적으로 진행됩니다.<br>
+                    응답 내용은 통계 목적으로만 사용되며, 개인을 특정할 수 없도록 처리됩니다.
+                </div>
+            </div>
+
+            <div class="consent-item" onclick="toggleDetail(this)">
+                <div class="consent-checkbox-wrapper">
+                    <input type="checkbox" class="consent-checkbox individual-consent" id="consent3" onclick="event.stopPropagation(); updateAllConsent()">
+                    <label for="consent3" class="consent-label">제3자 정보 제공 동의 (필수)</label>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="consent-detail">
+                    <strong>제공받는 자:</strong> 고용노동부, 출입국·외국인정책본부<br>
+                    <strong>제공 목적:</strong> 사업장 변경 심사 및 승인<br>
+                    <strong>제공 항목:</strong> 이름, 연락처, 사업장 정보, 설문 결과
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="action-button disagree" onclick="handleDisagree()">동의하지 않음</button>
+                <button class="action-button agree" id="agreeBtn" onclick="handleAgree()" disabled>동의하고 시작</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let selectedSurveyType = null;
+
+        function selectSurveyType(type) {
+            selectedSurveyType = type;
+            
+            // 버튼 스타일 업데이트
+            document.getElementById('workerBtn').classList.remove('selected');
+            document.getElementById('employerBtn').classList.remove('selected');
+            
+            if (type === 'worker') {
+                document.getElementById('workerBtn').classList.add('selected');
+            } else {
+                document.getElementById('employerBtn').classList.add('selected');
+            }
+            
+            // 동의 버튼 활성화 상태 체크
+            updateAgreeButton();
+        }
+
+        function toggleDetail(element) {
+            element.classList.toggle('expanded');
+        }
+
+        function toggleAllConsent() {
+            const allConsent = document.getElementById('allConsent');
+            const individualConsents = document.querySelectorAll('.individual-consent');
+            
+            individualConsents.forEach(checkbox => {
+                checkbox.checked = allConsent.checked;
+            });
+            
+            updateAgreeButton();
+        }
+
+        function updateAllConsent() {
+            const individualConsents = document.querySelectorAll('.individual-consent');
+            const allConsent = document.getElementById('allConsent');
+            
+            const allChecked = Array.from(individualConsents).every(checkbox => checkbox.checked);
+            allConsent.checked = allChecked;
+            
+            updateAgreeButton();
+        }
+
+        function updateAgreeButton() {
+            const agreeBtn = document.getElementById('agreeBtn');
+            const individualConsents = document.querySelectorAll('.individual-consent');
+            const allChecked = Array.from(individualConsents).every(checkbox => checkbox.checked);
+            
+            agreeBtn.disabled = !(allChecked && selectedSurveyType);
+        }
+
+        function handleDisagree() {
+            showToast('동의하지 않으면 설문조사를 진행할 수 없습니다.');
+            setTimeout(() => {
+                window.history.back();
+            }, 2000);
+        }
+
+        function handleAgree() {
+            const surveyTypeText = selectedSurveyType === 'worker' ? '노동자' : '고용주';
+            showToast(`${surveyTypeText} 설문조사를 시작합니다.`);
+            
+            // 실제로는 설문조사 페이지로 이동
+            setTimeout(() => {
+                // window.location.href = '/survey?type=' + selectedSurveyType;
+                showToast('설문조사 페이지로 이동합니다...');
+            }, 1500);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        // 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            updateAgreeButton();
+        });
+    </script>
+</body>
+</html>
