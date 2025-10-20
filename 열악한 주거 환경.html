@@ -1,0 +1,2046 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dom Dom - 주거환경 문제</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f0f0f0;
+            max-width: 430px;
+            margin: 0 auto;
+            overflow-x: hidden;
+            padding-bottom: 20px;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .logo {
+            font-size: 42px;
+            font-weight: 700;
+            color: #6BA3D4;
+            letter-spacing: 1px;
+            font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+        }
+
+        .logo-subtitle {
+            font-size: 12px;
+            color: #6BA3D4;
+            margin-top: 5px;
+        }
+
+        .home-button {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+            background: none;
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .home-button:hover {
+            color: #6BA3D4;
+        }
+
+        .home-button svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .page-info {
+            background-color: #ffffff;
+            padding: 20px;
+            margin: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .page-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .page-description {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+            background-color: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #6BA3D4;
+        }
+
+        .section {
+            background-color: #ffffff;
+            padding: 20px;
+            margin: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-card {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .info-card:hover {
+            background-color: #e8f4f8;
+            transform: translateY(-2px);
+        }
+
+        .info-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-card-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-card-content {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .problem-item {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .problem-item:hover {
+            background-color: #e8f4f8;
+            transform: translateY(-2px);
+        }
+
+        .problem-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .problem-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .problem-desc {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .highlight-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .highlight-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #856404;
+            margin-bottom: 8px;
+        }
+
+        .highlight-text {
+            font-size: 13px;
+            color: #856404;
+            line-height: 1.5;
+        }
+
+        .warning-box {
+            background-color: #fee2e2;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .warning-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #7f1d1d;
+            margin-bottom: 8px;
+        }
+
+        .warning-text {
+            font-size: 13px;
+            color: #7f1d1d;
+            line-height: 1.5;
+        }
+
+        .contact-section {
+            padding: 0 20px 30px 20px;
+        }
+
+        .contact-button {
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .contact-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .contact-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .contact-phone {
+            font-size: 16px;
+            font-weight: 700;
+            color: #6BA3D4;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .toast.show {
+            opacity: 0.9;
+        }
+
+        .step-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .step-number {
+            min-width: 28px;
+            height: 28px;
+            background-color: #6BA3D4;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            overflow-y: auto;
+        }
+
+        .modal.show {
+            display: block;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            max-width: 430px;
+            margin: 20px auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background-color: #6BA3D4;
+            color: white;
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .modal-subtitle {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .detail-section {
+            margin-bottom: 20px;
+        }
+
+        .detail-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-content {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .detail-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .detail-list li {
+            padding: 10px 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #333;
+            display: flex;
+            align-items: start;
+            gap: 8px;
+        }
+
+        .detail-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-list li::before {
+            content: '•';
+            color: #6BA3D4;
+            font-weight: 700;
+            font-size: 18px;
+            line-height: 1.2;
+        }
+
+        .contact-info {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #6BA3D4;
+        }
+
+        .contact-info-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .contact-info-item {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contact-info-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-info-phone {
+            color: #6BA3D4;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .contact-info-phone:hover {
+            text-decoration: underline;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .apply-button {
+            width: 100%;
+            padding: 16px;
+            background-color: #6BA3D4;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .apply-button:hover {
+            background-color: #5a92c3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(107, 163, 212, 0.4);
+        }
+
+        .contact-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .contact-btn {
+            padding: 12px;
+            border: 2px solid #6BA3D4;
+            background-color: white;
+            color: #6BA3D4;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .contact-btn:hover {
+            background-color: #6BA3D4;
+            color: white;
+        }
+
+        .required-tag {
+            display: inline-block;
+            background-color: #dc3545;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-left: 6px;
+        }
+
+        .important-highlight {
+            background-color: #fff3cd;
+            border-left: 4px solid #dc3545;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <div class="logo">Dom Dom</div>
+            <div class="logo-subtitle">외국인 노동자 도우미 앱</div>
+        </div>
+        <button class="home-button" onclick="goHome()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span>홈으로</span>
+        </button>
+    </div>
+
+    <div class="page-info">
+        <div class="page-title">
+            <span>🏠</span>
+            <span>주거환경 문제 해결</span>
+        </div>
+        <div class="page-description">
+            💡 <strong>안내:</strong> 열악한 주거환경은 <strong style="color: #dc3545;">인간의 기본권 침해</strong>입니다. 당신도 깨끗하고 안전한 곳에서 살 권리가 있습니다!
+        </div>
+    </div>
+
+    <!-- 주거 문제 유형 -->
+    <div class="section">
+        <div class="section-title">🚨 흔한 주거 문제</div>
+        <div class="problem-grid">
+            <div class="problem-item" onclick="showInfo('좁은 공간')">
+                <div class="problem-icon">📦</div>
+                <div class="problem-name">너무 좁음</div>
+                <div class="problem-desc">비좁은 공간</div>
+            </div>
+            <div class="problem-item" onclick="showInfo('비위생')">
+                <div class="problem-icon">🦠</div>
+                <div class="problem-name">비위생적</div>
+                <div class="problem-desc">청결 문제</div>
+            </div>
+            <div class="problem-item" onclick="showInfo('시설 불량')">
+                <div class="problem-icon">🔧</div>
+                <div class="problem-name">시설 불량</div>
+                <div class="problem-desc">고장·낡음</div>
+            </div>
+            <div class="problem-item" onclick="showInfo('안전 문제')">
+                <div class="problem-icon">⚠️</div>
+                <div class="problem-name">안전 위험</div>
+                <div class="problem-desc">화재·붕괴 등</div>
+            </div>
+            <div class="problem-item" onclick="showInfo('난방 문제')">
+                <div class="problem-icon">🥶</div>
+                <div class="problem-name">난방 안됨</div>
+                <div class="problem-desc">추위·더위</div>
+            </div>
+            <div class="problem-item" onclick="showInfo('과도한 비용')">
+                <div class="problem-icon">💸</div>
+                <div class="problem-name">비용 과다</div>
+                <div class="problem-desc">임금 공제</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 주거 기준 -->
+    <div class="section">
+        <div class="section-title">📏 법정 최소 주거 기준</div>
+        <div class="warning-box">
+            <div class="warning-title">⚠️ 이것만은 꼭 지켜야 합니다!</div>
+            <div class="warning-text">외국인 근로자에게도 최소한의 주거 기준이 법으로 정해져 있습니다. 회사가 이를 어기면 신고할 수 있습니다.</div>
+        </div>
+        <div class="info-card" onclick="showInfo('면적 기준')">
+            <div class="info-card-title">
+                <span>📐</span>
+                <span>최소 면적 기준</span>
+            </div>
+            <div class="info-card-content">
+                1인당 최소 2.5㎡ (약 0.75평) 이상의 공간이 필요합니다. 자세히 보기 →
+            </div>
+        </div>
+        <div class="info-card" onclick="showInfo('시설 기준')">
+            <div class="info-card-title">
+                <span>🚿</span>
+                <span>필수 시설 기준</span>
+            </div>
+            <div class="info-card-content">
+                화장실, 샤워실, 난방, 환기 등 기본 시설이 갖춰져야 합니다. 자세히 보기 →
+            </div>
+        </div>
+        <div class="info-card" onclick="showInfo('안전 기준')">
+            <div class="info-card-title">
+                <span>🔥</span>
+                <span>안전 기준</span>
+            </div>
+            <div class="info-card-content">
+                소화기, 비상구, 전기 안전 등이 확보되어야 합니다. 자세히 보기 →
+            </div>
+        </div>
+    </div>
+
+    <!-- 해결 방법 -->
+    <div class="section">
+        <div class="section-title">💪 문제 해결 방법</div>
+        <ul class="step-list">
+            <li class="step-item">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <div class="step-title">증거 수집</div>
+                    <div class="step-desc">사진, 영상으로 주거 환경을 기록하세요. 날짜가 표시되도록 촬영하세요.</div>
+                </div>
+            </li>
+            <li class="step-item">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <div class="step-title">회사에 개선 요청</div>
+                    <div class="step-desc">먼저 회사에 문제를 알리고 개선을 요청하세요. 문서로 남기는 것이 좋습니다.</div>
+                </div>
+            </li>
+            <li class="step-item">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <div class="step-title">고용노동부 신고</div>
+                    <div class="step-desc">개선되지 않으면 고용노동부(1350)에 신고하세요.</div>
+                </div>
+            </li>
+            <li class="step-item">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <div class="step-title">지자체 신고</div>
+                    <div class="step-desc">주거 환경이 심각하면 시·군·구청이나 보건소에 신고하세요.</div>
+                </div>
+            </li>
+            <li class="step-item">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <div class="step-title">외부 지원 요청</div>
+                    <div class="step-desc">외국인력상담센터, 이주노동자센터에 도움을 요청하세요.</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 비용 관련 -->
+    <div class="section">
+        <div class="section-title">💰 주거비용 관련 권리</div>
+        <div class="info-card" onclick="showInfo('숙소비 공제')">
+            <div class="info-card-title">
+                <span>💵</span>
+                <span>숙소비 임금 공제</span>
+            </div>
+            <div class="info-card-content">
+                회사가 임금에서 공제할 수 있는 숙소비 한도가 정해져 있습니다. 자세히 보기 →
+            </div>
+        </div>
+        <div class="info-card" onclick="showInfo('보증금 문제')">
+            <div class="info-card-title">
+                <span>🏦</span>
+                <span>보증금 반환 문제</span>
+            </div>
+            <div class="info-card-content">
+                보증금을 받고 숙소를 제공받았다면 퇴사 시 반드시 돌려받아야 합니다. 자세히 보기 →
+            </div>
+        </div>
+        <div class="info-card" onclick="showInfo('숙소 제공')">
+            <div class="info-card-title">
+                <span>🏠</span>
+                <span>숙소 제공 관련</span>
+            </div>
+            <div class="info-card-content">
+                회사의 숙소 제공 의무는 근로계약서에 따라 결정됩니다. 자세히 보기 →
+            </div>
+        </div>
+    </div>
+
+    <!-- 대안 찾기 -->
+    <div class="section">
+        <div class="section-title">🔍 다른 주거지 찾기</div>
+        <div class="highlight-box">
+            <div class="highlight-title">💡 회사 숙소를 나와도 됩니다</div>
+            <div class="highlight-text">회사 숙소가 너무 열악하면 밖에서 집을 구할 수 있습니다. 하지만 계약서를 잘 확인하세요.</div>
+        </div>
+        <div class="info-card" onclick="showInfo('외부 거주')">
+            <div class="info-card-title">
+                <span>🏘️</span>
+                <span>회사 밖에서 살기</span>
+            </div>
+            <div class="info-card-content">
+                외부 거주 가능 여부와 주의사항을 확인하세요. 자세히 보기 →
+            </div>
+        </div>
+        <div class="info-card" onclick="showInfo('집 구하는 법')">
+            <div class="info-card-title">
+                <span>🔎</span>
+                <span>한국에서 집 구하는 방법</span>
+            </div>
+            <div class="info-card-content">
+                월세, 전세, 보증금 등 한국 주거 시스템과 집 구하는 팁. 자세히 보기 →
+            </div>
+        </div>
+        <div class="info-card" onclick="showInfo('쉼터')">
+            <div class="info-card-title">
+                <span>🏠</span>
+                <span>긴급 쉼터</span>
+            </div>
+            <div class="info-card-content">
+                당장 갈 곳이 없을 때 이용할 수 있는 긴급 쉼터 정보. 자세히 보기 →
+            </div>
+        </div>
+    </div>
+
+    <!-- 지원 기관 -->
+    <div class="contact-section">
+        <div class="section-title" style="margin-bottom: 15px; padding: 0 0 0 20px;">📞 상담 및 신고 기관</div>
+        <button class="contact-button" onclick="makeCall('1350')">
+            <span class="contact-title">고용노동부 (주거 문제 신고)</span>
+            <span class="contact-phone">☎ 1350</span>
+        </button>
+        <button class="contact-button" onclick="makeCall('1644-0644')">
+            <span class="contact-title">외국인력 상담센터</span>
+            <span class="contact-phone">☎ 1644-0644</span>
+        </button>
+        <button class="contact-button" onclick="makeCall('120')">
+            <span class="contact-title">시·군·구청 (위생·안전 신고)</span>
+            <span class="contact-phone">☎ 120</span>
+        </button>
+        <button class="contact-button" onclick="makeCall('02-2670-0331')">
+            <span class="contact-title">서울이주노동자센터</span>
+            <span class="contact-phone">☎ 02-2670-0331</span>
+        </button>
+        <button class="contact-button" onclick="makeCall('119')">
+            <span class="contact-title">화재·안전 위험 긴급신고</span>
+            <span class="contact-phone">☎ 119</span>
+        </button>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-title" id="modalTitle"></div>
+                <div class="modal-subtitle" id="modalSubtitle"></div>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        function goHome() {
+            showToast('홈 페이지로 이동합니다');
+        }
+
+        function makeCall(number) {
+            showToast(`${number}로 전화를 겁니다`);
+        }
+
+        function showInfo(type) {
+            const infoData = {
+                '좁은 공간': {
+                    icon: '📦',
+                    title: '너무 좁은 공간',
+                    subtitle: '1인당 최소 면적이 보장되어야 합니다',
+                    content: `
+                        <div class="detail-section">
+                            <div class="detail-title">📏 법정 최소 기준</div>
+                            <div class="detail-content">
+                                <strong style="color: #dc3545;">1인당 최소 2.5㎡ (약 0.75평) 이상</strong>의 공간이 필요합니다.
+                                <br><br>
+                                예: 방 10㎡(약 3평)에는 최대 4명까지만 거주해야 합니다.
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">🚨 이런 경우는 위법!</div>
+                            <ul class="detail-list">
+                                <li>컨테이너 1칸에 6명 이상 거주</li>
+                                <li>좁은 공간에 2층 침대 빽빽하게 배치</li>
+                                <li>통로도 없을 정도로 침대 가득</li>
+                                <li>개인 짐 놓을 공간도 없음</li>
+                                <li>방 안에서 움직이기 어려움</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">💪 대응 방법</div>
+                            <ul class="detail-list">
+                                <li>방 크기와 거주 인원 사진 촬영</li>
+                                <li>줄자로 방 크기 측정 (가능하면)</li>
+                                <li>고용노동부(1350)에 신고</li>
+                                <li>외국인력상담센터 상담</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">⚖️ 처벌</div>
+                            <div class="detail-content">
+                                최저 주거 기준을 위반한 회사는 500만원 이하의 과태료를 받을 수 있습니다.
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">📞 신고하세요</div>
+                            <div class="contact-info">
+                                <div class="contact-info-title">주거 공간 협소 신고</div>
+                                <div class="contact-info-item">
+                                    <span>고용노동부:</span>
+                                    <span class="contact-info-phone" onclick="makeCall('1350')">☎ 1350</span>
+                                </div>
+                                <div class="contact-info-item">
+                                    <span>외국인력상담센터:</span>
+                                    <span class="contact-info-phone" onclick="makeCall('1644-0644')">☎ 1644-0644</span>
+                                </div>
+                            </div>
+                        </div>
+                    `,
+                    applyPhone: '1350',
+                    applyText: '좁은 공간 신고하기'
+                },
+                '비위생': {
+                    icon: '🦠',
+                    title: '비위생적인 환경',
+                    subtitle: '깨끗한 환경에서 살 권리가 있습니다',
+                    content: `
+                        <div class="detail-section">
+                            <div class="detail-title">🚨 비위생적 환경의 예</div>
+                            <ul class="detail-list">
+                                <li>화장실, 샤워실이 더럽고 청소 안 됨</li>
+                                <li>곰팡이가 벽과 천장에 가득</li>
+                                <li>쓰레기 처리가 안 됨</li>
+                                <li>벌레(바퀴벌레, 쥐 등) 출몰</li>
+                                <li>악취가 심함</li>
+                                <li>배수가 안 되어 물이 고임</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">⚠️ 건강 위험</div>
+                            <div class="detail-content">
+                                비위생적인 환경은 <strong style="color: #dc3545;">각종 질병과 감염</strong>을 유발합니다.
+                                호흡기 질환, 피부병, 식중독 등의 위험이 있습니다.
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">💪 해결 방법</div>
+                            <ul class="detail-list">
+                                <li>사진과 영상으로 증거 확보</li>
+                                <li>회사에 청소 및 개선 요청</li>
+                                <li>개선 안 되면 보건소에 신고</li>
+                                <li>고용노동부에도 신고</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">🏥 건강 문제 발생 시</div>
+                            <div class="detail-content">
+                                비위생적 환경으로 인해 아프면 산재 신청을 할 수 있습니다. 
+                                병원 진료 기록을 꼭 남기세요.
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">📞 신고처</div>
+                            <div class="contact-info">
+                                <div class="contact-info-title">비위생 환경 신고</div>
+                                <div class="contact-info-item">
+                                    <span>보건소 (위생 문제):</span>
+                                    <span class="contact-info-phone" onclick="makeCall('120')">☎ 120</span>
+                                </div>
+                                <div class="contact-info-item">
+                                    <span>고용노동부:</span>
+                                    <span class="contact-info-phone" onclick="makeCall('1350')">☎ 1350</span>
+                                </div>
+                            </div>
+                        </div>
+                    `,
+                    applyPhone: '120',
+                    applyText: '비위생 환경 신고'
+                },
+                '시설 불량': {
+                    icon: '🔧',
+                    title: '시설 불량 문제',
+                    subtitle: '기본 시설이 제대로 작동해야 합니다',
+                    content: `
+                        <div class="detail-section">
+                            <div class="detail-title">🚨 시설 불량의 예</div>
+                            <ul class="detail-list">
+                                <li>화장실, 샤워기가 고장나서 사용 불가</li>
+                                <li>수도가 안 나오거나 물이 새어나옴</li>
+                                <li>전기 콘센트가 고장 또는 부족</li>
+                                <li>문, 창문이 고장나서 안 닫힘</li>
+                                <li>환기구가 없거나 막혀 있음</li>
+                                <li>냉장고, 세탁기 등 가전제품 고장</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">✅ 필수 시설</div>
+                            <div class="detail-content">
+                                회사는 다음 시설을 제공하고 유지·보수할 의무가 있습니다:
+                            </div>
+                            <ul class="detail-list">
+                                <li>화장실 (남녀 구분, 청결 유지)</li>
+                                <li>샤워실 (온수 공급)</li>
+                                <li>세면대</li>
+                                <li>세탁 시설</li>
+                                <li>취사 시설</li>
+                                <li>냉난방 시설</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">💪 대응 방법</div>
+                            <ul class="detail-list">
+                                <li>1단계: 회사에 수리 요청 (문서로)</li>
+                                <li>2단계: 요청 후에도 방치하면 증거 확보</li>
+                                <li>3단계: 고용노동부에 신고</li>
+                                <li>4단계: 긴급한 경우 직접 수리 후 비용 청구</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">⚠️ 주의사항</div>
+                            <div class="detail-content">
+                                시설이 고장났는데 방치하는 것도 회사의 책임입니다. 
+                                "오래되어서 어쩔 수 없다"는 핑계는 통하지 않습니다.
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">📞 신고처</div>
+                            <div class="contact-info">
+                                <div class="contact-info-title">시설 불량 신고</div>
+                                <div class="contact-info-item">
+                                    <span>고용노동부:</span>
+                                    <span class="contact-info-phone" onclick="makeCall('1350')">☎ 1350</span>
+                                </div>
+                            </div>
+                        </div>
+                    `,
+                    applyPhone: '1350',
+                    applyText: '시설 불량 신고'
+                },
+                '안전 문제': {
+                    icon: '⚠️',
+                    title: '안전 위험',
+                    subtitle: '생명과 직결된 심각한 문제입니다',
+                    content: `
+                        <div class="detail-section">
+                            <div class="detail-title">🚨 위험한 주거 환경</div>
+                            <ul class="detail-list">
+                                <li class="important-highlight">소화기 없음 <span class="required-tag">즉시 신고!</span></li>
+                                <li>비상구가 막혀 있거나 없음</li>
+                                <li>전기 배선이 노출되거나 낡음</li>
+                                <li>가스 누출 위험</li>
+                                <li>건물이 낡아서 무너질 위험</li>
+                                <li>창문에 안전 시설 없음 (추락 위험)</li>
+                                <li>계단이 위험함</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">🔥 화재 안전</div>
+                            <div class="detail-content">
+                                <strong style="color: #dc3545;">모든 숙소에는 반드시:</strong>
+                                <br>• 소화기 비치 (정기 점검 필요)
+                                <br>• 화재 경보기 설치
+                                <br>• 비상구 확보 및 표시
+                                <br>• 비상 대피로 확보
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">⚡ 전기 안전</div>
+                            <ul class="detail-list">
+                                <li>문어발 콘센트 사용 금지</li>
+                                <li>전선이 손상되면 즉시 수리</li>
+                                <li>누전차단기 정상 작동 확인</li>
+                                <li>과부하로 인한 화재 주의</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">💪 즉시 행동!</div>
+                            <ul class="detail-list">
+                                <li class="important-highlight">생명 위험 시 119 즉시 신고!</li>
+                                <li>소방서에 안전 점검 요청</li>
+                                <li>고용노동부에 신고</li>
+                                <li>증거 사진/영상 확보</li>
+                                <li>위험하면 즉시 대피</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">📞 긴급 신고</div>
+                            <div class="contact-info">
+                                <div class="contact-info-title">안전 위험 신고</div>
+                                <div class="contact-info-item">
+                                    <span>화재·안전 긴급:</span>
+                                    <span class="contact-info-phone" onclick="makeCall('119')">☎ 119</span>
+                                </div>
+                                <div class="contact-info-item">
+                                    <span>고용노동부:</span>
+                                    <span class="contact-info-phone" onclick="makeCall('1350')">☎ 1350</span>
+                                </div>
+                                <div class="contact-info-item" style="margin-top: 8px; color: #7f1d1d;">
+                                    ⚠️ 생명이 위험하면 망설이지 말고 119!
+                                </div>
+                            </div>
+                        </div>
+                    `,
+                    applyPhone: '119',
+                    applyText: '안전 위험 신고'
+                },
+                '난방 문제': {
+                    icon: '🥶',
+                    title: '난방·냉방 문제',
+                    subtitle: '적절한 온도가 유지되어야 합니다',
+                    content: `
+                        <div class="detail-section">
+                            <div class="detail-title">🚨 흔한 문제</div>
+                            <ul class="detail-list">
+                                <li>겨울에 난방이 안 되어 너무 추움</li>
+                                <li>여름에 냉방이 안 되어 너무 더움</li>
+                                <li>난방비를 아끼려고 난방 제한</li>
+                                <li>보일러가 고장났는데 방치</li>
+                                <li>에어컨이 없거나 작동 안 함</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">✅ 회사의 의무</div>
+                            <div class="detail-content">
+                                회사는 근로자 숙소에 <strong style="color: #6BA3D4;">적절한 냉난방 시설</strong>을 
+                                제공하고 유지할 의무가 있습니다.
+                                <br><br>
+                                "난방비가 비싸다", "전기세가 아깝다"는 이유로 난방을 제한하면 안 됩니다.
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">🌡️ 적정 온도</div>
+                            <ul class="detail-list">
+                                <li>겨울: 실내 온도 18~20℃ 이상 유지</li>
+                                <li>여름: 적절한 환기 및 냉방 제공</li>
+                                <li>개인이 온도 조절 가능해야 함</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">⚠️ 건강 피해</div>
+                            <div class="detail-content">
+                                극심한 추위나 더위는 건강을 해칩니다. 
+                                저체온증, 동상, 열사병 등이 발생할 수 있으며, 
+                                이는 산업재해로 인정될 수 있습니다.
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">💪 대응 방법</div>
+                            <ul class="detail-list">
+                                <li>실내 온도 측정 (온도계 사진)</li>
+                                <li>회사에 개선 요청</li>
+                                <li>고용노동부 신고</li>
+                                <li>건강 피해 발생 시 병원 진료</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">📞 신고처</div>
+                            <div class="contact-info">
+                                <div class="contact-info-title">난방 문제 신고</div>
+                                <div class="contact-info-item">
+                                    <span>고용노동부:</span>
+                                    <span class="contact-info-phone" onclick="makeCall('1350')">☎ 1350</span>
+                                </div>
+                            </div>
+                        </div>
+                    `,
+                    applyPhone: '1350',
+                    applyText: '난방 문제 신고'
+                },
+                '과도한 비용': {
+                    icon: '💸',
+                    title: '과도한 주거비용',
+                    subtitle: '임금에서 부당하게 공제하면 안 됩니다',
+                    content: `
+                        <div class="detail-section">
+                            <div class="detail-title">💰 숙소비 공제 한도</div>
+                            <div class="detail-content">
+                                회사가 숙소를 제공하고 임금에서 공제할 수 있는 금액은 
+                                <strong style="color: #dc3545;">적정 수준</strong>이어야 합니다.
+                                <br><br>
+                                일반적으로 <strong>월 임금의 10~20%</strong>를 넘지 않아야 하며, 
+                                시장 가격보다 비싸면 안 됩니다.
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">🚨 부당한 공제 예시</div>
+                            <ul class="detail-list">
+                                <li>열악한 숙소인데 월 50만원 공제</li>
+                                <li>컨테이너 1칸에 4명인데 1인당 30만원</li>
+                                <li>실제 비용보다 훨씬 많이 공제</li>
+                                <li>계약서에 없는 비용 공제</li>
+                                <li>수도·전기세를 과도하게 청구</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">✅ 공제 시 주의사항</div>
+                            <ul class="detail-list">
+                                <li class="important-highlight">반드시 근로계약서에 명시 <span class="required-tag">필수</span></li>
+                                <li>근로자의 동의 필요</li>
+                                <li>공제 내역을 명확히 알려줘야 함</li>
+                                <li>영수증이나 증빙 제공</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">💪 대응 방법</div>
+                            <ul class="detail-list">
+                                <li>급여명세서 확인 및 보관</li>
+                                <li>주변 숙소 시세 조사</li>
+                                <li>회사에 공제 내역 설명 요구</li>
+                                <li>과다 공제 시 고용노동부 신고</li>
+                                <li>과다 공제액 환급 요구</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">🏦 환급 받기</div>
+                            <div class="detail-content">
+                                부당하게 공제된 금액은 돌려받을 수 있습니다. 
+                                고용노동부에 임금 체불로 신고하세요.
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">📞 신고처</div>
+                            <div class="contact-info">
+                                <div class="contact-info-title">과도한 비용 신고</div>
+                                <div class="contact-info-item">
+                                    <span>고용노동부 (임금 체불):</span>
+                                    <span class="contact-info-phone" onclick="makeCall('1350')">☎ 1350</span>
+                                </div>
+                            </div>
+                        </div>
+                    `,
+                    applyPhone: '1350',
+                    applyText: '과도한 비용 신고'
+                },
+                '면적 기준': {
+                    icon: '📐',
+                    title: '최소 면적 기준',
+                    subtitle: '1인당 최소 2.5㎡',
+                    content: `
+                        <div class="detail-section">
+                            <div class="detail-title">📏 법정 기준</div>
+                            <div class="detail-content">
+                                <strong style="color: #dc3545;">1인당 최소 2.5㎡ (약 0.75평)</strong>
+                                <br><br>
+                                이는 근로자 1명이 생활할 수 있는 최소한의 공간입니다.
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">📊 예시</div>
+                            <ul class="detail-list">
+                                <li>10㎡ (약 3평) 방 → 최대 4명</li>
+                                <li>15㎡ (약 4.5평) 방 → 최대 6명</li>
+                                <li>20㎡ (약 6평) 방 → 최대 8명</li>
+                                <li>컨테이너 (약 3평) → 최대 4명</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">💡 측정 방법</div>
+                            <ul class="detail-list">
+                                <li>방의 가로 × 세로 측정</li>
+                                <li>침대 밑 공간도 면적에 포함</li>
+                                <li>화장실, 복도는 제외</li>
+                                <li>가구가 차지하는 공간 고려</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">📞 상담 및 신고</div>
+                            <div class="contact-info">
+                                <div class="contact-info-title">면적 기준 위반 신고</div>
+                                <div class="contact-info-item">
+                                    <span>고용노동부:</span>
+                                    <span class="contact-info-phone" onclick="makeCall('1350')">☎ 1350</span>
+                                </div>
+                            </div>
+                        </div>
+                    `,
+                    applyPhone: '1350',
+                    applyText: '면적 기준 상담'
+                },
+                '시설 기준': {
+                    icon: '🚿',
+                    title: '필수 시설 기준',
+                    subtitle: '기본 생활 시설이 갖춰져야 합니다',
+                    content: `
+                        <div class="detail-section">
+                            <div class="detail-title">✅ 반드시 있어야 할 시설</div>
+                            <ul class="detail-list">
+                                <li class="important-highlight">화장실 (수세식, 청결) <span class="required-tag">필수</span></li>
+                                <li>샤워실 (온수 공급)</li>
+                                <li>세면대</li>
+                                <li>난방 시설</li>
+                                <li>환기 시설 (창문 또는 환풍기)</li>
+                                <li>채광 시설 (자연광 유입)</li>
+                                <li>전기 (콘센트 충분)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">🍽️ 생활 편의 시설</div>
+                            <ul class="detail-list">
+                                <li>취사 시설 (가스레인지 또는 인덕션)</li>
+                                <li>냉장고</li>
+                                <li>세탁 시설</li>
+                                <li>개인 수납공간 (옷장, 선반)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">🚻 화장실·샤워실 기준</div>
+                            <div class="detail-content">
+                                • 남녀 구분 (혼용 금지)
+                                <br>• 5명당 1개 이상 권장
+                                <br>• 온수 공급 필수
+                                <br>• 청결 유지 의무
+                                <br>• 환기 시설 필수
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">⚠️ 이런 건 안 됩니다</div>
+                            <ul class="detail-list">
+                                <li>화장실이 밖에 있어서 불편</li>
+                                <li>샤워실이 없어 공동 목욕탕만 사용</li>
+                                <li>온수가 안 나옴</li>
+                                <li>화장실이 너무 더러움</li>
+                                <li>환기가 안 되어 냄새 심함</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">📞 신고처</div>
+                            <div class="contact-info">
+                                <div class="contact-info-title">시설 기준 미달 신고</div>
+                                <div class="contact-info-item">
+                                    <span>고용노동부:</span>
+                                    <span class="contact-info-phone" onclick="makeCall('1350')">☎ 1350</span>
+                                </div>
+                            </div>
+                        </div>
+                    `,
+                    applyPhone: '1350',
+                    applyText: '시설 기준 상담'
+                },
+                '안전 기준': {
+                    icon: '🔥',
+                    title: '안전 기준',
+                    subtitle: '화재와 사고로부터 안전해야 합니다',
+                    content: `
+                        <div class="detail-section">
+                            <div class="detail-title">🔥 화재 안전 시설</div>
+                            <ul class="detail-list">
+                                <li class="important-highlight">소화기 비치 <span class="required-tag">필수</span></li>
+                                <li>화재 경보기 설치</li>
+                                <li>비상구 확보 및 표시</li>
+                                <li>비상 대피로 확보</li>
+                                <li>소방 안전 교육 실시</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">⚡ 전기 안전</div>
+                            <ul class="detail-list">
+                                <li>누전차단기 설치</li>
+                                <li>전선 피복 손상 없음</li>
+                                <li>콘센트 과부하 방지</li>
+                                <li>전기 용량 적정</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">🏗️ 건축 안전</div>
+                            <ul class="detail-list">
+                                <li>건물 구조적 안전성</li>
+                                <li>계단 안전 난간</li>
+                                <li>창문 추락 방지 시설</li>
+                                <li>지붕·벽 누수 없음</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">🚨 위험 발견 시</div>
+                            <div class="detail-content">
+                                안전 위험이 있으면 즉시 119 또는 고용노동부에 신고하세요. 
+                                생명과 직결된 문제입니다.
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">📞 안전 신고</div>
+                            <div class="contact-info">
+                                <div class="contact-info-title">안전 기준 미달 신고</div>
+                                <div class="contact-info-item">
+                                    <span>소방서 (화재안전):</span>
+                                    <span class="contact-info-phone" onclick="makeCall('119')">☎ 119</span>
+                                </div>
+                                <div class="contact-info-item">
+                                    <span>고용노동부:</span>
+                                    <span class="contact-info-phone" onclick="makeCall('1350')">☎ 1350</span>
+                                </div>
+                            </div>
+                        </div>
+                    `,
+                    applyPhone: '119',
+                    applyText: '안전 문제 신고'
+                },
+                '숙소비 공제': {
+                    icon: '💵',
+                    title: '숙소비 임금 공제',
+                    subtitle: '적정 금액만 공제할 수 있습니다',
+                    content: `
+                        <div class="detail-section">
+                            <div class="detail-title">💰 공제 가능 금액</div>
+                            <div class="detail-content">
+                                회사가 숙소를 제공하고 임금에서 공제할 수 있는 금액은:
+                                <br><br>
+                                <strong style="color: #6BA3D4;">• 일반적으로 월 임금의 10~20%</strong>
+                                <br>• 주변 시세와 비슷한 수준
+                                <br>• 숙소 상태에 맞는 적정 금액
+                                <br><br>
+                                예: 월급 200만원이면 숙소비 20~40만원 정도가 적정
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">✅ 공제 전 필수 요건</div>
+                            <ul class="detail-list">
+                                <li class="important-highlight">근로계약서에 명시 <span class="required-tag">필수</span></li>
+                                <li>근로자의 사전 동의</li>
+                                <li>공제 금액과 내역 명확히 고지</li>
+                                <li>급여명세서에 공제 내역 표시</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">🚨 부당한 공제</div>
+                            <ul class="detail-list">
+                                <li>계약서에 없는데 임의로 공제</li>
+                                <li>시세보다 훨씬 비싸게 공제</li>
+                                <li>열악한 숙소인데 과다 공제</li>
+                                <li>수도·전기세를 과도하게 청구</li>
+                                <li>동의 없이 공제액 인상</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">💪 대응 방법</div>
+                            <ul class="detail-list">
+                                <li>급여명세서 확인 및 보관</li>
+                                <li>근로계약서 확인</li>
+                                <li>주변 숙소 시세 조사</li>
+                                <li>과다 공제 시 고용노동부 신고</li>
+                                <li>환급 요구</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">📞 신고처</div>
+                            <div class="contact-info">
+                                <div class="contact-info-title">부당 공제 신고</div>
+                                <div class="contact-info-item">
+                                    <span>고용노동부:</span>
+                                    <span class="contact-info-phone" onclick="makeCall('1350')">☎ 1350</span>
+                                </div>
+                            </div>
+                        </div>
+                    `,
+                    applyPhone: '1350',
+                    applyText: '부당 공제 신고'
+                },
+                '보증금 문제': {
+                    icon: '🏦',
+                    title: '보증금 반환 문제',
+                    subtitle: '퇴사 시 보증금은 돌려받아야 합니다',
+                    content: `
+                        <div class="detail-section">
+                            <div class="detail-title">📋 보증금이란?</div>
+                            <div class="detail-content">
+                                회사 숙소 입주 시 낸 보증금은 퇴사하거나 
+                                숙소를 나갈 때 <strong style="color: #dc3545;">반드시 돌려받아야</strong> 합니다.
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">✅ 보증금 반환 원칙</div>
+                            <ul class="detail-list">
+                                <li>퇴사 시 전액 반환이 원칙</li>
+                                <li>시설 파손이 없으면 100% 반환</li>
+                                <li>일반적인 마모는 공제 불가</li>
+                                <li>청소비 명목 공제 불가</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">🚨 보증금 분쟁 예시</div>
+                            <ul class="detail-list">
+                                <li>"청소 안 했다"며 보증금 안 줌</li>
+                                <li>"시설 파손"을 핑계로 과다 공제</li>
+                                <li>퇴사 후 연락 안 되어 못 받음</li>
+                                <li>보증금을 임금에서 공제했다고 주장</li>
+                                <li>영수증 없이 받았다며 발뺌</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">💪 예방 및 대응</div>
+                            <ul class="detail-list">
+                                <li>보증금 낼 때 영수증 받기</li>
+                                <li>입주 시 사진/영상 촬영 (상태 기록)</li>
+                                <li>퇴거 시에도 사진/영상 촬영</li>
+                                <li>안 돌려주면 고용노동부 신고</li>
+                                <li>소액재판 청구 가능</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">⏰ 반환 기한</div>
+                            <div class="detail-content">
+                                법적으로 명확한 기한은 없지만, 
+                                퇴사 후 <strong style="color: #6BA3D4;">1개월 이내</strong> 반환이 일반적입니다. 
+                                지연 시 이자 청구 가능합니다.
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">📞 신고처</div>
+                            <div class="contact-info">
+                                <div class="contact-info-title">보증금 미반환 신고</div>
+                                <div class="contact-info-item">
+                                    <span>고용노동부:</span>
+                                    <span class="contact-info-phone" onclick="makeCall('1350')">☎ 1350</span>
+                                </div>
+                                <div class="contact-info-item">
+                                    <span>외국인력상담센터:</span>
+                                    <span class="contact-info-phone" onclick="makeCall('1644-0644')">☎ 1644-0644</span>
+                                </div>
+                            </div>
+                        </div>
+                    `,
+                    applyPhone: '1350',
+                    applyText: '보증금 미반환 신고'
+                },
+                '숙소 제공': {
+                    icon: '🏠',
+                    title: '숙소 제공 관련 권리',
+                    subtitle: '근로계약서를 꼭 확인하세요',
+                    content: `
+                        <div class="detail-section">
+                            <div class="detail-title">📋 숙소 제공 원칙</div>
+                            <div class="detail-content">
+                                회사가 숙소를 제공할 의무는 <strong style="color: #6BA3D4;">근로계약서에 따라</strong> 결정됩니다.
+                                <br><br>
+                                • E-9, H-2 등 모든 비자 유형에서 회사는 숙소를 제공할 수도 있고, 안 할 수도 있습니다.
+                                <br>• 숙소를 제공하기로 했다면, 반드시 최저 주거 기준을 지켜야 합니다.
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">✅ 근로계약서 확인 사항</div>
+                            <ul class="detail-list">
+                                <li class="important-highlight">숙소 제공 여부 <span class="required-tag">필수 확인</span></li>
+                                <li>숙소비 공제 여부 및 금액</li>
+                                <li>공과금(수도·전기·가스) 부담 방법</li>
+                                <li>숙소 위치 및 출퇴근 방법</li>
+                                <li>외부 거주 가능 여부</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">💰 숙소비 공제</div>
+                            <div class="detail-content">
+                                회사가 숙소를 제공하면서 비용을 공제하는 것은 가능합니다.
+                                <br><br>
+                                단, 다음을 지켜야 합니다:
+                                <br>• 근로계약서에 명시
+                                <br>• 근로자 동의
+                                <br>• 적정 금액 (시세의 수준)
+                                <br>• 숙소 상태에 맞는 금액
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">⚡ 공과금 처리</div>
+                            <div class="detail-content">
+                                수도·전기·가스 요금은:
+                                <br>• 실제 사용량만큼 부담하는 것이 일반적
+                                <br>• 과도한 청구는 불법
+                                <br>• 사용량 확인 가능해야 함
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">🚨 이런 경우는 문제!</div>
+                            <ul class="detail-list">
+                                <li>계약서에 없는데 임금에서 공제</li>
+                                <li>열악한 숙소인데 과도한 비용 공제</li>
+                                <li>공과금을 실제보다 많이 청구</li>
+                                <li>최저 주거 기준에 미달하는 숙소 제공</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">💪 대응 방법</div>
+                            <ul class="detail-list">
+                                <li>근로계약서 내용 확인</li>
+                                <li>급여명세서에서 공제 내역 확인</li>
+                                <li>주변 숙소 시세 조사</li>
+                                <li>부당하면 고용노동부 신고</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">📞 상담 및 신고</div>
+                            <div class="contact-info">
+                                <div class="contact-info-title">숙소 관련 상담</div>
+                                <div class="contact-info-item">
+                                    <span>고용노동부:</span>
+                                    <span class="contact-info-phone" onclick="makeCall('1350')">☎ 1350</span>
+                                </div>
+                                <div class="contact-info-item">
+                                    <span>외국인력상담센터:</span>
+                                    <span class="contact-info-phone" onclick="makeCall('1644-0644')">☎ 1644-0644</span>
+                                </div>
+                            </div>
+                        </div>
+                    `,
+                    applyPhone: '1644-0644',
+                    applyText: '숙소 관련 상담'
+                },
+                '외부 거주': {
+                    icon: '🏘️',
+                    title: '회사 밖에서 살기',
+                    subtitle: '외부 거주도 가능합니다',
+                    content: `
+                        <div class="detail-section">
+                            <div class="detail-title">✅ 외부 거주 가능 여부</div>
+                            <div class="detail-content">
+                                회사 숙소가 너무 열악하거나 개인 사정이 있으면 
+                                <strong style="color: #6BA3D4;">밖에서 집을 구할 수 있습니다.</strong>
+                                <br><br>
+                                단, 근로계약서를 먼저 확인하세요!
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">📋 확인할 사항</div>
+                            <ul class="detail-list">
+                                <li>근로계약서에 "숙소 의무 거주" 조항 확인</li>
+                                <li>회사와 협의 (문서로 남기기)</li>
+                                <li>숙소비 공제 여부 확인</li>
+                                <li>외부 거주 시 보조금 지급 여부</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">💰 비용 처리</div>
+                            <div class="detail-content">
+                                • 회사 숙소를 안 쓰면 → 숙소비 공제 안 함
+                                <br>• 일부 회사는 → 외부 거주 보조금 지급
+                                <br>• 계약서에 따라 다름
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">⚠️ 주의사항</div>
+                            <ul class="detail-list">
+                                <li>회사 허락 없이 나가면 계약 위반 가능</li>
+                                <li>출퇴근 거리 고려 (교통비, 시간)</li>
+                                <li>집 구하기 전 회사와 먼저 협의</li>
+                                <li>주소 변경 신고 (출입국관리사무소)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">💪 회사가 거부하면?</div>
+                            <div class="detail-content">
+                                회사 숙소가 최저 기준에 미달하는데도 
+                                외부 거주를 막으면 고용노동부에 신고할 수 있습니다.
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">📞 상담</div>
+                            <div class="contact-info">
+                                <div class="contact-info-title">외부 거주 상담</div>
+                                <div class="contact-info-item">
+                                    <span>외국인력상담센터:</span>
+                                    <span class="contact-info-phone" onclick="makeCall('1644-0644')">☎ 1644-0644</span>
+                                </div>
+                            </div>
+                        </div>
+                    `,
+                    applyPhone: '1644-0644',
+                    applyText: '외부 거주 상담'
+                },
+                '집 구하는 법': {
+                    icon: '🔎',
+                    title: '한국에서 집 구하는 방법',
+                    subtitle: '월세, 전세, 보증금 시스템',
+                    content: `
+                        <div class="detail-section">
+                            <div class="detail-title">🏠 한국 주거 유형</div>
+                            <div class="detail-content">
+                                <strong style="color: #6BA3D4;">1. 월세</strong>
+                                <br>• 보증금 + 매달 월세 납부
+                                <br>• 보증금: 500만~1000만원
+                                <br>• 월세: 30만~60만원 (지역마다 다름)
+                                <br><br>
+                                <strong style="color: #6BA3D4;">2. 전세</strong>
+                                <br>• 큰 보증금만 내고 월세 없음
+                                <br>• 계약 끝나면 보증금 전액 반환
+                                <br>• 외국인은 전세 구하기 어려움
+                                <br><br>
+                                <strong style="color: #6BA3D4;">3. 고시원/원룸</strong>
+                                <br>• 보증금 적고 월세만 납부
+                                <br>• 외국인에게 가장 현실적
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">📱 집 구하는 방법</div>
+                            <ul class="detail-list">
+                                <li>부동산 앱 이용 (직방, 다방, 네이버 부동산)</li>
+                                <li>동네 부동산 중개사무소 방문</li>
+                                <li>외국인 커뮤니티 활용</li>
+                                <li>회사 동료에게 소개받기</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">⚠️ 계약 시 주의사항</div>
+                            <ul class="detail-list">
+                                <li class="important-highlight">계약서 꼭 확인! <span class="required-tag">필수</span></li>
+                                <li>집 상태 사진/영상 촬영</li>
+                                <li>보증금 영수증 받기</li>
+                                <li>계약 기간 확인</li>
+                                <li>외국인등록증 필요</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">💡 외국인을 위한 팁</div>
+                            <ul class="detail-list">
+                                <li>고시원: 보증금 적음, 구하기 쉬움</li>
+                                <li>원룸: 독립 공간, 월세 비쌈</li>
+                                <li>셰어하우스: 여러 명이 같이 사는 집</li>
+                                <li>직장과 가까운 곳 추천</li>
+                                <li>대중교통 접근성 확인</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">🚨 사기 주의!</div>
+                            <div class="detail-content">
+                                • 계약서 없이 보증금 내지 마세요
+                                <br>• 너무 싼 집은 의심하세요
+                                <br>• 집주인 신분증 확인
+                                <br>• 실제 집을 보고 계약하세요
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">📞 주거 상담</div>
+                            <div class="contact-info">
+                                <div class="contact-info-title">주거 문제 상담</div>
+                                <div class="contact-info-item">
+                                    <span>외국인력상담센터:</span>
+                                    <span class="contact-info-phone" onclick="makeCall('1644-0644')">☎ 1644-0644</span>
+                                </div>
+                                <div class="contact-info-item">
+                                    <span>서울이주노동자센터:</span>
+                                    <span class="contact-info-phone" onclick="makeCall('02-2670-0331')">☎ 02-2670-0331</span>
+                                </div>
+                            </div>
+                        </div>
+                    `,
+                    applyPhone: '1644-0644',
+                    applyText: '주거 상담받기'
+                },
+                '쉼터': {
+                    icon: '🏠',
+                    title: '긴급 쉼터',
+                    subtitle: '당장 갈 곳이 없을 때',
+                    content: `
+                        <div class="detail-section">
+                            <div class="detail-title">🆘 긴급 쉼터란?</div>
+                            <div class="detail-content">
+                                회사 숙소를 나왔는데 갈 곳이 없거나, 
+                                긴급하게 대피해야 할 때 
+                                <strong style="color: #dc3545;">임시로 머물 수 있는 곳</strong>입니다.
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">📍 지역별 쉼터 찾기</div>
+                            <div class="detail-content" style="margin-bottom: 12px;">
+                                아래에서 당신이 있는 지역을 선택하세요:
+                            </div>
+                            <select id="regionSelect" style="width: 100%; padding: 12px; border: 2px solid #6BA3D4; border-radius: 8px; font-size: 14px; font-weight: 600; background-color: white; margin-bottom: 15px;" onchange="showRegionShelters(this.value)">
+                                <option value="">-- 지역 선택 --</option>
+                                <option value="서울">서울</option>
+                                <option value="경기">경기</option>
+                                <option value="인천">인천</option>
+                                <option value="부산">부산</option>
+                                <option value="대구">대구</option>
+                                <option value="대전">대전</option>
+                                <option value="광주">광주</option>
+                                <option value="울산">울산</option>
+                                <option value="강원">강원</option>
+                                <option value="충북">충청북도</option>
+                                <option value="충남">충청남도</option>
+                                <option value="전북">전라북도</option>
+                                <option value="전남">전라남도</option>
+                                <option value="경북">경상북도</option>
+                                <option value="경남">경상남도</option>
+                                <option value="제주">제주</option>
+                            </select>
+                            <div id="shelterList" style="display: none;">
+                                <div style="background-color: #e8f4f8; padding: 15px; border-radius: 8px; border-left: 4px solid #6BA3D4;">
+                                    <div style="font-weight: 700; color: #333; margin-bottom: 10px;" id="shelterRegionTitle"></div>
+                                    <div id="shelterItems"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">🏠 이용 가능한 쉼터 종류</div>
+                            <ul class="detail-list">
+                                <li>이주노동자 쉼터 (지역별 운영)</li>
+                                <li>외국인근로자지원센터</li>
+                                <li>종교 단체 운영 쉼터</li>
+                                <li>NGO 운영 긴급 쉼터</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">📋 이용 방법</div>
+                            <ul class="detail-list">
+                                <li>전화로 먼저 연락 (자리 확인)</li>
+                                <li>외국인등록증 지참</li>
+                                <li>상황 설명</li>
+                                <li>무료 또는 저렴한 비용</li>
+                                <li>단기 체류 (보통 1~2주)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">🌟 쉼터에서 제공하는 것</div>
+                            <ul class="detail-list">
+                                <li>잠잘 곳 (침대, 이불)</li>
+                                <li>식사 (기본 제공)</li>
+                                <li>상담 및 법률 지원</li>
+                                <li>다음 거처 찾기 도움</li>
+                                <li>심리적 지원</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">⚠️ 주의사항</div>
+                            <div class="detail-content">
+                                쉼터는 <strong>임시 공간</strong>이므로 
+                                머무는 동안 다음 거처를 찾아야 합니다. 
+                                쉼터 직원이 도와줍니다.
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">📞 긴급 연락처</div>
+                            <div class="contact-info">
+                                <div class="contact-info-title">전국 긴급 상담</div>
+                                <div class="contact-info-item">
+                                    <span>외국인력상담센터:</span>
+                                    <span class="contact-info-phone" onclick="makeCall('1644-0644')">☎ 1644-0644</span>
+                                </div>
+                                <div class="contact-info-item">
+                                    <span>외국인근로자지원센터:</span>
+                                    <span class="contact-info-phone" onclick="makeCall('1577-0071')">☎ 1577-0071</span>
+                                </div>
+                                <div class="contact-info-item" style="margin-top: 8px; color: #856404;">
+                                    💡 위 지역별 쉼터 목록에서 가까운 곳으로 연락하세요
+                                </div>
+                            </div>
+                        </div>
+                    `,
+                    applyPhone: '1644-0644',
+                    applyText: '긴급 쉼터 문의'
+                }
+            };
+
+            const data = infoData[type];
+            if (!data) {
+                showToast('상세 정보를 확인합니다');
+                return;
+            }
+
+            document.getElementById('modalTitle').innerHTML = `${data.icon} ${data.title}`;
+            document.getElementById('modalSubtitle').textContent = data.subtitle;
+            
+            const footerHTML = `
+                <div class="modal-footer">
+                    <button class="apply-button" onclick="applyInfo('${type}', '${data.applyPhone}')">
+                        📞 ${data.applyText}
+                    </button>
+                    <div class="contact-buttons">
+                        <button class="contact-btn" onclick="makeCall('${data.applyPhone}')">
+                            ☎️ 전화 상담
+                        </button>
+                        <button class="contact-btn" onclick="closeModal()">
+                            ✖️ 닫기
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('modalBody').innerHTML = data.content + footerHTML;
+            document.getElementById('detailModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function applyInfo(type, phone) {
+            closeModal();
+            showToast(`${type} 상담 신청을 진행합니다`);
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        function showRegionShelters(region) {
+            const shelterData = {
+                '서울': [
+                    { name: '서울이주노동자센터', phone: '02-2670-0331', address: '서울시 구로구' },
+                    { name: '서울외국인노동자센터', phone: '02-3672-9472', address: '서울시 영등포구' },
+                    { name: '한국이주민건강협회 희망의친구들', phone: '02-322-1003', address: '서울시 마포구' },
+                    { name: '남서울이주노동자센터', phone: '02-834-1833', address: '서울시 관악구' }
+                ],
+                '경기': [
+                    { name: '안산이주민센터', phone: '031-492-6451', address: '경기도 안산시' },
+                    { name: '성남이주민센터', phone: '031-754-7891', address: '경기도 성남시' },
+                    { name: '수원이주민센터', phone: '031-247-0691', address: '경기도 수원시' },
+                    { name: '평택이주노동자쉼터', phone: '031-656-9636', address: '경기도 평택시' },
+                    { name: '의정부이주노동자센터', phone: '031-873-7521', address: '경기도 의정부시' }
+                ],
+                '인천': [
+                    { name: '인천외국인노동자센터', phone: '032-817-7316', address: '인천시 남동구' },
+                    { name: '인천이주민센터', phone: '032-434-2080', address: '인천시 부평구' }
+                ],
+                '부산': [
+                    { name: '부산이주민센터', phone: '051-806-0620', address: '부산시 사상구' },
+                    { name: '부산외국인노동자지원센터', phone: '051-322-7420', address: '부산시 부산진구' }
+                ],
+                '대구': [
+                    { name: '대구이주민선교센터', phone: '053-425-0691', address: '대구시 중구' },
+                    { name: '대구외국인노동자센터', phone: '053-743-1004', address: '대구시 북구' }
+                ],
+                '대전': [
+                    { name: '대전이주민지원센터', phone: '042-524-6984', address: '대전시 중구' }
+                ],
+                '광주': [
+                    { name: '광주이주민건강센터', phone: '062-444-0070', address: '광주시 남구' },
+                    { name: '광주외국인노동자센터', phone: '062-367-0989', address: '광주시 광산구' }
+                ],
+                '울산': [
+                    { name: '울산이주민센터', phone: '052-256-2001', address: '울산시 남구' }
+                ],
+                '강원': [
+                    { name: '원주이주민센터', phone: '033-744-8950', address: '강원도 원주시' },
+                    { name: '강릉이주민지원센터', phone: '033-642-6316', address: '강원도 강릉시' }
+                ],
+                '충북': [
+                    { name: '청주이주민지원센터', phone: '043-234-4420', address: '충청북도 청주시' },
+                    { name: '충주이주노동자센터', phone: '043-843-9958', address: '충청북도 충주시' }
+                ],
+                '충남': [
+                    { name: '천안외국인노동자센터', phone: '041-567-2040', address: '충청남도 천안시' },
+                    { name: '아산이주민센터', phone: '041-547-0691', address: '충청남도 아산시' }
+                ],
+                '전북': [
+                    { name: '전주이주민센터', phone: '063-232-0691', address: '전라북도 전주시' },
+                    { name: '군산이주노동자센터', phone: '063-442-7522', address: '전라북도 군산시' }
+                ],
+                '전남': [
+                    { name: '순천이주민지원센터', phone: '061-742-5691', address: '전라남도 순천시' },
+                    { name: '여수이주민센터', phone: '061-684-0199', address: '전라남도 여수시' }
+                ],
+                '경북': [
+                    { name: '포항이주민센터', phone: '054-272-7796', address: '경상북도 포항시' },
+                    { name: '구미이주노동자지원센터', phone: '054-456-0693', address: '경상북도 구미시' }
+                ],
+                '경남': [
+                    { name: '창원이주민센터', phone: '055-268-3440', address: '경상남도 창원시' },
+                    { name: '김해이주민지원센터', phone: '055-336-0691', address: '경상남도 김해시' },
+                    { name: '거제이주노동자센터', phone: '055-638-0691', address: '경상남도 거제시' }
+                ],
+                '제주': [
+                    { name: '제주이주민센터', phone: '064-744-1004', address: '제주시' }
+                ]
+            };
+
+            const shelterList = document.getElementById('shelterList');
+            const shelterRegionTitle = document.getElementById('shelterRegionTitle');
+            const shelterItems = document.getElementById('shelterItems');
+
+            if (!region) {
+                shelterList.style.display = 'none';
+                return;
+            }
+
+            const shelters = shelterData[region] || [];
+            
+            if (shelters.length === 0) {
+                shelterRegionTitle.textContent = `${region} 지역`;
+                shelterItems.innerHTML = `
+                    <div style="color: #666; font-size: 13px; padding: 10px 0;">
+                        등록된 쉼터 정보가 없습니다. 전국 상담센터(1644-0644)로 문의하세요.
+                    </div>
+                `;
+                shelterList.style.display = 'block';
+                return;
+            }
+
+            shelterRegionTitle.textContent = `${region} 지역 쉼터 (${shelters.length}곳)`;
+            
+            let itemsHTML = '';
+            shelters.forEach(shelter => {
+                itemsHTML += `
+                    <div style="background-color: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid #6BA3D4;">
+                        <div style="font-weight: 700; color: #333; font-size: 14px; margin-bottom: 4px;">${shelter.name}</div>
+                        <div style="font-size: 12px; color: #666; margin-bottom: 4px;">📍 ${shelter.address}</div>
+                        <div style="font-size: 14px; color: #6BA3D4; font-weight: 700; cursor: pointer;" onclick="makeCall('${shelter.phone}')">
+                            ☎ ${shelter.phone}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            shelterItems.innerHTML = itemsHTML;
+            shelterList.style.display = 'block';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('detailModal');
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+                                
