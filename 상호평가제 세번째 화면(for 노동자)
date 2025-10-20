@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dom Dom - 직원 행동 평가</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f0f0f0;
+            max-width: 430px;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 42px;
+            font-weight: 700;
+            color: #6BA3D4;
+            letter-spacing: 1px;
+            font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+        }
+
+        .logo-subtitle {
+            font-size: 12px;
+            color: #6BA3D4;
+            margin-top: 5px;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+            transition: all 0.3s;
+        }
+
+        .back-button:hover {
+            color: #6BA3D4;
+        }
+
+        .main-content {
+            padding: 20px;
+        }
+
+        .info-section {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .info-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .info-description {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .question-section {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .question-number {
+            font-size: 16px;
+            font-weight: 700;
+            color: #6BA3D4;
+            margin-bottom: 12px;
+        }
+
+        .question-text {
+            font-size: 15px;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .rating-scale {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .rating-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .rating-option:hover {
+            background-color: #e9ecef;
+        }
+
+        .rating-option.selected {
+            background-color: #e3f2fd;
+            border-color: #6BA3D4;
+        }
+
+        .rating-option input[type="radio"] {
+            margin-top: 3px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .rating-label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 13px;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .rating-point {
+            font-weight: 700;
+            color: #6BA3D4;
+        }
+
+        .question-note {
+            font-size: 12px;
+            color: #6BA3D4;
+            margin-top: 12px;
+            padding: 10px;
+            background-color: #f0f8ff;
+            border-radius: 6px;
+            border-left: 3px solid #6BA3D4;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .action-button {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .prev-button {
+            background-color: #ffffff;
+            color: #333;
+            border: 2px solid #e0e0e0;
+        }
+
+        .prev-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            background-color: #f9f9f9;
+        }
+
+        .next-button {
+            background-color: #6BA3D4;
+            color: white;
+        }
+
+        .next-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            background-color: #5a92c3;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 18px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            background-color: #218838;
+        }
+
+        .action-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-bar {
+            background-color: #ffffff;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .progress-text {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #6BA3D4;
+            transition: width 0.3s;
+            border-radius: 4px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+            max-width: 90%;
+        }
+
+        .toast.show {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="back-button" onclick="goBack()">←</button>
+        <div class="logo">Dom Dom</div>
+        <div class="logo-subtitle">외국인 노동자 도우미 앱</div>
+    </div>
+
+    <div class="main-content">
+        <div class="info-section">
+            <div class="info-title">📝 응답 지침</div>
+            <div class="info-description">
+                귀하의 답변은 지난 6개월 내에 제3자에게 정대 공유되지 않습니다.<br>
+                (Ex. 노무 / 고용)
+            </div>
+            <div class="info-description" style="margin-top: 10px;">
+                솔직하게 답변하여주십니다.
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-text">진행률: <span id="progressText">0/10</span></div>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div id="questionsContainer"></div>
+
+        <div class="action-buttons">
+            <button class="action-button prev-button" id="prevBtn" onclick="prevQuestion()" disabled>← 이전</button>
+            <button class="action-button next-button" id="nextBtn" onclick="nextQuestion()">다음 →</button>
+        </div>
+
+        <button class="submit-button" id="submitBtn" onclick="submitSurvey()" style="display: none;">제출하기</button>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const questions = [
+            {
+                number: 1,
+                text: "동료가 도움을 요청할 경우 자발적으로 지원한다.",
+                options: [
+                    { point: 1, text: "도움 요청을 무시·거절한다." },
+                    { point: 2, text: "시간 여유 있을 때만 마지못해 지원한다." },
+                    { point: 3, text: "요청 시 성실히 지원한다." },
+                    { point: 4, text: "필요를 먼저 파악해 제안·지원한다." },
+                    { point: 5, text: "멘토링·온보딩 등으로 팀 역량을 향상시킨다." }
+                ],
+                note: "👉 이 질문은 협업 행동을 측정하기 위한 문항입니다."
+            },
+            {
+                number: 2,
+                text: "중요한 업무의 마감을 지키지 못하는 경우가 자주 있다.",
+                options: [
+                    { point: 1, text: "거의 마감을 지키며 지연은 드물다." },
+                    { point: 2, text: "대체로 지키지만 가끔 사후 통보로 지연한다." },
+                    { point: 3, text: "지연이 종종 발생하나 사전 조율이 있다." },
+                    { point: 4, text: "지연이 잦고 품질에도 영향을 준다." },
+                    { point: 5, text: "마감을 자주 놓쳐 팀 성과에 큰 영향을 준다." }
+                ],
+                note: "👉 이 질문은 업무 수행 태도를 측정하기 위한 문항입니다."
+            },
+            {
+                number: 3,
+                text: "피드백을 받아도 업무 방식에 변화가 거의 없다.",
+                options: [
+                    { point: 1, text: "피드백을 적극 반영하여 개선한다." },
+                    { point: 2, text: "대체로 반영하나 일부는 변하지 않는다." },
+                    { point: 3, text: "피드백 반영이 제한적이고 일시적이다." },
+                    { point: 4, text: "피드백 반영이 드물다." },
+                    { point: 5, text: "피드백을 무시하며 같은 실수를 반복한다." }
+                ],
+                note: "👉 이 질문은 성장 저항성을 측정하기 위한 문항입니다."
+            },
+            {
+                number: 4,
+                text: "문제 상황 발생 시 스스로 해결책을 찾아 적용한다.",
+                options: [
+                    { point: 1, text: "문제를 회피하거나 타인 지시 없이는 해결하지 않는다." },
+                    { point: 2, text: "문제를 인식하나 임시방편에 그친다." },
+                    { point: 3, text: "일반 문제는 스스로 원인 파악·해결한다." },
+                    { point: 4, text: "복잡한 문제도 분석·대안 실행 후 결과 공유한다." },
+                    { point: 5, text: "문제를 사전 예방하고 프로세스 개선으로 재발 방지한다." }
+                ],
+                note: "👉 이 질문은 문제 해결 능력을 측정하기 위한 문항입니다."
+            },
+            {
+                number: 5,
+                text: "개인 업무만 수행하며 팀 목표 달성에는 거의 기여하지 않는다.",
+                options: [
+                    { point: 1, text: "팀 목표에도 꾸준히 기여한다." },
+                    { point: 2, text: "필요 시 일부만 참여한다." },
+                    { point: 3, text: "대체로 개인 업무 위주로 일한다." },
+                    { point: 4, text: "팀 목표에 거의 기여하지 않는다." },
+                    { point: 5, text: "팀 목표 달성을 방해하거나 무관심하다." }
+                ],
+                note: "👉 이 질문은 목표 지향성을 측정하기 위한 문항입니다."
+            },
+            {
+                number: 6,
+                text: "할당된 업무를 마감일까지 완료한다.",
+                options: [
+                    { point: 1, text: "마감을 자주 놓치고(50% 미만) 사전 공유 없이 지연한다." },
+                    { point: 2, text: "마감 준수율 50~80%, 지연 시 사후 보고에 그친다." },
+                    { point: 3, text: "마감 준수율 80~95%, 필요 시 사전 알림 후 기준 품질로 제출한다." },
+                    { point: 4, text: "마감 준수율 95% 이상, 리스크를 미리 공유·조정한다." },
+                    { point: 5, text: "항상 마감 준수 또는 앞당겨 제출, 리스크를 선제 제거한다." }
+                ],
+                note: "👉 이 질문은 업무 수행 능력을 측정하기 위한 문항입니다."
+            },
+            {
+                number: 7,
+                text: "도움 요청을 무시하거나 거절하는 편이다.",
+                options: [
+                    { point: 1, text: "항상 요청에 응한다." },
+                    { point: 2, text: "대체로 돕지만 소극적이다." },
+                    { point: 3, text: "상황에 따라 돕지 않는 경우가 있다." },
+                    { point: 4, text: "요청을 자주 거절한다." },
+                    { point: 5, text: "일관되게 협조하지 않는다." }
+                ],
+                note: "👉 이 질문은 협업 태도를 측정하기 위한 문항입니다."
+            },
+            {
+                number: 8,
+                text: "피드백을 받은 뒤 업무 방식을 바꾼 경험이 있다.",
+                options: [
+                    { point: 1, text: "피드백을 방어적으로 받아들이고 변화가 없다." },
+                    { point: 2, text: "수용하지만 행동 변화는 미미하거나 일시적이다." },
+                    { point: 3, text: "일부 행동을 바꾸고 개선을 보인다." },
+                    { point: 4, text: "신속히 반영해 측정 가능한 개선을 낸다." },
+                    { point: 5, text: "피드백을 선제적으로 요청하고 표준화·확산한다." }
+                ],
+                note: "👉 이 질문은 성장 및 발전을 측정하기 위한 문항입니다."
+            },
+            {
+                number: 9,
+                text: "문제를 회피하거나 타인의 지시 없이는 해결하지 않는다.",
+                options: [
+                    { point: 1, text: "항상 스스로 문제를 해결하고 공유한다." },
+                    { point: 2, text: "대체로 해결하되 어려운 경우 지시를 따른다." },
+                    { point: 3, text: "문제를 피하거나 다른 사람에 의존하는 편이다." },
+                    { point: 4, text: "스스로 해결한 사례가 드물다." },
+                    { point: 5, text: "문제 해결 시도조차 거의 하지 않는다." }
+                ],
+                note: "👉 이 질문은 문제 해결 태도를 측정하기 위한 문항입니다."
+            },
+            {
+                number: 10,
+                text: "팀/부서 목표 달성을 위해 본인이 맡지 않은 부분도 보완한다.",
+                options: [
+                    { point: 1, text: "개인 업무만 고수하고 팀 목표에 관심이 없다." },
+                    { point: 2, text: "요청 시 제한적으로 참여한다." },
+                    { point: 3, text: "요청 시 적시에 지원하고 일정 조율한다." },
+                    { point: 4, text: "필요를 먼저 파악해 자발적으로 보완한다." },
+                    { point: 5, text: "병목을 주도 해결하고 KPI 개선에 기여한다." }
+                ],
+                note: "👉 이 질문은 목표 달성도를 측정하기 위한 문항입니다."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let answers = {};
+
+        function renderQuestion(index) {
+            const container = document.getElementById('questionsContainer');
+            const question = questions[index];
+            
+            container.innerHTML = `
+                <div class="question-section">
+                    <div class="question-number">Q${question.number}</div>
+                    <div class="question-text">${question.text}</div>
+                    <div class="rating-scale">
+                        ${question.options.map((option, i) => `
+                            <div class="rating-option ${answers[index] === i ? 'selected' : ''}" onclick="selectRating(${index}, ${i})">
+                                <input type="radio" id="q${index}_${i}" name="q${index}" value="${i}" ${answers[index] === i ? 'checked' : ''}>
+                                <label for="q${index}_${i}" class="rating-label">
+                                    <span class="rating-point">${option.point}점:</span> ${option.text}
+                                </label>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="question-note">${question.note}</div>
+                </div>
+            `;
+
+            updateProgress();
+            updateButtons();
+        }
+
+        function selectRating(questionIndex, optionIndex) {
+            answers[questionIndex] = optionIndex;
+            document.getElementById(`q${questionIndex}_${optionIndex}`).checked = true;
+            
+            // 선택 스타일 업데이트
+            document.querySelectorAll(`input[name="q${questionIndex}"]`).forEach(radio => {
+                radio.parentElement.classList.remove('selected');
+            });
+            document.getElementById(`q${questionIndex}_${optionIndex}`).parentElement.classList.add('selected');
+            
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const answeredCount = Object.keys(answers).length;
+            const totalCount = questions.length;
+            const percentage = (answeredCount / totalCount) * 100;
+            
+            document.getElementById('progressText').textContent = `${answeredCount}/${totalCount}`;
+            document.getElementById('progressFill').style.width = `${percentage}%`;
+        }
+
+        function updateButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            prevBtn.disabled = currentQuestion === 0;
+            
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'block';
+            } else {
+                nextBtn.style.display = 'block';
+                submitBtn.style.display = 'none';
+            }
+        }
+
+        function nextQuestion() {
+            if (answers[currentQuestion] === undefined) {
+                showToast('답변을 선택해주세요.');
+                return;
+            }
+            
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                renderQuestion(currentQuestion);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                renderQuestion(currentQuestion);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function submitSurvey() {
+            if (Object.keys(answers).length < questions.length) {
+                showToast('모든 질문에 답변해주세요.');
+                return;
+            }
+            
+            showToast('설문이 제출되었습니다. 감사합니다!');
+            
+            // 실제로는 서버에 제출
+            setTimeout(() => {
+                // window.location.href = 'result-page.html';
+            }, 1500);
+        }
+
+        function goBack() {
+            if (confirm('작성 중인 내용이 사라집니다. 돌아가시겠습니까?')) {
+                showToast('이전 페이지로 돌아갑니다.');
+                setTimeout(() => {
+                    // window.history.back();
+                }, 1000);
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        // 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            renderQuestion(currentQuestion);
+        });
+    </script>
+</body>
+</html>
