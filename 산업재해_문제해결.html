@@ -1,0 +1,2163 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dom Dom - 산업재해 문제</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f0f0f0;
+            max-width: 430px;
+            margin: 0 auto;
+            overflow-x: hidden;
+            padding-bottom: 20px;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .logo {
+            font-size: 42px;
+            font-weight: 700;
+            color: #6BA3D4;
+            letter-spacing: 1px;
+            font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+        }
+
+        .logo-subtitle {
+            font-size: 12px;
+            color: #6BA3D4;
+            margin-top: 5px;
+        }
+
+        .home-button {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+            background: none;
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .home-button:hover {
+            color: #6BA3D4;
+        }
+
+        .page-info {
+            background-color: #ffffff;
+            padding: 20px;
+            margin: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .page-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .page-description {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+            background-color: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #6BA3D4;
+        }
+
+        .section {
+            background-color: #ffffff;
+            padding: 20px;
+            margin: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-card {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .info-card:hover {
+            background-color: #e8f4f8;
+            transform: translateY(-2px);
+        }
+
+        .info-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-card-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-card-content {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .rights-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .rights-item {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .rights-item:hover {
+            background-color: #e8f4f8;
+            transform: translateY(-2px);
+        }
+
+        .rights-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .rights-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .rights-desc {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .highlight-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .highlight-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #856404;
+            margin-bottom: 8px;
+        }
+
+        .highlight-text {
+            font-size: 13px;
+            color: #856404;
+            line-height: 1.5;
+        }
+
+        .warning-box {
+            background-color: #fee2e2;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .warning-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #7f1d1d;
+            margin-bottom: 8px;
+        }
+
+        .warning-text {
+            font-size: 13px;
+            color: #7f1d1d;
+            line-height: 1.5;
+        }
+
+        .contact-section {
+            padding: 0 20px 30px 20px;
+        }
+
+        .contact-button {
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .contact-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .contact-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .contact-phone {
+            font-size: 16px;
+            font-weight: 700;
+            color: #6BA3D4;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .toast.show {
+            opacity: 0.9;
+        }
+
+        .step-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .step-number {
+            min-width: 28px;
+            height: 28px;
+            background-color: #6BA3D4;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            overflow-y: auto;
+        }
+
+        .modal.show {
+            display: block;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            max-width: 430px;
+            margin: 20px auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background-color: #6BA3D4;
+            color: white;
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .modal-subtitle {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .modal-body {
+            padding: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .detail-section {
+            margin-bottom: 20px;
+        }
+
+        .detail-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-content {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .detail-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .detail-list li {
+            padding: 10px 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #333;
+            display: flex;
+            align-items: start;
+            gap: 8px;
+        }
+
+        .detail-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-list li::before {
+            content: '•';
+            color: #6BA3D4;
+            font-weight: 700;
+            font-size: 18px;
+            line-height: 1.2;
+        }
+
+        .contact-info {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #6BA3D4;
+        }
+
+        .contact-info-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .contact-info-item {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contact-info-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-info-phone {
+            color: #6BA3D4;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .contact-info-phone:hover {
+            text-decoration: underline;
+        }
+
+        .required-tag {
+            display: inline-block;
+            background-color: #dc3545;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-left: 6px;
+        }
+
+        .important-highlight {
+            background-color: #fff3cd;
+            border-left: 4px solid #dc3545;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            color: #721c24;
+            margin-bottom: 10px;
+        }
+
+        .danger-box {
+            background-color: #ffe5e5;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .danger-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #dc3545;
+            margin-bottom: 8px;
+        }
+
+        .danger-text {
+            font-size: 13px;
+            color: #721c24;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <div class="logo">Dom Dom</div>
+            <div class="logo-subtitle">외국인 노동자 도우미 앱</div>
+        </div>
+        <button class="home-button" onclick="showToast('홈 페이지로 이동합니다')">
+            ← 홈으로
+        </button>
+    </div>
+
+    <div class="page-info">
+        <div class="page-title">
+            <span>🚑</span>
+            <span>산업재해 문제 해결</span>
+        </div>
+        <div class="page-description">
+            💡 <strong>중요:</strong> 일하다 다치면 <strong style="color: #dc3545;">즉시 회사에 알리고 병원</strong>에 가세요. 산재보험으로 치료비를 받을 수 있습니다!
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🏥 산업재해란?</div>
+        <div class="danger-box">
+            <div class="danger-title">⚠️ 산업재해 (산재)</div>
+            <div class="danger-text">일하다가 다치거나 병에 걸리는 것을 말합니다. 회사가 치료비와 보상을 해야 합니다!</div>
+        </div>
+        <div class="info-card" onclick="showInfo('산재정의')">
+            <div class="info-card-title">
+                <span>📋</span>
+                <span>산업재해가 뭔가요?</span>
+            </div>
+            <div class="info-card-content">
+                업무 중 발생한 부상, 질병, 사망을 말합니다
+                <br><strong style="color: #6BA3D4;">자세히 보기 →</strong>
+            </div>
+        </div>
+        <div class="info-card" onclick="showInfo('산재보험')">
+            <div class="info-card-title">
+                <span>🛡️</span>
+                <span>산재보험이란?</span>
+            </div>
+            <div class="info-card-content">
+                일하다 다친 근로자를 보호하는 국가 보험입니다
+                <br><strong style="color: #6BA3D4;">자세히 보기 →</strong>
+            </div>
+        </div>
+        <div class="info-card" onclick="showInfo('산재인정')">
+            <div class="info-card-title">
+                <span>✅</span>
+                <span>어떤 경우에 산재인가요?</span>
+            </div>
+            <div class="info-card-content">
+                업무 중, 출퇴근 중 사고도 산재입니다
+                <br><strong style="color: #6BA3D4;">자세히 보기 →</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">💰 산재보험 혜택</div>
+        <div class="rights-grid">
+            <div class="rights-item" onclick="showInfo('요양급여')">
+                <div class="rights-icon">🏥</div>
+                <div class="rights-name">요양급여</div>
+                <div class="rights-desc">치료비 전액 지원</div>
+            </div>
+            <div class="rights-item" onclick="showInfo('휴업급여')">
+                <div class="rights-icon">💵</div>
+                <div class="rights-name">휴업급여</div>
+                <div class="rights-desc">치료 중 임금 보상</div>
+            </div>
+            <div class="rights-item" onclick="showInfo('장해급여')">
+                <div class="rights-icon">♿</div>
+                <div class="rights-name">장해급여</div>
+                <div class="rights-desc">후유증 보상</div>
+            </div>
+            <div class="rights-item" onclick="showInfo('유족급여')">
+                <div class="rights-icon">👨‍👩‍👧</div>
+                <div class="rights-name">유족급여</div>
+                <div class="rights-desc">사망 시 유가족 보상</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🚨 이런 경우 즉시 신고!</div>
+        <div class="highlight-box">
+            <div class="highlight-title">💡 알아두세요!</div>
+            <div class="highlight-text">이런 상황이면 반드시 산재 신고를 하세요. 늦으면 보상을 못 받을 수 있습니다!</div>
+        </div>
+        <div class="info-card" onclick="showInfo('작업중사고')">
+            <div class="info-card-title">
+                <span>⚙️</span>
+                <span>작업 중 다친 경우</span>
+            </div>
+            <div class="info-card-content">
+                기계에 다치거나 떨어지는 등 작업 중 부상
+                <br><strong style="color: #6BA3D4;">자세히 보기 →</strong>
+            </div>
+        </div>
+        <div class="info-card" onclick="showInfo('출퇴근사고')">
+            <div class="info-card-title">
+                <span>🚗</span>
+                <span>출퇴근 중 사고</span>
+            </div>
+            <div class="info-card-content">
+                집에서 회사 가는 길, 회사에서 집 가는 길 사고
+                <br><strong style="color: #6BA3D4;">자세히 보기 →</strong>
+            </div>
+        </div>
+        <div class="info-card" onclick="showInfo('직업병')">
+            <div class="info-card-title">
+                <span>🤒</span>
+                <span>직업병이 생긴 경우</span>
+            </div>
+            <div class="info-card-content">
+                소음으로 귀가 안 들리거나 화학물질로 병이 생긴 경우
+                <br><strong style="color: #6BA3D4;">자세히 보기 →</strong>
+            </div>
+        </div>
+        <div class="info-card" onclick="showInfo('과로질병')">
+            <div class="info-card-title">
+                <span>💔</span>
+                <span>과로로 병이 생긴 경우</span>
+            </div>
+            <div class="info-card-content">
+                과로로 심장병, 뇌출혈 등이 생긴 경우
+                <br><strong style="color: #6BA3D4;">자세히 보기 →</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">⚡ 산재 발생 시 대처 방법</div>
+        <ul class="step-list">
+            <li class="step-item">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <div class="step-title">즉시 응급조치</div>
+                    <div class="step-desc">위험한 상황이면 119 신고! 심각하면 병원으로 바로 가세요.</div>
+                </div>
+            </li>
+            <li class="step-item">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <div class="step-title">회사에 알리기</div>
+                    <div class="step-desc">즉시 회사에 다쳤다고 알리고, 증거를 남기세요 (문자, 사진 등).</div>
+                </div>
+            </li>
+            <li class="step-item">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <div class="step-title">병원 치료</div>
+                    <div class="step-desc">산재 지정 병원에서 "산재 환자"라고 말하고 치료받으세요.</div>
+                </div>
+            </li>
+            <li class="step-item">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <div class="step-title">산재 신청</div>
+                    <div class="step-desc">근로복지공단에 산재 신청서를 제출하세요 (회사 또는 본인).</div>
+                </div>
+            </li>
+            <li class="step-item">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <div class="step-title">치료 및 보상</div>
+                    <div class="step-desc">산재 승인되면 치료비와 휴업급여를 받으며 치료하세요.</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <div class="section-title">❗ 회사가 이렇게 하면 불법!</div>
+        <div class="info-card" onclick="showInfo('산재은폐')">
+            <div class="info-card-title">
+                <span>🙈</span>
+                <span>산재를 숨기라고 하는 경우</span>
+            </div>
+            <div class="info-card-content">
+                "산재 신고하지 마", "개인 치료비로 해결해" → 불법!
+                <br><strong style="color: #6BA3D4;">자세히 보기 →</strong>
+            </div>
+        </div>
+        <div class="info-card" onclick="showInfo('산재회피')">
+            <div class="info-card-title">
+                <span>💸</span>
+                <span>돈을 주며 합의하자는 경우</span>
+            </div>
+            <div class="info-card-content">
+                산재 대신 돈을 주겠다는 제안은 조심해야 합니다
+                <br><strong style="color: #6BA3D4;">자세히 보기 →</strong>
+            </div>
+        </div>
+        <div class="info-card" onclick="showInfo('산재불이익')">
+            <div class="info-card-title">
+                <span>😡</span>
+                <span>산재 신청했다고 불이익을 주는 경우</span>
+            </div>
+            <div class="info-card-content">
+                산재 신청을 이유로 해고, 불이익은 불법입니다
+                <br><strong style="color: #6BA3D4;">자세히 보기 →</strong>
+            </div>
+        </div>
+        <div class="info-card" onclick="showInfo('치료거부')">
+            <div class="info-card-title">
+                <span>🚫</span>
+                <span>병원 가지 못하게 하는 경우</span>
+            </div>
+            <div class="info-card-content">
+                다쳤는데 병원 못 가게 하는 것은 범죄입니다
+                <br><strong style="color: #6BA3D4;">자세히 보기 →</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">❓ 자주 묻는 질문</div>
+        <div class="info-card" onclick="showInfo('외국인산재')">
+            <div class="info-card-title">
+                <span>🌏</span>
+                <span>외국인도 산재보험 받나요?</span>
+            </div>
+            <div class="info-card-content">
+                네! 외국인도 내국인과 똑같이 산재보험을 받습니다
+                <br><strong style="color: #6BA3D4;">자세히 보기 →</strong>
+            </div>
+        </div>
+        <div class="info-card" onclick="showInfo('회사거부')">
+            <div class="info-card-title">
+                <span>🤝</span>
+                <span>회사가 산재 신청 거부하면?</span>
+            </div>
+            <div class="info-card-content">
+                근로자 본인이 직접 신청할 수 있습니다
+                <br><strong style="color: #6BA3D4;">자세히 보기 →</strong>
+            </div>
+        </div>
+        <div class="info-card" onclick="showInfo('치료비')">
+            <div class="info-card-title">
+                <span>💊</span>
+                <span>치료비를 이미 냈어요</span>
+            </div>
+            <div class="info-card-content">
+                산재 승인되면 나중에 돌려받을 수 있습니다
+                <br><strong style="color: #6BA3D4;">자세히 보기 →</strong>
+            </div>
+        </div>
+        <div class="info-card" onclick="showInfo('불승인')">
+            <div class="info-card-title">
+                <span>❌</span>
+                <span>산재 신청이 거절됐어요</span>
+            </div>
+            <div class="info-card-content">
+                불복 심사를 청구할 수 있습니다
+                <br><strong style="color: #6BA3D4;">자세히 보기 →</strong>
+            </div>
+        </div>
+        <div class="info-card" onclick="showInfo('소송생활비')">
+            <div class="info-card-title">
+                <span>💰</span>
+                <span>소송 중에 일할 수 있나요?</span>
+            </div>
+            <div class="info-card-content">
+                치료 중이 아니면 다른 일을 할 수 있습니다
+                <br><strong style="color: #6BA3D4;">자세히 보기 →</strong>
+            </div>
+        </div>
+        <div class="info-card" onclick="showInfo('예방')">
+            <div class="info-card-title">
+                <span>🦺</span>
+                <span>산재를 예방하려면?</span>
+            </div>
+            <div class="info-card-content">
+                안전 수칙을 지키고 보호구를 착용하세요
+                <br><strong style="color: #6BA3D4;">자세히 보기 →</strong>
+            </div>
+        </div>
+        <div class="info-card" onclick="showInfo('소송기간생활')">
+            <div class="info-card-title">
+                <span>⏳</span>
+                <span>심사·소송 기간에 일 못하나요?</span>
+            </div>
+            <div class="info-card-content">
+                불승인 심사 중에도 일할 수 있고 생활비 지원도 받을 수 있습니다
+                <br><strong style="color: #6BA3D4;">자세히 보기 →</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="contact-section">
+        <div class="section-title" style="margin-bottom: 15px; padding: 0 0 0 20px;">📞 긴급 연락처</div>
+        <a href="tel:119" class="contact-button" style="border-left: 4px solid #dc3545;">
+            <span class="contact-title">응급상황 (구급차)</span>
+            <span class="contact-phone" style="color: #dc3545;">☎ 119</span>
+        </a>
+        <a href="tel:1588-0075" class="contact-button">
+            <span class="contact-title">근로복지공단 (산재 신청·상담)</span>
+            <span class="contact-phone">☎ 1588-0075</span>
+        </a>
+        <a href="tel:1644-0644" class="contact-button">
+            <span class="contact-title">외국인력 상담센터</span>
+            <span class="contact-phone">☎ 1644-0644</span>
+        </a>
+        <a href="tel:1350" class="contact-button">
+            <span class="contact-title">고용노동부 (산재 은폐 신고)</span>
+            <span class="contact-phone">☎ 1350</span>
+        </a>
+        <a href="tel:1577-1588" class="contact-button">
+            <span class="contact-title">대한법률구조공단 (무료 법률지원)</span>
+            <span class="contact-phone">☎ 1577-1588</span>
+        </a>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-title" id="modalTitle"></div>
+                <div class="modal-subtitle" id="modalSubtitle"></div>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        const modalData = {
+            '소송생활비': {
+                title: '소송 중 생활비',
+                subtitle: '불승인 소송 기간 동안의 취업과 생활',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">💰 소송 중에도 일할 수 있나요?</div>
+                        <div class="important-highlight">
+                            네! 치료가 끝났고 일할 수 있는 상태라면 다른 일을 하면서 소송을 진행할 수 있습니다
+                        </div>
+                        <div class="detail-content">
+                            산재 불승인 결정에 대한 불복(심사청구, 재심사, 소송)은 몇 개월에서 1~2년까지 걸릴 수 있습니다. 이 기간 동안 생활비 걱정이 당연하지만, 대부분의 경우 일을 할 수 있습니다!
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">✅ 일할 수 있는 경우</div>
+                        <div class="detail-content">
+                            <strong>다음 상황이면 다른 일을 할 수 있습니다:</strong><br><br>
+                            
+                            <strong>1. 치료가 종결된 경우</strong><br>
+                            • 의사가 "더 이상 치료 필요 없음" 판정<br>
+                            • 다른 일자리 구할 수 있음<br>
+                            • 소송과 별개로 생활 가능<br><br>
+                            
+                            <strong>2. 장해가 남았지만 일할 수 있는 경우</strong><br>
+                            • 후유증은 있지만 업무 수행 가능<br>
+                            • 본인 상태에 맞는 일 찾기<br>
+                            • 가벼운 업무, 단시간 근무도 OK<br><br>
+                            
+                            <strong>3. 통원치료 중인 경우</strong><br>
+                            • 입원은 안 하고 정기적으로 병원 다님<br>
+                            • 치료 시간 외에는 일 가능<br>
+                            • 무리하지 않는 선에서 근무<br><br>
+                            
+                            <strong style="color: #6BA3D4;">중요: 일하는 것이 소송에 불리하지 않습니다!</strong>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">⚠️ 조심할 점</div>
+                        <div class="detail-content">
+                            <strong>1. 같은 종류의 일은 피하기</strong><br>
+                            • 같은 부위를 다치게 한 작업은 피하기<br>
+                            • 예: 허리 다쳤으면 무거운 것 드는 일 X<br>
+                            • 재발하면 원래 산재와 관련성 증명 어려움<br><br>
+                            
+                            <strong>2. 증상 악화 주의</strong><br>
+                            • 무리하면 증상 악화 가능<br>
+                            • 의사와 상담 후 결정<br>
+                            • 본인 몸 상태 최우선<br><br>
+                            
+                            <strong>3. 소득 기록 남기기</strong><br>
+                            • 새로운 일자리 계약서 보관<br>
+                            • 급여명세서 보관<br>
+                            • 소송 시 참고 자료
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">💡 생활비 해결 방법</div>
+                        <div class="detail-content">
+                            <strong>1. 다른 일자리 구하기 (가능한 경우)</strong><br>
+                            • 본인 상태에 맞는 일<br>
+                            • 가벼운 업무, 단시간 근무<br>
+                            • 소송 중에도 당당히 생활<br><br>
+                            
+                            <strong>2. 긴급복지 지원</strong><br>
+                            생계가 어려운 경우 정부 지원<br>
+                            • 생계비, 의료비, 주거비<br>
+                            • 읍면동 주민센터 신청<br>
+                            • 129 전화 (보건복지콜센터)<br><br>
+                            
+                            <strong>3. 기초생활수급</strong><br>
+                            소득·재산 기준 충족 시<br>
+                            • 생계급여, 의료급여 등<br>
+                            • 주민센터 신청<br><br>
+                            
+                            <strong>4. 실업급여 (퇴사한 경우)</strong><br>
+                            고용보험 가입했었다면<br>
+                            • 조건 충족 시 실업급여<br>
+                            • 고용센터 신청<br><br>
+                            
+                            <strong>5. 법률구조공단 소송비 지원</strong><br>
+                            소송 비용 걱정되면<br>
+                            • 무료 또는 저렴하게 변호사<br>
+                            • 승소하면 비용 공단 부담<br>
+                            • 1577-1588 문의
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">📅 소송 기간은 얼마나?</div>
+                        <div class="detail-content">
+                            <strong>심사청구:</strong> 2~3개월<br>
+                            <strong>재심사청구:</strong> 2~3개월<br>
+                            <strong>행정소송:</strong> 6개월~2년<br><br>
+                            
+                            <strong>빨리 끝내려면:</strong><br>
+                            • 전문가(노무사, 변호사) 도움<br>
+                            • 증거 철저히 준비<br>
+                            • 기한 엄수
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">💪 소송 중 일하면 불리한가요?</div>
+                        <div class="detail-content">
+                            <strong style="color: #6BA3D4;">아니요! 전혀 불리하지 않습니다.</strong><br><br>
+                            
+                            • 치료가 끝나고 일할 수 있으면 일하는 것이 정상<br>
+                            • 일한다고 해서 산재가 아니라는 증거 아님<br>
+                            • 법원도 이를 이해함<br>
+                            • 생활을 위해 일하는 것은 당연한 권리<br><br>
+                            
+                            <strong>단,</strong> 같은 업무를 무리 없이 하면:<br>
+                            → 다른 종류의 일을 하는 것이 좋음
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">🏥 치료 중인데 생활비가 없다면?</div>
+                        <div class="detail-content">
+                            <strong>매우 어려운 상황입니다. 즉시 도움 요청하세요:</strong><br><br>
+                            
+                            <strong>1. 긴급복지 지원 신청</strong><br>
+                            • 주민센터에 즉시 방문<br>
+                            • "생계가 어렵습니다" 말하기<br>
+                            • 빠르면 며칠 내 지원<br><br>
+                            
+                            <strong>2. 병원에 사정 설명</strong><br>
+                            • 치료비 분할 납부 요청<br>
+                            • 사회복지팀 상담<br><br>
+                            
+                            <strong>3. 외국인력상담센터</strong><br>
+                            • 1644-0644<br>
+                            • 모국어로 상담<br>
+                            • 지원 방법 안내
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">💡 핵심 정리</div>
+                        <div class="detail-content">
+                            ✅ <strong>치료 끝나면 일해도 됩니다</strong><br>
+                            ✅ <strong>소송과 일은 별개입니다</strong><br>
+                            ✅ <strong>일하는 것이 소송에 불리하지 않습니다</strong><br>
+                            ✅ <strong>생활비 지원 제도 활용하세요</strong><br>
+                            ✅ <strong>긴급복지 지원 신청하세요</strong><br>
+                            ✅ <strong>무리하지 말고 몸 관리 우선</strong><br><br>
+                            
+                            <strong style="color: #6BA3D4;">경제적 어려움 때문에 정당한 권리를 포기하지 마세요!</strong>
+                        </div>
+                    </div>
+
+                    <div class="contact-info">
+                        <div class="contact-info-title">📞 생활비 지원 상담</div>
+                        <div class="contact-info-item">
+                            주민센터: 거주지 읍면동 주민센터 방문
+                        </div>
+                        <div class="contact-info-item">
+                            긴급복지: <a href="tel:129" class="contact-info-phone">129</a> (보건복지콜센터)
+                        </div>
+                        <div class="contact-info-item">
+                            법률구조공단: <a href="tel:1577-1588" class="contact-info-phone">1577-1588</a>
+                        </div>
+                        <div class="contact-info-item">
+                            외국인력상담센터: <a href="tel:1644-0644" class="contact-info-phone">1644-0644</a>
+                        </div>
+                    </div>
+                `
+            },
+            '산재정의': {
+                title: '산업재해란?',
+                subtitle: '일하다가 다치거나 병에 걸리는 것',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">📋 산업재해의 정의</div>
+                        <div class="important-highlight">
+                            근로자가 업무를 수행하다가 발생한 부상, 질병, 장해 또는 사망
+                        </div>
+                        <div class="detail-content">
+                            산업재해보상보험법에 따라 업무상 재해로 인정되면 국가가 치료비와 보상금을 지급합니다. 외국인 근로자도 동일하게 보호받습니다.
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">🔍 산재의 종류</div>
+                        <ul class="detail-list">
+                            <li><strong>업무상 사고:</strong> 작업 중 기계에 다치거나 떨어지는 등</li>
+                            <li><strong>출퇴근 재해:</strong> 출퇴근 중 발생한 교통사고 등</li>
+                            <li><strong>업무상 질병:</strong> 소음, 화학물질 등으로 인한 직업병</li>
+                            <li><strong>과로 질병:</strong> 장시간 노동으로 인한 심장병, 뇌출혈 등</li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">💡 중요 사항</div>
+                        <div class="detail-content">
+                            • 근로자의 과실이 있어도 산재로 인정됩니다<br>
+                            • 안전수칙을 지키지 않았어도 산재입니다<br>
+                            • 작은 부상도 산재 신청 가능합니다<br>
+                            • 즉시 증상이 없어도 나중에 나타나면 산재입니다
+                        </div>
+                    </div>
+                `
+            },
+            '산재보험': {
+                title: '산재보험',
+                subtitle: '일하다 다친 근로자를 보호하는 국가 보험',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">🛡️ 산재보험이란?</div>
+                        <div class="important-highlight">
+                            근로자가 업무상 재해를 당했을 때 국가가 치료와 보상을 해주는 사회보험
+                        </div>
+                        <div class="detail-content">
+                            회사가 보험료를 전액 부담하며(근로자 부담 없음), 모든 사업장의 근로자는 자동으로 가입됩니다. 외국인 근로자도 동일하게 적용됩니다.
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">🏥 산재보험 혜택</div>
+                        <ul class="detail-list">
+                            <li><strong>요양급여:</strong> 치료비 전액 (병원비, 약값 등)</li>
+                            <li><strong>휴업급여:</strong> 일 못하는 기간 임금의 70% 지급</li>
+                            <li><strong>장해급여:</strong> 후유장해가 남으면 보상</li>
+                            <li><strong>간병급여:</strong> 간병이 필요하면 추가 지급</li>
+                            <li><strong>유족급여:</strong> 사망 시 유가족에게 보상</li>
+                        </ul>
+                    </div>
+
+                    <div class="contact-info">
+                        <div class="contact-info-title">📞 산재보험 문의</div>
+                        <div class="contact-info-item">
+                            근로복지공단: <a href="tel:1588-0075" class="contact-info-phone">1588-0075</a>
+                        </div>
+                    </div>
+                `
+            },
+            '산재인정': {
+                title: '산재 인정 기준',
+                subtitle: '어떤 경우에 산재로 인정되나요?',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">✅ 산재 인정 기준</div>
+                        <div class="important-highlight">
+                            업무와 재해 사이에 상당한 인과관계가 있으면 산재로 인정
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">🔍 인정되는 경우</div>
+                        <div class="detail-content">
+                            <strong>1. 작업 중 사고</strong><br>
+                            • 기계·장비를 사용하다 다침<br>
+                            • 높은 곳에서 떨어짐<br>
+                            • 무거운 물건에 깔림<br><br>
+                            
+                            <strong>2. 출퇴근 중 사고</strong><br>
+                            • 집 → 회사 이동 중 교통사고<br>
+                            • 합리적 경로에서 발생한 사고<br><br>
+                            
+                            <strong>3. 업무상 질병</strong><br>
+                            • 소음으로 청력 손실<br>
+                            • 화학물질로 피부병<br>
+                            • 반복작업으로 근골격계 질환<br><br>
+                            
+                            <strong>4. 과로 질병</strong><br>
+                            • 장시간 노동으로 뇌출혈<br>
+                            • 과로로 심근경색
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">💡 중요 원칙</div>
+                        <div class="detail-content">
+                            • <strong>근로자 과실 있어도 인정</strong><br>
+                            • <strong>작은 부상도 인정</strong><br>
+                            • <strong>만성질환도 인정</strong><br>
+                            • <strong>정신질환도 인정</strong>
+                        </div>
+                    </div>
+                `
+            },
+            '요양급여': {
+                title: '요양급여',
+                subtitle: '치료비 전액 지원',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">🏥 요양급여란?</div>
+                        <div class="important-highlight">
+                            산재로 다친 근로자의 치료비를 전액 지원하는 급여
+                        </div>
+                        <div class="detail-content">
+                            병원비, 약값, 수술비, 입원비, 물리치료비 등 치료에 필요한 모든 비용을 근로복지공단이 직접 병원에 지급합니다.
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">💰 지원 범위</div>
+                        <ul class="detail-list">
+                            <li><strong>진찰 및 검사:</strong> 진료비, X-ray, CT, MRI 등</li>
+                            <li><strong>약제 및 치료재료:</strong> 약값, 붕대, 깁스 등</li>
+                            <li><strong>수술:</strong> 수술비 전액</li>
+                            <li><strong>입원:</strong> 입원실 비용</li>
+                            <li><strong>물리치료:</strong> 재활치료, 물리치료</li>
+                            <li><strong>이동비:</strong> 병원 이동 교통비</li>
+                        </ul>
+                    </div>
+                `
+            },
+            '휴업급여': {
+                title: '휴업급여',
+                subtitle: '치료 중 임금 보상',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">💵 휴업급여란?</div>
+                        <div class="important-highlight">
+                            산재로 일을 못해서 임금을 못 받는 기간 동안 평균임금의 70%를 지급
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">💰 지급 금액</div>
+                        <div class="detail-content">
+                            <strong>평균임금의 70%</strong><br><br>
+                            
+                            <strong>계산 예시:</strong><br>
+                            월급 250만원인 경우<br>
+                            • 평균임금: 약 83,333원/일<br>
+                            • 휴업급여: 58,333원/일<br>
+                            • 한 달: 약 175만원
+                        </div>
+                    </div>
+                `
+            },
+            '장해급여': {
+                title: '장해급여',
+                subtitle: '후유증 보상',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">♿ 장해급여란?</div>
+                        <div class="important-highlight">
+                            산재로 장해(후유증)가 남았을 때 지급되는 보상금
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">📊 장해 등급</div>
+                        <div class="detail-content">
+                            <strong>1급 ~ 14급으로 구분</strong><br><br>
+                            
+                            • 1급: 가장 중한 장해<br>
+                            • 14급: 가장 경한 장해
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">💰 지급 방법</div>
+                        <div class="detail-content">
+                            <strong>1~3급:</strong> 장해연금 (매년)<br>
+                            <strong>4~7급:</strong> 연금 또는 일시금 선택<br>
+                            <strong>8~14급:</strong> 일시금
+                        </div>
+                    </div>
+                `
+            },
+            '유족급여': {
+                title: '유족급여',
+                subtitle: '사망 시 유가족 보상',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">👨‍👩‍👧 유족급여란?</div>
+                        <div class="important-highlight">
+                            근로자가 업무상 사고나 질병으로 사망했을 때 유가족에게 지급되는 급여
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">💰 유족급여 종류</div>
+                        <div class="detail-content">
+                            <strong>1. 유족연금 (매년)</strong><br>
+                            평균임금의 52~67%<br><br>
+                            
+                            <strong>2. 유족일시금</strong><br>
+                            평균임금 × 1,300일분
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">⚰️ 장례비</div>
+                        <div class="detail-content">
+                            <strong>평균임금 × 120일분</strong><br>
+                            장례를 치른 사람에게 지급
+                        </div>
+                    </div>
+                `
+            },
+            '작업중사고': {
+                title: '작업 중 사고',
+                subtitle: '업무 수행 중 발생한 부상',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">⚙️ 작업 중 사고란?</div>
+                        <div class="important-highlight">
+                            근로자가 업무를 수행하는 과정에서 발생한 모든 사고
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">📋 인정되는 사고 유형</div>
+                        <div class="detail-content">
+                            • 기계에 손이 끼임<br>
+                            • 사다리에서 떨어짐<br>
+                            • 바닥에서 미끄러짐<br>
+                            • 화재·폭발<br>
+                            • 감전
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">💡 근로자 과실이 있어도</div>
+                        <div class="detail-content">
+                            <strong style="color: #6BA3D4;">근로자의 실수나 부주의가 있어도 산재로 인정됩니다!</strong>
+                        </div>
+                    </div>
+                `
+            },
+            '출퇴근사고': {
+                title: '출퇴근 재해',
+                subtitle: '출퇴근 중 발생한 사고',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">🚗 출퇴근 재해란?</div>
+                        <div class="important-highlight">
+                            사업주 지배관리하에서 출퇴근하는 중 발생한 사고
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">✅ 인정 요건</div>
+                        <div class="detail-content">
+                            • 회사 통근버스: 무조건 인정<br>
+                            • 통상적 경로: 조건 충족 시 인정<br>
+                            • 합리적 경로
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">🚕 인정되는 사고</div>
+                        <ul class="detail-list">
+                            <li>교통사고</li>
+                            <li>보행 중 차에 치임</li>
+                            <li>대중교통 내 부상</li>
+                            <li>역 계단에서 넘어짐</li>
+                        </ul>
+                    </div>
+                `
+            },
+            '직업병': {
+                title: '직업병',
+                subtitle: '일하면서 생긴 질병',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">🤒 직업병이란?</div>
+                        <div class="important-highlight">
+                            업무상 유해한 작업환경이나 요인에 장기간 노출되어 발생한 질병
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">📋 주요 직업병</div>
+                        <div class="detail-content">
+                            • 소음성 난청<br>
+                            • 진폐증<br>
+                            • 화학물질 중독<br>
+                            • 근골격계 질환<br>
+                            • 피부질환<br>
+                            • 직업성 암
+                        </div>
+                    </div>
+                `
+            },
+            '과로질병': {
+                title: '과로 질병',
+                subtitle: '과로·스트레스로 생긴 질병',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">💔 과로 질병이란?</div>
+                        <div class="important-highlight">
+                            과도한 업무, 장시간 노동, 업무 스트레스로 발생한 질병
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">🧠 주요 질병</div>
+                        <div class="detail-content">
+                            • 뇌출혈 (뇌졸중)<br>
+                            • 뇌경색<br>
+                            • 심근경색<br>
+                            • 협심증<br>
+                            • 우울증<br>
+                            • 불안장애
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">✅ 인정 기준</div>
+                        <div class="detail-content">
+                            • 주 60시간 이상 근무<br>
+                            • 야간근무, 교대근무<br>
+                            • 업무량 급증
+                        </div>
+                    </div>
+                `
+            },
+            '산재은폐': {
+                title: '산재 은폐',
+                subtitle: '회사가 산재를 숨기려는 경우',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">🙈 산재 은폐란?</div>
+                        <div class="important-highlight">
+                            회사가 산재 발생 사실을 숨기거나 근로자에게 산재 신청을 하지 못하게 하는 불법 행위
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">⚡ 대응 방법</div>
+                        <div class="detail-content">
+                            <strong>1. 단호한 거부</strong><br>
+                            "저는 산재 신청할 권리가 있습니다"<br><br>
+                            
+                            <strong>2. 증거 확보</strong><br>
+                            회사의 말 녹음, 문자 보관<br><br>
+                            
+                            <strong>3. 본인 직접 신청</strong><br>
+                            회사 협조 없이도 신청 가능<br><br>
+                            
+                            <strong>4. 고용노동부 신고</strong><br>
+                            1350 전화
+                        </div>
+                    </div>
+                `
+            },
+            '산재회피': {
+                title: '산재 대신 합의',
+                subtitle: '돈을 주며 합의하자는 경우',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">💸 합의 제안이란?</div>
+                        <div class="important-highlight">
+                            회사가 산재 신청 대신 직접 돈을 주겠다고 제안하는 것
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">⚠️ 합의의 위험성</div>
+                        <div class="detail-content">
+                            • 후유증이 남을 가능성<br>
+                            • 재발 시 보호 없음<br>
+                            • 회사 제시 금액은 적음<br>
+                            • 장기적 손실이 큼
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">💰 산재 vs 합의금</div>
+                        <div class="detail-content">
+                            <strong>회사 합의금:</strong> 500~1,000만원<br>
+                            <strong>산재 보상:</strong> 약 5,200만원<br>
+                            <strong>차이:</strong> 4,000만원 이상!
+                        </div>
+                    </div>
+                `
+            },
+            '산재불이익': {
+                title: '산재 신청 후 불이익',
+                subtitle: '산재 신청을 이유로 한 불이익',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">😡 불이익 처우란?</div>
+                        <div class="important-highlight">
+                            산재 신청을 이유로 근로자에게 불이익을 주는 것은 명백한 불법
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">❌ 금지되는 불이익</div>
+                        <ul class="detail-list">
+                            <li>해고</li>
+                            <li>감봉</li>
+                            <li>징계</li>
+                            <li>괴롭힘</li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">⚡ 대응 방법</div>
+                        <div class="detail-content">
+                            • 증거 확보<br>
+                            • 고용노동부 신고<br>
+                            • 노동위원회 구제신청<br>
+                            • 원직 복직
+                        </div>
+                    </div>
+                `
+            },
+            '치료거부': {
+                title: '치료 거부',
+                subtitle: '다쳤는데 병원 못 가게 하는 경우',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">🚫 치료 거부란?</div>
+                        <div class="important-highlight">
+                            근로자가 다쳤는데 회사가 병원에 가지 못하게 하는 것은 범죄입니다
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">🚨 즉시 행동</div>
+                        <div class="detail-content">
+                            <strong>1. 회사 지시 무시</strong><br>
+                            생명과 건강이 최우선!<br><br>
+                            
+                            <strong>2. 119 신고</strong><br>
+                            심각한 경우 즉시<br><br>
+                            
+                            <strong>3. 병원 방문</strong><br>
+                            회사 허락 없이<br><br>
+                            
+                            <strong>4. 고용노동부 신고</strong><br>
+                            1350 전화
+                        </div>
+                    </div>
+                `
+            },
+            '외국인산재': {
+                title: '외국인 산재보험',
+                subtitle: '외국인도 산재보험을 받습니다',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">🌏 외국인 산재보험</div>
+                        <div class="important-highlight">
+                            외국인 근로자도 내국인과 100% 동일하게 산재보험 적용
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">✅ 적용 대상</div>
+                        <ul class="detail-list">
+                            <li>합법 체류 (모든 비자)</li>
+                            <li>불법체류 (비자 만료도 보호)</li>
+                            <li>단기 체류</li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">🗣️ 언어 지원</div>
+                        <div class="detail-content">
+                            <strong>외국인력상담센터</strong><br>
+                            1644-0644<br>
+                            17개 언어<br>
+                            24시간 상담
+                        </div>
+                    </div>
+                `
+            },
+            '회사거부': {
+                title: '회사가 산재 거부하면',
+                subtitle: '근로자 본인이 직접 신청',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">🤝 회사 협조 거부</div>
+                        <div class="important-highlight">
+                            회사가 산재 신청을 거부해도 근로자 본인이 직접 신청할 수 있습니다
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">📋 본인 신청 방법</div>
+                        <div class="detail-content">
+                            • 산재보험 급여 청구서<br>
+                            • 진단서<br>
+                            • 사고 경위서<br>
+                            • 근로복지공단 제출<br>
+                            • 공단이 직접 조사
+                        </div>
+                    </div>
+
+                    <div class="contact-info">
+                        <div class="contact-info-title">📞 신청 도움</div>
+                        <div class="contact-info-item">
+                            외국인력상담센터: <a href="tel:1644-0644" class="contact-info-phone">1644-0644</a>
+                        </div>
+                    </div>
+                `
+            },
+            '치료비': {
+                title: '치료비를 이미 낸 경우',
+                subtitle: '산재 승인 후 환급',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">💊 치료비 환급</div>
+                        <div class="important-highlight">
+                            산재 승인되면 이미 낸 치료비를 돌려받을 수 있습니다
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">💰 환급 방법</div>
+                        <div class="detail-content">
+                            <strong>1. 영수증 모으기</strong><br>
+                            모든 영수증 보관<br><br>
+                            
+                            <strong>2. 산재 승인</strong><br>
+                            먼저 산재 신청 후 승인<br><br>
+                            
+                            <strong>3. 환급 청구</strong><br>
+                            공단에 청구서 제출<br><br>
+                            
+                            <strong>시효: 3년</strong>
+                        </div>
+                    </div>
+                `
+            },
+            '불승인': {
+                title: '산재 불승인',
+                subtitle: '산재 신청이 거절된 경우',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">❌ 산재 불승인이란?</div>
+                        <div class="important-highlight">
+                            근로복지공단이 산재 신청을 심사한 결과 업무 관련성을 인정하지 않는 경우
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">⚡ 불복 절차</div>
+                        <div class="detail-content">
+                            <strong>1. 심사청구</strong><br>
+                            90일 이내 / 무료<br><br>
+                            
+                            <strong>2. 재심사청구</strong><br>
+                            90일 이내 / 무료<br><br>
+                            
+                            <strong>3. 행정소송</strong><br>
+                            90일 이내 / 법원
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">⏱️ 기한 엄수!</div>
+                        <div class="detail-content">
+                            <strong style="color: #dc3545;">기한을 꼭 지켜야 합니다!</strong><br>
+                            기한 지나면 불복 기회 상실
+                        </div>
+                    </div>
+
+                    <div class="contact-info">
+                        <div class="contact-info-title">📞 불복 상담</div>
+                        <div class="contact-info-item">
+                            법률구조공단: <a href="tel:1577-1588" class="contact-info-phone">1577-1588</a>
+                        </div>
+                    </div>
+                `
+            },
+            '소송기간생활': {
+                title: '심사·소송 기간 중 생활',
+                subtitle: '불승인 심사 중에도 일하고 생활할 수 있습니다',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">⏳ 심사·소송 기간은?</div>
+                        <div class="important-highlight">
+                            산재 불승인 후 심사·소송은 수개월에서 수년이 걸릴 수 있습니다
+                        </div>
+                        <div class="detail-content">
+                            • 심사청구: 2~3개월<br>
+                            • 재심사청구: 2~3개월<br>
+                            • 행정소송: 6개월~2년<br><br>
+                            
+                            <strong>총 길게는 2~3년까지 걸릴 수 있습니다.</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">💼 취업 가능 여부</div>
+                        <div class="important-highlight">
+                            심사·소송 중에도 일할 수 있습니다!
+                        </div>
+                        <div class="detail-content">
+                            <strong>✅ 가능한 것:</strong><br><br>
+                            
+                            • 새로운 직장 구하기<br>
+                            • 다른 업종에서 일하기<br>
+                            • 아르바이트하기<br>
+                            • 일용직 일하기<br><br>
+                            
+                            <strong>❌ 제한 없음:</strong><br><br>
+                            
+                            • 산재 심사 중이라고 취업이 막히지 않습니다<br>
+                            • 회사에 알릴 의무도 없습니다<br>
+                            • 비자 문제도 없습니다 (합법 체류 시)<br><br>
+                            
+                            <strong style="color: #6BA3D4;">걱정하지 마세요! 자유롭게 일할 수 있습니다.</strong>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">⚠️ 주의사항</div>
+                        <div class="detail-content">
+                            <strong>1. 치료 중인 경우</strong><br>
+                            • 부상 부위에 무리 없는 일 선택<br>
+                            • 의사와 상담 권장<br>
+                            • 악화되면 증거 확보 어려움<br><br>
+                            
+                            <strong>2. 소송에 영향</strong><br>
+                            • 일할 수 있다 = 장해 정도가 경미하다는 주장 가능<br>
+                            • 하지만 생계를 위해 일하는 것은 당연<br>
+                            • 무리하지 않는 선에서 일하기<br><br>
+                            
+                            <strong>3. 증거 관리</strong><br>
+                            • 부상 부위를 쓰지 않는 일이라고 설명 가능<br>
+                            • 의사 소견서로 입증<br>
+                            • "생계를 위해 어쩔 수 없이 일함" 주장 가능
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">💰 생활비 지원 (매우 중요!)</div>
+                        <div class="important-highlight">
+                            산재 심사 중 생활비가 없어도 걱정하지 마세요. 정부와 민간 지원이 있습니다!
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">🆘 1. 긴급복지 지원 (가장 빠름)</div>
+                        <div class="detail-content">
+                            <strong>📌 이런 분들에게:</strong><br>
+                            • 갑자기 일을 못하게 된 경우<br>
+                            • 당장 생활비가 없는 경우<br>
+                            • 의료비를 낼 수 없는 경우<br>
+                            • 집세를 낼 수 없는 경우<br><br>
+                            
+                            <strong>💵 지원 금액:</strong><br>
+                            • <strong>생계비:</strong> 1인 약 70만원 (최대 6개월)<br>
+                            • <strong>의료비:</strong> 최대 300만원<br>
+                            • <strong>주거비:</strong> 월 최대 70만원 (6개월)<br>
+                            • <strong>연료비:</strong> 월 11만원<br>
+                            • <strong>해산비:</strong> 70만원 (출산 시)<br>
+                            • <strong>장제비:</strong> 80만원 (사망 시)<br><br>
+                            
+                            <strong>✅ 자격 조건:</strong><br>
+                            • 갑작스런 위기 상황 (실직, 질병, 재해 등)<br>
+                            • 소득·재산 기준 이하<br>
+                            • <strong style="color: #6BA3D4;">외국인도 신청 가능!</strong> (합법 체류 시)<br><br>
+                            
+                            <strong>📋 신청 방법:</strong><br>
+                            <strong>1. 주민센터 방문</strong><br>
+                            &nbsp;&nbsp;- 집 근처 주민센터 (동사무소)<br>
+                            &nbsp;&nbsp;- 통역 필요하면 외국인력상담센터 동행 요청<br><br>
+                            
+                            <strong>2. 필요 서류:</strong><br>
+                            &nbsp;&nbsp;- 신분증 (외국인등록증)<br>
+                            &nbsp;&nbsp;- 진단서 (병원)<br>
+                            &nbsp;&nbsp;- 소득·재산 증빙 서류<br>
+                            &nbsp;&nbsp;- 통장 사본<br><br>
+                            
+                            <strong>3. 즉시 지원 시작</strong><br>
+                            &nbsp;&nbsp;- 신청 후 1~2주 내 지급<br>
+                            &nbsp;&nbsp;- 긴급하면 당일 지급 가능<br><br>
+                            
+                            <strong>📞 문의:</strong> 주민센터 또는 129 (보건복지상담센터)
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">🏠 2. 국민기초생활보장 (장기 지원)</div>
+                        <div class="detail-content">
+                            <strong>📌 이런 분들에게:</strong><br>
+                            • 소득이 매우 낮거나 없는 경우<br>
+                            • 장기간 생활비가 필요한 경우<br>
+                            • 산재 소송이 길어질 것 같은 경우<br><br>
+                            
+                            <strong>💵 지원 금액 (2025년 기준):</strong><br>
+                            • <strong>생계급여:</strong> 1인 월 약 70만원<br>
+                            • <strong>의료급여:</strong> 병원비 거의 무료 (본인부담 최소)<br>
+                            • <strong>주거급여:</strong> 1인 월 약 33만원<br>
+                            • <strong>교육급여:</strong> 자녀 학비 지원<br><br>
+                            
+                            <strong>✅ 자격 조건:</strong><br>
+                            • 기준 중위소득 30~50% 이하<br>
+                            • 재산 기준 이하<br>
+                            • <strong style="color: #dc3545;">⚠️ 외국인은 제한적</strong><br>
+                            &nbsp;&nbsp;→ 결혼이민자, 국적 취득 전 자녀 등만 가능<br>
+                            &nbsp;&nbsp;→ 일반 외국인 근로자는 어려움<br><br>
+                            
+                            <strong>📋 신청 방법:</strong><br>
+                            • 주민센터 방문<br>
+                            • 복지로 홈페이지 (www.bokjiro.go.kr)<br>
+                            • 소득·재산 조사 후 결정<br><br>
+                            
+                            <strong>📞 문의:</strong> 주민센터 또는 129
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">⚖️ 3. 법률구조공단 (소송비 지원)</div>
+                        <div class="detail-content">
+                            <strong>📌 이런 분들에게:</strong><br>
+                            • 산재 불승인으로 소송해야 하는데 돈이 없는 경우<br>
+                            • 변호사 비용을 낼 수 없는 경우<br><br>
+                            
+                            <strong>💵 지원 내용:</strong><br>
+                            • <strong>무료 법률상담</strong><br>
+                            • <strong>변호사 비용 무료 또는 감면</strong><br>
+                            &nbsp;&nbsp;→ 소득 기준 충족 시 100% 무료<br>
+                            &nbsp;&nbsp;→ 초과 시 30~70% 감면<br>
+                            • <strong>소송 비용 (인지대, 송달료) 무료</strong><br>
+                            • <strong>승소 시 모든 비용 공단 부담</strong><br><br>
+                            
+                            <strong>✅ 자격 조건:</strong><br>
+                            • 월 소득 400만원 이하 (1인 기준)<br>
+                            • 재산 2억원 이하<br>
+                            • <strong style="color: #6BA3D4;">외국인도 가능!</strong><br><br>
+                            
+                            <strong>📋 신청 방법:</strong><br>
+                            <strong>1. 전화 상담:</strong> 1577-1588 (132번 - 외국어 통역)<br>
+                            <strong>2. 방문 상담:</strong> 전국 지부<br>
+                            <strong>3. 온라인 신청:</strong> www.klac.or.kr<br><br>
+                            
+                            <strong>필요 서류:</strong><br>
+                            • 신분증<br>
+                            • 소득·재산 증빙<br>
+                            • 불승인 결정서<br>
+                            • 진단서<br><br>
+                            
+                            <strong>⏱️ 처리 기간:</strong> 1~2주 내 결정<br><br>
+                            
+                            <strong style="color: #6BA3D4;">💡 꿀팁:</strong> 승소하면 비용을 전혀 안 내도 됩니다!
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">🌏 4. 외국인 근로자 특별 지원</div>
+                        <div class="detail-content">
+                            <strong>📌 외국인력지원센터:</strong><br>
+                            • 긴급 생활비 지원 (소액)<br>
+                            • 무료 숙소 제공 (일시적)<br>
+                            • 무료 식사 제공<br>
+                            • 구직 지원<br>
+                            • 법률 상담<br><br>
+                            
+                            <strong>📞 연락처:</strong><br>
+                            • 외국인력상담센터: 1644-0644<br>
+                            • 각 지역 외국인력지원센터<br><br>
+                            
+                            <strong>📌 종교단체·NGO 지원:</strong><br>
+                            • 외국인 노동자센터<br>
+                            • 이주민센터<br>
+                            • 교회, 성당, 사찰 긴급 지원<br>
+                            • 소액 생활비, 식사, 숙소 지원<br><br>
+                            
+                            <strong>지역별 센터:</strong><br>
+                            • 서울: 서울글로벌센터 (02-2075-4180)<br>
+                            • 경기: 경기도외국인인권지원센터 (031-891-3117)<br>
+                            • 전국: 각 지역 이주민센터
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">🍚 5. 식사 지원</div>
+                        <div class="detail-content">
+                            <strong>무료급식소:</strong><br>
+                            • 전국 무료급식소에서 무료 식사<br>
+                            • 외국인도 이용 가능<br>
+                            • 주민센터에서 가까운 곳 안내<br><br>
+                            
+                            <strong>푸드뱅크:</strong><br>
+                            • 무료 식료품 제공<br>
+                            • 라면, 쌀, 통조림 등<br>
+                            • 주민센터에 신청<br><br>
+                            
+                            <strong>종교단체:</strong><br>
+                            • 교회, 성당, 사찰 무료 식사<br>
+                            • 외국인 대상 프로그램 많음<br><br>
+                            
+                            <strong>📞 문의:</strong> 주민센터 또는 129
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">🏘️ 6. 주거 지원</div>
+                        <div class="detail-content">
+                            <strong>긴급 주거 지원:</strong><br>
+                            • 긴급복지 주거비: 월 최대 70만원<br>
+                            • 임시 주거시설<br>
+                            • 쉼터 (단기)<br><br>
+                            
+                            <strong>외국인 쉼터:</strong><br>
+                            • 외국인노동자지원센터 쉼터<br>
+                            • 종교단체 운영 쉼터<br>
+                            • 무료 또는 저렴한 숙소<br><br>
+                            
+                            <strong>주거비 대출:</strong><br>
+                            • 주거안정월세대출 (주택도시기금)<br>
+                            • 외국인은 제한적<br>
+                            • 합법 체류 5년 이상 등 조건
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">💳 7. 기타 지원</div>
+                        <div class="detail-content">
+                            <strong>통신비 감면:</strong><br>
+                            • 기초생활수급자: 휴대폰 요금 감면<br>
+                            • 통신사에 문의<br><br>
+                            
+                            <strong>전기·가스 요금 감면:</strong><br>
+                            • 기초생활수급자: 전기·가스 요금 감면<br>
+                            • 한전, 가스공사 신청<br><br>
+                            
+                            <strong>교통비 감면:</strong><br>
+                            • 기초생활수급자: 대중교통 할인<br><br>
+                            
+                            <strong>긴급 대부:</strong><br>
+                            • 소액 대부 (50만원~200만원)<br>
+                            • 저금리 또는 무이자<br>
+                            • 사회복지공동모금회 등
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">📝 신청 체크리스트</div>
+                        <div class="detail-content">
+                            <strong>당장 신청할 것:</strong><br><br>
+                            
+                            ☑️ <strong>긴급복지 지원</strong> (가장 먼저!)<br>
+                            &nbsp;&nbsp;→ 주민센터 방문, 1~2주 내 지급<br><br>
+                            
+                            ☑️ <strong>법률구조공단</strong> (소송 있으면)<br>
+                            &nbsp;&nbsp;→ 1577-1588 전화, 무료 변호사<br><br>
+                            
+                            ☑️ <strong>외국인력상담센터</strong><br>
+                            &nbsp;&nbsp;→ 1644-0644, 긴급 지원 문의<br><br>
+                            
+                            ☑️ <strong>무료급식소 찾기</strong><br>
+                            &nbsp;&nbsp;→ 주민센터에서 안내<br><br>
+                            
+                            ☑️ <strong>지역 외국인센터 연락</strong><br>
+                            &nbsp;&nbsp;→ 긴급 생활비, 숙소 지원<br><br>
+                            
+                            <strong style="color: #6BA3D4;">혼자 고민하지 말고 즉시 도움을 요청하세요!</strong>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">💰 실제 지원 사례</div>
+                        <div class="detail-content">
+                            <strong>사례 1: 베트남 근로자 A씨</strong><br>
+                            • 손가락 절단, 산재 불승인<br>
+                            • 긴급복지: 생계비 70만원 × 6개월<br>
+                            • 법률구조공단: 무료 변호사<br>
+                            • 외국인센터: 무료 숙소 3개월<br>
+                            • 결과: 1년 후 심사 인용, 5천만원 수령<br><br>
+                            
+                            <strong>사례 2: 네팔 근로자 B씨</strong><br>
+                            • 허리 부상, 소송 2년<br>
+                            • 긴급복지: 의료비 300만원 + 생계비<br>
+                            • 법률구조: 무료 변호사<br>
+                            • 가벼운 일: 월 150만원 수입<br>
+                            • 결과: 승소, 장해급여 8천만원<br><br>
+                            
+                            <strong>사례 3: 중국 근로자 C씨</strong><br>
+                            • 과로 질병, 불승인<br>
+                            • 긴급복지: 생계비 + 주거비<br>
+                            • 법률구조: 무료 소송<br>
+                            • 교회 지원: 식사, 교통비<br>
+                            • 결과: 재심사 인용, 치료비 전액 + 휴업급여<br><br>
+                            
+                            <strong style="color: #6BA3D4;">지원을 잘 활용하면 버틸 수 있습니다!</strong>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">🌏 외국인 근로자 특별 사항</div>
+                        <div class="detail-content">
+                            <strong>✅ 합법 체류자 (E-9, H-2 등):</strong><br><br>
+                            
+                            • 자유롭게 취업 가능<br>
+                            • 비자 종류에 따라 직종 제한 있을 수 있음<br>
+                            • E-9: 사업장 변경 필요 시 고용센터<br>
+                            • H-2: 자유롭게 취업 가능<br><br>
+                            
+                            <strong>⚠️ 불법 체류자:</strong><br><br>
+                            
+                            • 산재 심사에는 영향 없음<br>
+                            • 하지만 취업은 불법<br>
+                            • 적발 시 강제 퇴거 위험<br>
+                            • 산재 승인 후 출국 가능성 고려<br><br>
+                            
+                            <strong>💡 조언:</strong><br>
+                            • 산재 소송 중 비자 연장 어려울 수 있음<br>
+                            • 외국인력상담센터 (1644-0644) 상담<br>
+                            • 변호사와 비자 문제 상담
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">📋 실제 사례</div>
+                        <div class="detail-content">
+                            <strong>사례 1: 손가락 절단 후 심사 중</strong><br>
+                            • 상황: 왼손 검지 절단, 불승인 → 심사청구<br>
+                            • 대응: 오른손으로 할 수 있는 포장 일 시작<br>
+                            • 결과: 6개월 후 심사 인용, 장해급여 수령<br>
+                            • 교훈: 일하면서도 소송 가능<br><br>
+                            
+                            <strong>사례 2: 허리 디스크 불승인 후 재심사</strong><br>
+                            • 상황: 허리 디스크, 불승인 → 재심사청구<br>
+                            • 대응: 가벼운 사무직 아르바이트<br>
+                            • 의사 소견: "무거운 것 못 들지만 앉아서 일은 가능"<br>
+                            • 결과: 재심사 인용, 산재 승인<br>
+                            • 교훈: 일 종류 선택하면 문제 없음<br><br>
+                            
+                            <strong>사례 3: 소송 2년 동안 생활</strong><br>
+                            • 상황: 중대 재해, 불승인 → 행정소송 2년<br>
+                            • 대응: <br>
+                            &nbsp;&nbsp;- 1년차: 치료 중심, 긴급복지 지원<br>
+                            &nbsp;&nbsp;- 2년차: 회복 후 가벼운 일 시작<br>
+                            &nbsp;&nbsp;- 법률구조공단 무료 변호사<br>
+                            • 결과: 승소, 산재 승인, 수천만원 보상<br>
+                            • 교훈: 장기전 대비, 지원 활용
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">💪 심리적 부담 극복</div>
+                        <div class="detail-content">
+                            <strong>불안할 수 있는 것들:</strong><br><br>
+                            
+                            • "일하면 소송에 불리할까?"<br>
+                            → 생계를 위한 일은 당연, 불리하지 않음<br><br>
+                            
+                            • "심사 기간이 너무 길어"<br>
+                            → 길지만 끝은 있음, 포기하지 마세요<br><br>
+                            
+                            • "돈이 없어 소송 못할 것 같아"<br>
+                            → 법률구조공단이 무료 지원<br><br>
+                            
+                            • "혼자 외로워"<br>
+                            → 외국인력상담센터, 동료, 친구에게 도움 요청<br><br>
+                            
+                            <strong style="color: #6BA3D4;">여러분은 혼자가 아닙니다!</strong>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">📝 체크리스트</div>
+                        <div class="detail-content">
+                            <strong>심사·소송 기간 동안 해야 할 것:</strong><br><br>
+                            
+                            ☑ 생계를 위한 일 찾기 (무리하지 않게)<br>
+                            ☑ 정기적으로 병원 치료 (증거 확보)<br>
+                            ☑ 생활비 지원 신청 (긴급복지 등)<br>
+                            ☑ 변호사·노무사와 정기 상담<br>
+                            ☑ 증거 자료 계속 수집<br>
+                            ☑ 심리적 지원 받기 (상담센터 등)<br>
+                            ☑ 포기하지 않기!<br><br>
+                            
+                            <strong>하지 말아야 할 것:</strong><br><br>
+                            
+                            ✖ 치료 중단<br>
+                            ✖ 부상 부위 악화시키는 일<br>
+                            ✖ 증거 없이 주장만 하기<br>
+                            ✖ 중간에 포기하기<br>
+                            ✖ 혼자 고민하기
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">💡 핵심 요약</div>
+                        <div class="detail-content">
+                            <strong style="color: #6BA3D4;">✅ 심사·소송 중에도 일할 수 있습니다</strong><br>
+                            <strong style="color: #6BA3D4;">✅ 생활비 지원을 받을 수 있습니다</strong><br>
+                            <strong style="color: #6BA3D4;">✅ 법률구조공단이 무료로 도와줍니다</strong><br>
+                            <strong style="color: #6BA3D4;">✅ 무리하지 않는 일을 선택하세요</strong><br>
+                            <strong style="color: #6BA3D4;">✅ 포기하지 마세요, 끝까지 싸우세요</strong><br><br>
+                            
+                            심사·소송 기간이 길어도 생계 걱정 없이 권리를 찾을 수 있습니다!
+                        </div>
+                    </div>
+
+                    <div class="contact-info">
+                        <div class="contact-info-title">📞 생활 지원 상담</div>
+                        <div class="contact-info-item">
+                            긴급복지 (주민센터): <a href="tel:129" class="contact-info-phone">129</a>
+                        </div>
+                        <div class="contact-info-item">
+                            법률구조공단: <a href="tel:1577-1588" class="contact-info-phone">1577-1588</a>
+                        </div>
+                        <div class="contact-info-item">
+                            외국인력상담센터: <a href="tel:1644-0644" class="contact-info-phone">1644-0644</a>
+                        </div>
+                        <div class="contact-info-item">
+                            근로복지공단: <a href="tel:1588-0075" class="contact-info-phone">1588-0075</a>
+                        </div>
+                    </div>
+                `
+            },
+            '예방': {
+                title: '산재 예방',
+                subtitle: '안전하게 일하는 방법',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">🦺 산재 예방의 중요성</div>
+                        <div class="important-highlight">
+                            산재는 예방이 가장 중요합니다. 한 번 다치면 평생 후유증이 남을 수 있습니다.
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">🛡️ 개인 보호구</div>
+                        <div class="detail-content">
+                            • 안전모 (머리 보호)<br>
+                            • 안전화 (발 보호)<br>
+                            • 안전장갑 (손 보호)<br>
+                            • 보안경 (눈 보호)<br>
+                            • 마스크 (호흡기 보호)
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">📋 안전수칙</div>
+                        <ul class="detail-list">
+                            <li>작업 전 점검</li>
+                            <li>안전교육 이수</li>
+                            <li>정해진 절차대로</li>
+                            <li>정리정돈</li>
+                            <li>서두르지 않기</li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">⚠️ 위험 시 대처</div>
+                        <div class="detail-content">
+                            • 즉시 작업 중단<br>
+                            • 상사에게 보고<br>
+                            • 안전조치 요구<br>
+                            • 위험한 작업 거부 가능<br><br>
+                            
+                            <strong style="color: #6BA3D4;">생명과 건강이 일보다 중요합니다!</strong>
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        function showInfo(type) {
+            const data = modalData[type];
+            if (!data) {
+                showToast(type + ' 정보를 준비 중입니다');
+                return;
+            }
+
+            document.getElementById('modalTitle').textContent = data.title;
+            document.getElementById('modalSubtitle').textContent = data.subtitle;
+            document.getElementById('modalBody').innerHTML = data.content;
+            
+            const modal = document.getElementById('detailModal');
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        // 모달 외부 클릭 시 닫기
+        document.getElementById('detailModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
