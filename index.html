@@ -401,7 +401,10 @@
 
     <div class="chart-section">
         <div class="calendar-container">
-            <div class="calendar-header">이번 주 노동 기록</div>
+            <div class="calendar-header" style="cursor: pointer; display: flex; align-items: center; justify-content: space-between;" onclick="goToWorkRecord()">
+                <span>이번 주 노동 기록</span>
+                <span style="font-size: 14px; color: #6BA3D4;">→</span>
+            </div>
             <div class="calendar-week" id="calendarWeek">
                 <!-- JavaScript로 동적 생성 -->
             </div>
@@ -703,6 +706,11 @@
 
         function makeCall(number) {
             showToast(`${number}로 전화 연결합니다.`);
+        }
+
+        // 노동 기록 페이지로 이동
+        function goToWorkRecord() {
+            window.location.href = '노동기록.html';
         }
 
         // 초기화
