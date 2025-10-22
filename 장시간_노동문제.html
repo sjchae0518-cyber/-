@@ -565,8 +565,8 @@
             <div class="logo">Dom Dom</div>
             <div class="logo-subtitle">외국인 노동자 도우미 앱</div>
         </div>
-        <button class="home-button" onclick="showToast('홈 페이지로 이동합니다')">
-            ← 홈으로
+        <button class="home-button" onclick="goHome()">
+    ← 홈으로
         </button>
     </div>
 
@@ -794,6 +794,10 @@
     </div>
 
     <script>
+            // 홈으로 이동 함수 추가
+    function goHome() {
+        window.location.href = 'index.html';
+    }
         const modalData = {
             '법정근로시간': {
                 title: '법정 근로시간',
