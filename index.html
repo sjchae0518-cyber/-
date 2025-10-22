@@ -716,8 +716,9 @@
                 });
             });
 
+            // 한글 배우기 섹션 클릭 시 한국어 퀴즈 페이지로 이동
             document.querySelector('.korean-section').addEventListener('click', function() {
-                showToast('한국어 학습 페이지로 이동합니다.');
+                window.location.href = '한국어퀴즈.html';
             });
 
             document.querySelectorAll('.top-icon').forEach(function(icon, index) {

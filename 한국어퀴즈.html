@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dom Dom - 한국어 퀴즈</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f0f0f0;
+            max-width: 430px;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 42px;
+            font-weight: 700;
+            color: #6BA3D4;
+            letter-spacing: 1px;
+            font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+        }
+
+        .logo-subtitle {
+            font-size: 12px;
+            color: #6BA3D4;
+            margin-top: 5px;
+        }
+
+        .back-bar {
+            background-color: #ffffff;
+            display: flex;
+            padding: 15px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            color: #333;
+            fontSize: 14px;
+            font-weight: 600;
+            background: none;
+            border: none;
+        }
+
+        .profile-card {
+            background-color: #ffffff;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .profile-top {
+            display: flex;
+            align-items: start;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .profile-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .profile-emoji {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #6BA3D4 0%, #5a8cbd 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            fontSize: 36px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .profile-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .profile-level {
+            color: #6BA3D4;
+            font-weight: 700;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .streak-info {
+            text-align: right;
+        }
+
+        .streak-number {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            justify-content: flex-end;
+            margin-bottom: 4px;
+        }
+
+        .streak-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #f97316;
+        }
+
+        .progress-bar-container {
+            margin-top: 20px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            width: 100%;
+            backgroundColor: #e5e7eb;
+            border-radius: 999px;
+            height: 12px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(to right, #f87171, #ef4444, #dc2626);
+            height: 12px;
+            border-radius: 999px;
+            transition: width 0.7s ease-out;
+        }
+
+        .attendance-card {
+            background-color: #ffffff;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .attendance-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .attendance-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .attendance-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .attendance-day {
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(251, 146, 60, 0.3);
+        }
+
+        .attendance-day.active {
+            background: linear-gradient(135deg, #fb923c 0%, #ec4899 100%);
+            color: white;
+        }
+
+        .attendance-day.inactive {
+            background: #f3f4f6;
+            color: #9ca3af;
+        }
+
+        .quiz-button {
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 25px 20px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            margin: 0 20px;
+            max-width: 390px;
+        }
+
+        .quiz-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .quiz-button-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .quiz-button-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .quiz-button-icon {
+            font-size: 50px;
+        }
+
+        .quiz-button-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .quiz-button-subtitle {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .difficulty-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .difficulty-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .difficulty-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .difficulty-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .difficulty-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .difficulty-icon.beginner {
+            background: linear-gradient(135deg, #4ade80, #10b981);
+        }
+
+        .difficulty-icon.intermediate {
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+        }
+
+        .difficulty-icon.advanced {
+            background: linear-gradient(135deg, #a78bfa, #ec4899);
+        }
+
+        .difficulty-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .difficulty-desc {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .quiz-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 25px 20px;
+            margin: 0 20px 30px 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .quiz-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .quiz-badge {
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+            background: linear-gradient(135deg, #6BA3D4, #5a8cbd);
+        }
+
+        .quiz-question {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .answer-button {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+            border: 2px solid #e5e7eb;
+            background: #ffffff;
+            color: #333;
+        }
+
+        .answer-button.selected {
+            border: 2px solid #6BA3D4;
+            background: #6BA3D4;
+            color: white;
+            box-shadow: 0 2px 8px rgba(107, 163, 212, 0.3);
+        }
+
+        .answer-button.correct {
+            background: linear-gradient(135deg, #4ade80, #10b981);
+            color: white;
+            border: none;
+        }
+
+        .answer-button.incorrect {
+            background: linear-gradient(135deg, #f87171, #ec4899);
+            color: white;
+            border: none;
+        }
+
+        .answer-button.disabled {
+            background: #f3f4f6;
+            color: #9ca3af;
+            border: none;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            background: linear-gradient(135deg, #6BA3D4, #5a8cbd);
+            box-shadow: 0 2px 8px rgba(107, 163, 212, 0.3);
+            transition: all 0.3s;
+        }
+
+        .submit-button:disabled {
+            background: #d1d5db;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .result-box {
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .result-box.correct {
+            background: linear-gradient(to right, #d1fae5, #a7f3d0);
+            border: 2px solid #10b981;
+        }
+
+        .result-box.incorrect {
+            background: linear-gradient(to right, #fee2e2, #fecaca);
+            border: 2px solid #ef4444;
+        }
+
+        .result-emoji {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .result-text {
+            font-size: 14px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 메인 화면 -->
+    <div id="mainScreen">
+        <div class="header">
+            <div class="logo">Dom Dom</div>
+            <div class="logo-subtitle">외국인 노동자 도우미 앱</div>
+        </div>
+
+        <div class="back-bar">
+            <button class="back-button" onclick="goBack()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 24px; height: 24px;">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                <span>홈으로</span>
+            </button>
+        </div>
+
+        <div class="profile-card">
+            <div class="profile-top">
+                <div class="profile-left">
+                    <div class="profile-emoji" id="profileEmoji">🎓</div>
+                    <div>
+                        <div class="profile-name" id="profileName">학습자</div>
+                        <div class="profile-level">
+                            <span id="levelName">입문</span> Lv.<span id="levelNumber">1</span>
+                            <span style="font-size: 14px;">✨</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="streak-info">
+                    <div class="streak-number">
+                        <span style="font-size: 24px;">🔥</span>
+                        <span class="streak-text" id="streakDays">0</span>
+                        <span style="font-size: 20px; font-weight: 700; color: #f97316;">일</span>
+                    </div>
+                    <p style="font-size: 12px; color: #666; margin: 4px 0 0 0;">연속 출석</p>
+                    <p style="font-size: 11px; color: #999; margin: 2px 0 0 0;">총 <span id="totalPoints">0</span>점</p>
+                </div>
+            </div>
+
+            <div class="progress-bar-container">
+                <div class="progress-label">
+                    <span>경험치</span>
+                    <span><span id="currentExp">0</span> / 50</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="attendance-card">
+            <div class="attendance-header">
+                <div class="attendance-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#6BA3D4" stroke-width="2" style="width: 24px; height: 24px;">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span>출석 체크</span>
+                </div>
+            </div>
+
+            <div class="attendance-grid" id="attendanceGrid">
+                <!-- JavaScript로 생성 -->
+            </div>
+
+            <p style="text-align: center; font-size: 12px; color: #666;">
+                <span style="font-weight: 700; color: #f97316;" id="daysLeft">7</span>일 더 하면 첫 보상 획득! 🎁
+            </p>
+        </div>
+
+        <div style="padding: 0 20px 30px 20px;">
+            <button class="quiz-button" onclick="selectCategory()">
+                <div class="quiz-button-content">
+                    <div class="quiz-button-left">
+                        <div class="quiz-button-icon">📒</div>
+                        <div style="text-align: left;">
+                            <h3 class="quiz-button-title">한국어 퀴즈</h3>
+                            <p class="quiz-button-subtitle">매일 조금씩, 꾸준히 성장! 💪</p>
+                        </div>
+                    </div>
+                    <div style="font-size: 20px; color: #6BA3D4; font-weight: 700;">→</div>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <!-- 난이도 선택 화면 -->
+    <div id="difficultyScreen" class="hidden">
+        <div class="header">
+            <div class="logo">Dom Dom</div>
+            <div class="logo-subtitle">외국인 노동자 도우미 앱</div>
+        </div>
+
+        <div class="back-bar">
+            <button class="back-button" onclick="backToMain()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 24px; height: 24px;">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                <span>돌아가기</span>
+            </button>
+        </div>
+
+        <div style="background-color: #ffffff; padding: 20px; margin: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+            <div style="font-size: 56px; margin-bottom: 10px;">💬</div>
+            <h2 style="font-size: 22px; font-weight: 700; color: #333; margin: 0 0 8px 0;">한국어 퀴즈</h2>
+            <p style="color: #666; font-size: 13px;">난이도를 선택하세요!</p>
+        </div>
+
+        <div style="padding: 0 20px 30px 20px;">
+            <button class="difficulty-card" onclick="startQuiz('beginner')">
+                <div class="difficulty-content">
+                    <div class="difficulty-left">
+                        <div class="difficulty-icon beginner">1</div>
+                        <div style="text-align: left;">
+                            <h3 class="difficulty-title">초급</h3>
+                            <p class="difficulty-desc">기초부터 차근차근</p>
+                        </div>
+                    </div>
+                    <div style="font-size: 32px;">🌱</div>
+                </div>
+            </button>
+
+            <button class="difficulty-card" onclick="startQuiz('intermediate')">
+                <div class="difficulty-content">
+                    <div class="difficulty-left">
+                        <div class="difficulty-icon intermediate">2</div>
+                        <div style="text-align: left;">
+                            <h3 class="difficulty-title">중급</h3>
+                            <p class="difficulty-desc">실력을 한 단계 올려요</p>
+                        </div>
+                    </div>
+                    <div style="font-size: 32px;">🌿</div>
+                </div>
+            </button>
+
+            <button class="difficulty-card" onclick="startQuiz('advanced')">
+                <div class="difficulty-content">
+                    <div class="difficulty-left">
+                        <div class="difficulty-icon advanced">3</div>
+                        <div style="text-align: left;">
+                            <h3 class="difficulty-title">상급</h3>
+                            <p class="difficulty-desc">전문가 레벨 도전!</p>
+                        </div>
+                    </div>
+                    <div style="font-size: 32px;">🌳</div>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <!-- 퀴즈 화면 -->
+    <div id="quizScreen" class="hidden">
+        <div class="header">
+            <div class="logo">Dom Dom</div>
+            <div class="logo-subtitle">외국인 노동자 도우미 앱</div>
+        </div>
+
+        <div style="background-color: #ffffff; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #6BA3D4, #5a8cbd); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+                    <span id="quizProfileEmoji">🎓</span>
+                </div>
+                <div>
+                    <p style="font-weight: 700; color: #333; margin: 0; font-size: 13px;"><span id="quizLevelName">입문</span> Lv.<span id="quizLevelNumber">1</span></p>
+                    <p style="font-size: 11px; color: #666; margin: 2px 0 0 0;"><span id="quizTotalPoints">0</span>점</p>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px; color: #f97316;">
+                <span style="font-size: 18px;">🔥</span>
+                <span style="font-weight: 700; font-size: 14px;"><span id="quizStreakDays">0</span>일</span>
+            </div>
+        </div>
+
+        <div style="text-align: center; padding: 20px;">
+            <div style="display: inline-block; background-color: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 12px 20px;">
+                <p style="color: #333; font-weight: 600; margin: 0; font-size: 13px; display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 20px;">💪</span>
+                    <span>화이팅! 당신은 할 수 있어요!</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="quiz-card">
+            <div class="quiz-header">
+                <span class="quiz-badge">💬 한국어 퀴즈</span>
+                <span class="quiz-badge" id="difficultyBadge">초급</span>
+            </div>
+
+            <h2 class="quiz-question" id="quizQuestion">문제가 로딩 중입니다...</h2>
+
+            <div id="answersContainer" style="margin-bottom: 25px;">
+                <!-- JavaScript로 생성 -->
+            </div>
+
+            <div id="submitButtonContainer">
+                <button class="submit-button" id="submitButton" onclick="submitAnswer()" disabled>답변 제출하기</button>
+            </div>
+
+            <div id="resultContainer" class="hidden">
+                <!-- JavaScript로 생성 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const quizData = {
+            beginner: [
+                { id: 1, question: '안녕하세요의 의미는?', answers: ['만났을 때 하는 인사말', '헤어질 때 하는 인사말', '고마움을 표현하는 말', '미안함을 표현하는 말'], correct: 0 },
+                { id: 2, question: '감사합니다는 무슨 뜻일까요?', answers: ['실례를 구할 때 쓰는 말', '고마움을 표현하는 말', '부탁할 때 쓰는 말', '환영할 때 쓰는 말'], correct: 1 },
+                { id: 3, question: '물을 설명하면?', answers: ['음식', '마시는 투명한 액체', '쌀로 만든 음식', '차'], correct: 1 },
+                { id: 4, question: '밥의 의미는?', answers: ['국', '쌀로 지은 음식 또는 식사', '빵', '국수'], correct: 1 },
+                { id: 5, question: '친구는 무슨 뜻일까요?', answers: ['가족', '가까이 지내는 사람', '선생님', '학생'], correct: 1 },
+                { id: 6, question: '학교를 설명하면?', answers: ['배우는 곳', '사는 곳', '놀이터', '물건 사는 곳'], correct: 0 },
+                { id: 7, question: '사랑의 의미는?', answers: ['싫어하는 마음', '좋아하는 마음', '아주 깊이 좋아하는 마음', '화난 감정'], correct: 2 },
+                { id: 8, question: '책을 설명하면?', answers: ['글씨 쓰는 도구', '종이', '글과 그림이 있는 것', '앉는 곳'], correct: 2 },
+            ],
+            intermediate: [
+                { id: 9, question: '약속의 의미는?', answers: ['약', '미리 정한 시간이나 일', '약점', '병원'], correct: 1 },
+                { id: 10, question: '아까워하다는 무슨 뜻일까요?', answers: ['버리기 안타까운 마음', '화나는 마음', '기쁜 마음', '피곤한 마음'], correct: 0 },
+                { id: 11, question: '설레다의 뜻은?', answers: ['슬픈 마음', '기대되어 가슴이 두근거림', '혼란스러운 상태', '졸린 상태'], correct: 1 },
+                { id: 12, question: '부끄럽다는 무슨 뜻일까요?', answers: ['자랑스러운', '창피하거나 쑥스러운', '자신 있는', '용감한'], correct: 1 },
+                { id: 13, question: '그립다의 의미는?', answers: ['그림을 그리다', '보고 싶고 생각나다', '잡다', '보다'], correct: 1 },
+                { id: 14, question: '서운하다는 무슨 뜻일까요?', answers: ['기쁜', '섭섭하고 아쉬운', '신나는', '걱정되는'], correct: 1 },
+                { id: 15, question: '답답하다의 뜻은?', answers: ['막혀서 불편하거나 갑갑한', '편안한', '넓은', '맑은'], correct: 0 },
+            ],
+            advanced: [
+                { id: 16, question: '눈치가 빠르다는 무슨 의미인가요?', answers: ['달리기를 잘함', '상황을 빨리 파악함', '시력이 좋음', '공부를 잘함'], correct: 1 },
+                { id: 17, question: '손이 크다의 관용적 의미는?', answers: ['손의 크기가 큼', '인심이 후하고 베풂이 많음', '힘이 셈', '물건을 잘 떨어뜨림'], correct: 1 },
+                { id: 18, question: '발이 넓다는 무슨 뜻일까요?', answers: ['발의 크기가 큼', '아는 사람이 많고 인맥이 넓음', '키가 큼', '걷는 속도가 빠름'], correct: 1 },
+                { id: 19, question: '귀가 얇다의 의미는?', answers: ['귀가 얇음', '남의 말을 쉽게 믿음', '청력이 좋음', '남의 말을 안 들음'], correct: 1 },
+                { id: 20, question: '입이 무겁다는 무슨 뜻일까요?', answers: ['입술이 무거움', '비밀을 잘 지킴', '말을 많이 함', '입 냄새가 남'], correct: 1 },
+            ]
+        };
+
+        let userData = {
+            name: '학습자',
+            emoji: '🎓',
+            level: 1,
+            exp: 0,
+            streak: 0,
+            totalPoints: 0
+        };
+
+        let currentQuiz = null;
+        let selectedAnswer = null;
+        let currentDifficulty = null;
+
+        // 로컬 스토리지에서 데이터 로드
+        function loadUserData() {
+            const saved = localStorage.getItem('domdomUserData');
+            if (saved) {
+                userData = JSON.parse(saved);
+                updateUI();
+            }
+        }
+
+        // 로컬 스토리지에 데이터 저장
+        function saveUserData() {
+            localStorage.setItem('domdomUserData', JSON.stringify(userData));
+        }
+
+        // UI 업데이트
+        function updateUI() {
+            document.getElementById('profileName').textContent = userData.name;
+            document.getElementById('profileEmoji').textContent = userData.emoji;
+            document.getElementById('levelNumber').textContent = userData.level;
+            document.getElementById('levelName').textContent = getLevelName(userData.level);
+            document.getElementById('streakDays').textContent = userData.streak;
+            document.getElementById('totalPoints').textContent = userData.totalPoints;
+            document.getElementById('currentExp').textContent = userData.exp % 50;
+            document.getElementById('daysLeft').textContent = 7 - userData.streak;
+            
+            const progress = ((userData.exp % 50) / 50) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+
+            // 출석 그리드 업데이트
+            updateAttendanceGrid();
+        }
+
+        // 출석 그리드 생성
+        function updateAttendanceGrid() {
+            const grid = document.getElementById('attendanceGrid');
+            grid.innerHTML = '';
+            
+            for (let i = 1; i <= 7; i++) {
+                const day = document.createElement('div');
+                day.className = 'attendance-day ' + (i <= userData.streak ? 'active' : 'inactive');
+                day.innerHTML = `
+                    <span style="font-size: 20px; margin-bottom: 2px;">${i <= userData.streak ? '✓' : i}</span>
+                    <span style="font-size: 10px;">Day</span>
+                `;
+                grid.appendChild(day);
+            }
+        }
+
+        // 레벨 이름 가져오기
+        function getLevelName(level) {
+            if (level >= 9) return '전문가';
+            if (level >= 7) return '고급';
+            if (level >= 5) return '중급';
+            if (level >= 3) return '초급';
+            return '입문';
+        }
+
+        // 난이도 텍스트
+        function getDifficultyText(difficulty) {
+            if (difficulty === 'beginner') return '초급';
+            if (difficulty === 'intermediate') return '중급';
+            return '상급';
+        }
+
+        // 화면 전환
+        function selectCategory() {
+            document.getElementById('mainScreen').classList.add('hidden');
+            document.getElementById('difficultyScreen').classList.remove('hidden');
+        }
+
+        function backToMain() {
+            document.getElementById('difficultyScreen').classList.add('hidden');
+            document.getElementById('mainScreen').classList.remove('hidden');
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // 퀴즈 시작
+        function startQuiz(difficulty) {
+            currentDifficulty = difficulty;
+            const quizzes = quizData[difficulty];
+            currentQuiz = quizzes[Math.floor(Math.random() * quizzes.length)];
+            selectedAnswer = null;
+
+            // 퀴즈 화면으로 전환
+            document.getElementById('difficultyScreen').classList.add('hidden');
+            document.getElementById('quizScreen').classList.remove('hidden');
+
+            // 유저 정보 업데이트
+            document.getElementById('quizProfileEmoji').textContent = userData.emoji;
+            document.getElementById('quizLevelName').textContent = getLevelName(userData.level);
+            document.getElementById('quizLevelNumber').textContent = userData.level;
+            document.getElementById('quizTotalPoints').textContent = userData.totalPoints;
+            document.getElementById('quizStreakDays').textContent = userData.streak;
+
+            // 난이도 배지 업데이트
+            const badge = document.getElementById('difficultyBadge');
+            badge.textContent = getDifficultyText(difficulty);
+            if (difficulty === 'beginner') {
+                badge.style.background = 'linear-gradient(135deg, #4ade80, #10b981)';
+            } else if (difficulty === 'intermediate') {
+                badge.style.background = 'linear-gradient(135deg, #60a5fa, #3b82f6)';
+            } else {
+                badge.style.background = 'linear-gradient(135deg, #a78bfa, #ec4899)';
+            }
+
+            // 문제 표시
+            document.getElementById('quizQuestion').textContent = currentQuiz.question;
+
+            // 답변 버튼 생성
+            const container = document.getElementById('answersContainer');
+            container.innerHTML = '';
+            currentQuiz.answers.forEach((answer, index) => {
+                const button = document.createElement('button');
+                button.className = 'answer-button';
+                button.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 16px; font-weight: 700;">${String.fromCharCode(65 + index)}</span>
+                        <span>${answer}</span>
+                    </div>
+                `;
+                button.onclick = () => selectAnswer(index);
+                container.appendChild(button);
+            });
+
+            // 결과 숨기기
+            document.getElementById('resultContainer').classList.add('hidden');
+            document.getElementById('submitButtonContainer').classList.remove('hidden');
+            document.getElementById('submitButton').disabled = true;
+        }
+
+        // 답변 선택
+        function selectAnswer(index) {
+            selectedAnswer = index;
+            
+            // 모든 버튼에서 selected 제거
+            const buttons = document.querySelectorAll('.answer-button');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            
+            // 선택된 버튼에 selected 추가
+            buttons[index].classList.add('selected');
+            
+            // 제출 버튼 활성화
+            document.getElementById('submitButton').disabled = false;
+        }
+
+        // 답변 제출
+        function submitAnswer() {
+            if (selectedAnswer === null) return;
+
+            const isCorrect = selectedAnswer === currentQuiz.correct;
+            const basePoints = currentDifficulty === 'advanced' ? 15 : currentDifficulty === 'intermediate' ? 12 : 10;
+            const points = isCorrect ? basePoints : 0;
+
+            // 답변 버튼 스타일 변경
+            const buttons = document.querySelectorAll('.answer-button');
+            buttons.forEach((btn, index) => {
+                btn.onclick = null;
+                if (index === currentQuiz.correct) {
+                    btn.classList.add('correct');
+                    btn.classList.remove('selected');
+                } else if (index === selectedAnswer) {
+                    btn.classList.add('incorrect');
+                    btn.classList.remove('selected');
+                } else {
+                    btn.classList.add('disabled');
+                }
+            });
+
+            // 경험치 및 포인트 업데이트
+            if (isCorrect) {
+                userData.exp += points;
+                userData.totalPoints += points;
+                const newLevel = Math.floor(userData.exp / 50) + 1;
+                userData.level = Math.min(newLevel, 10);
+                saveUserData();
+            }
+
+            // 결과 표시
+            document.getElementById('submitButtonContainer').classList.add('hidden');
+            const resultContainer = document.getElementById('resultContainer');
+            resultContainer.classList.remove('hidden');
+            resultContainer.innerHTML = `
+                <div class="result-box ${isCorrect ? 'correct' : 'incorrect'}">
+                    <p class="result-emoji">${isCorrect ? '🎉 정답입니다!' : '😅 틀렸습니다'}</p>
+                    <p class="result-text">
+                        ${isCorrect 
+                            ? `+${points} 경험치를 획득했습니다!` 
+                            : `정답: ${currentQuiz.answers[currentQuiz.correct]}`}
+                    </p>
+                </div>
+                <button 
+                    onclick="backToMainFromQuiz()"
+                    style="width: 100%; background: linear-gradient(135deg, #6b7280, #4b5563); color: white; font-weight: 700; padding: 16px; border-radius: 12px; font-size: 15px; border: none; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    메인으로 돌아가기
+                </button>
+            `;
+        }
+
+        function backToMainFromQuiz() {
+            document.getElementById('quizScreen').classList.add('hidden');
+            document.getElementById('mainScreen').classList.remove('hidden');
+            updateUI();
+        }
+
+        // 초기화
+        loadUserData();
+        updateUI();
+    </script>
+</body>
+</html>
