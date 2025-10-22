@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dom Dom - 임금체불 문제</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif; background-color: #f0f0f0; max-width: 430px; margin: 0 auto; overflow-x: hidden; padding-bottom: 20px; }
+        .header { background-color: #ffffff; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .logo-container { text-align: center; margin-bottom: 15px; }
+        .logo { font-size: 42px; font-weight: 700; color: #6BA3D4; letter-spacing: 1px; font-family: 'Arial Rounded MT Bold', Arial, sans-serif; }
+        .logo-subtitle { font-size: 12px; color: #6BA3D4; margin-top: 5px; }
+        .home-button { display: flex; align-items: center; gap: 5px; cursor: pointer; color: #333; font-size: 14px; font-weight: 600; background: none; border: none; transition: all 0.3s; }
+        .home-button:hover { color: #6BA3D4; }
+        .home-button svg { width: 24px; height: 24px; }
+        .page-info { background-color: #ffffff; padding: 20px; margin: 15px 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .page-title { font-size: 22px; font-weight: 700; color: #333; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .page-description { font-size: 13px; color: #666; line-height: 1.5; background-color: #f8f9fa; padding: 12px; border-radius: 8px; border-left: 4px solid #6BA3D4; }
+        .section { background-color: #ffffff; padding: 20px; margin: 15px 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .section-title { font-size: 18px; font-weight: 700; color: #333; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .info-card { background-color: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 12px; cursor: pointer; transition: all 0.3s; }
+        .info-card:hover { background-color: #e8f4f8; transform: translateY(-2px); }
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background-color: #333; color: white; padding: 12px 24px; border-radius: 8px; font-size: 14px; z-index: 1000; opacity: 0; transition: opacity 0.3s; }
+        .toast.show { opacity: 0.9; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <div class="logo">Dom Dom</div>
+            <div class="logo-subtitle">외국인 노동자 도우미 앱</div>
+        </div>
+        <button class="home-button" onclick="goHome()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span>홈으로</span>
+        </button>
+    </div>
+    <div class="page-info">
+        <div class="page-title"><span>💸</span><span>임금체불 문제 해결</span></div>
+        <div class="page-description">💡 <strong>안내:</strong> 받지 못한 임금을 받을 수 있도록 도와드립니다. 체류 자격과 관계없이 일한 만큼 임금을 받을 권리가 있습니다!</div>
+    </div>
+    <div class="section">
+        <div class="section-title">📖 임금체불이란?</div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">📋 임금체불의 의미</div>
+            <div style="font-size: 13px; color: #666;">사업주가 약속한 임금을 정해진 날짜에 지급하지 않는 것을 말합니다.</div>
+        </div>
+    </div>
+    <div class="toast" id="toast"></div>
+    <script>
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+        function goHome() { window.location.href = 'index.html'; }
+    </script>
+</body>
+</html>

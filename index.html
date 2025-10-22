@@ -719,8 +719,15 @@
             
             document.querySelectorAll('.grid-item').forEach(function(item) {
                 item.addEventListener('click', function() {
+                    const issue = this.getAttribute('data-issue');
                     const issueTitle = this.querySelector('.grid-text').textContent.trim();
-                    showToast(`${issueTitle} 상세 정보 페이지로 이동합니다.`);
+                    
+                    // 임금체불 문제 클릭 시 해당 페이지로 이동
+                    if (issue === 'wage') {
+                        window.location.href = '임금체불.html';
+                    } else {
+                        showToast(`${issueTitle} 상세 정보 페이지로 이동합니다.`);
+                    }
                 });
             });
 
