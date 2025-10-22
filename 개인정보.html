@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dom Dom - 개인정보</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f0f0f0;
+            min-height: 100vh;
+            padding-bottom: 30px;
+        }
+
+        .container {
+            max-width: 430px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 42px;
+            font-weight: 700;
+            color: #6BA3D4;
+            letter-spacing: 1px;
+            font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+        }
+
+        .logo-subtitle {
+            font-size: 12px;
+            color: #6BA3D4;
+            margin-top: 5px;
+        }
+
+        .back-button-bar {
+            background-color: #ffffff;
+            display: flex;
+            padding: 15px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            color: #333;
+            fontSize: 14px;
+            font-weight: 600;
+            background: none;
+            border: none;
+        }
+
+        .back-button svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .profile-card {
+            background-color: #ffffff;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-image {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 4px solid #6BA3D4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px auto;
+            background-color: #f3f4f6;
+        }
+
+        .profile-image svg {
+            width: 50px;
+            height: 50px;
+            color: #6BA3D4;
+        }
+
+        .profile-name-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .name-input {
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            border-bottom: 2px solid #6BA3D4;
+            padding-bottom: 4px;
+            outline: none;
+            background-color: transparent;
+            text-align: center;
+            width: 140px;
+        }
+
+        .gender-selector {
+            position: relative;
+        }
+
+        .gender-button {
+            font-size: 13px;
+            color: #333;
+            padding: 6px 14px;
+            border: 2px solid #6BA3D4;
+            border-radius: 20px;
+            background-color: #ffffff;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .gender-dropdown {
+            position: absolute;
+            top: 40px;
+            left: 0;
+            background-color: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+            z-index: 10;
+            min-width: 100px;
+            display: none;
+        }
+
+        .gender-dropdown.show {
+            display: block;
+        }
+
+        .gender-option {
+            width: 100%;
+            padding: 10px 16px;
+            text-align: left;
+            border: none;
+            border-bottom: 1px solid #e5e7eb;
+            background-color: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .gender-option:last-child {
+            border-bottom: none;
+        }
+
+        .gender-option:hover {
+            background-color: #f3f4f6;
+        }
+
+        .form-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            background-color: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .residence-number-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .residence-input-short {
+            width: 90px;
+            background-color: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 14px;
+            outline: none;
+            text-align: center;
+        }
+
+        .residence-input-long {
+            flex: 1;
+            background-color: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 14px;
+            outline: none;
+            text-align: center;
+        }
+
+        .separator {
+            font-size: 18px;
+            font-weight: 700;
+            color: #666;
+        }
+
+        .settings-button {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border: 2px solid #6BA3D4;
+            border-radius: 12px;
+            background-color: #ffffff;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            margin: 0 20px;
+        }
+
+        .settings-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .settings-text {
+            font-weight: 600;
+            color: #333;
+            font-size: 15px;
+        }
+
+        .settings-button svg {
+            width: 20px;
+            height: 20px;
+            color: #6BA3D4;
+        }
+
+        .save-button {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            border: none;
+            background-color: #6BA3D4;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(107, 163, 212, 0.3);
+            transition: all 0.3s;
+            margin: 20px;
+            width: calc(100% - 40px);
+        }
+
+        .save-button:hover {
+            background-color: #5a92c3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(107, 163, 212, 0.4);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .toast.show {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <div class="logo">Dom Dom</div>
+            <div class="logo-subtitle">외국인 노동자 도우미 앱</div>
+        </div>
+
+        <!-- 뒤로가기 버튼 -->
+        <div class="back-button-bar">
+            <button class="back-button" onclick="window.history.back()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                <span>돌아가기</span>
+            </button>
+        </div>
+
+        <!-- 프로필 카드 -->
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-image">
+                    <svg fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                    </svg>
+                </div>
+                <div class="profile-name-section">
+                    <input
+                        type="text"
+                        class="name-input"
+                        id="koName"
+                        placeholder="한국어 이름"
+                    />
+                    <div class="gender-selector">
+                        <button class="gender-button" id="genderButton" onclick="toggleGenderSelector()">
+                            성별
+                        </button>
+                        <div class="gender-dropdown" id="genderDropdown">
+                            <button class="gender-option" onclick="selectGender('남')">남</button>
+                            <button class="gender-option" onclick="selectGender('여')">여</button>
+                            <button class="gender-option" onclick="selectGender('선택 안 함')">선택 안 함</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 입력 필드들 -->
+            <div class="form-fields">
+                <!-- 영문이름 -->
+                <div class="form-group">
+                    <label class="form-label">✍️ 영문이름</label>
+                    <input type="text" class="form-input" id="name" placeholder="영문 이름 입력" />
+                </div>
+
+                <!-- 외국인번호 -->
+                <div class="form-group">
+                    <label class="form-label">🆔 외국인번호</label>
+                    <div class="residence-number-group">
+                        <input type="text" maxlength="6" class="residence-input-short" id="residenceNumber1" placeholder="6자리" />
+                        <span class="separator">-</span>
+                        <input type="text" maxlength="7" class="residence-input-long" id="residenceNumber2" placeholder="7자리" />
+                    </div>
+                </div>
+
+                <!-- 국적 -->
+                <div class="form-group">
+                    <label class="form-label">🌏 국적</label>
+                    <input type="text" class="form-input" id="nationality" placeholder="국적 입력" />
+                </div>
+
+                <!-- 휴대폰번호 -->
+                <div class="form-group">
+                    <label class="form-label">📱 휴대폰번호</label>
+                    <input type="tel" class="form-input" id="phone" placeholder="전화번호 입력" />
+                </div>
+
+                <!-- 현사업주 -->
+                <div class="form-group">
+                    <label class="form-label">👔 현사업주</label>
+                    <input type="text" class="form-input" id="currentEmployer" placeholder="사업주 입력" />
+                </div>
+
+                <!-- 현사업장 위치 -->
+                <div class="form-group">
+                    <label class="form-label">📍 현사업장 위치</label>
+                    <input type="text" class="form-input" id="workLocation" placeholder="사업장 위치 입력" />
+                </div>
+            </div>
+        </div>
+
+        <!-- 권한 설정 버튼 -->
+        <button class="settings-button">
+            <span class="settings-text">⚙️ 권한설정</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18l6-6-6-6"/>
+            </svg>
+        </button>
+
+        <!-- 저장 버튼 -->
+        <button class="save-button" onclick="saveProfile()">
+            저장하기
+        </button>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let selectedGender = '';
+
+        function toggleGenderSelector() {
+            const dropdown = document.getElementById('genderDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        function selectGender(gender) {
+            selectedGender = gender;
+            document.getElementById('genderButton').textContent = gender;
+            document.getElementById('genderDropdown').classList.remove('show');
+        }
+
+        function saveProfile() {
+            const data = {
+                koName: document.getElementById('koName').value,
+                name: document.getElementById('name').value,
+                gender: selectedGender,
+                nationality: document.getElementById('nationality').value,
+                residenceNumber1: document.getElementById('residenceNumber1').value,
+                residenceNumber2: document.getElementById('residenceNumber2').value,
+                phone: document.getElementById('phone').value,
+                currentEmployer: document.getElementById('currentEmployer').value,
+                workLocation: document.getElementById('workLocation').value,
+            };
+
+            console.log('저장된 데이터:', data);
+            showToast('개인정보가 저장되었습니다.');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        // 드롭다운 외부 클릭 시 닫기
+        document.addEventListener('click', function(event) {
+            const genderSelector = document.querySelector('.gender-selector');
+            const dropdown = document.getElementById('genderDropdown');
+            
+            if (!genderSelector.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>
