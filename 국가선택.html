@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dom Dom - 국가 선택</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f0f0f0;
+            max-width: 430px;
+            margin: 0 auto;
+            overflow-x: hidden;
+            min-height: 100vh;
+            padding-bottom: 20px;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .logo {
+            font-size: 42px;
+            font-weight: 700;
+            color: #6BA3D4;
+            letter-spacing: 1px;
+            font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+        }
+
+        .logo-subtitle {
+            font-size: 12px;
+            color: #6BA3D4;
+            margin-top: 5px;
+        }
+
+        .page-info {
+            background-color: #ffffff;
+            padding: 20px;
+            margin: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .page-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .page-description {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .countries-container {
+            margin: 15px 20px;
+        }
+
+        .country-button {
+            background-color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .country-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            background-color: #e8f4f8;
+        }
+
+        .country-button.selected {
+            background-color: #6BA3D4;
+            color: white;
+        }
+
+        .country-button.selected .country-ko,
+        .country-button.selected .country-en,
+        .country-button.selected .country-local {
+            color: white;
+        }
+
+        .flag {
+            font-size: 32px;
+            line-height: 1;
+        }
+
+        .country-info {
+            flex: 1;
+            text-align: left;
+        }
+
+        .country-ko {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .country-en {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 2px;
+        }
+
+        .country-local {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .confirm-section {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 430px;
+            background-color: #ffffff;
+            padding: 15px 20px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .confirm-button {
+            width: 100%;
+            background-color: #6BA3D4;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .confirm-button:hover {
+            background-color: #5a92c3;
+        }
+
+        .confirm-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .toast.show {
+            opacity: 0.9;
+        }
+
+        .search-box {
+            background-color: #ffffff;
+            padding: 15px 20px;
+            margin: 0 20px 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #6BA3D4;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+            font-size: 14px;
+        }
+
+        /* 하단 확인 버튼 공간 확보 */
+        body {
+            padding-bottom: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <div class="logo">Dom Dom</div>
+            <div class="logo-subtitle">외국인 노동자 도우미 앱</div>
+        </div>
+    </div>
+
+    <div class="page-info">
+        <div class="page-title">
+            <span>🌍</span>
+            <span>국가를 선택하세요</span>
+        </div>
+        <div class="page-description">
+            귀하의 출신 국가를 선택하시면 맞춤형 정보를 제공해드립니다
+        </div>
+    </div>
+
+    <div class="search-box">
+        <input 
+            type="text" 
+            class="search-input" 
+            placeholder="🔍 국가명으로 검색..." 
+            id="searchInput"
+            oninput="filterCountries()"
+        >
+    </div>
+
+    <div class="countries-container" id="countriesContainer">
+        <!-- 국가 버튼들이 여기에 동적으로 생성됩니다 -->
+    </div>
+
+    <div class="no-results" id="noResults" style="display: none;">
+        검색 결과가 없습니다
+    </div>
+
+    <div class="confirm-section">
+        <button class="confirm-button" id="confirmButton" disabled onclick="confirmSelection()">
+            국가 선택 완료
+        </button>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const countries = [
+            { ko: '한국', en: 'Korea', local: '', flag: '🇰🇷' },
+            { ko: '미국', en: 'United States', local: '', flag: '🇺🇸' },
+            { ko: '필리핀', en: 'Philippines', local: 'Pilipinas', flag: '🇵🇭' },
+            { ko: '태국', en: 'Thailand', local: 'ไทย', flag: '🇹🇭' },
+            { ko: '베트남', en: 'Vietnam', local: 'Việt Nam', flag: '🇻🇳' },
+            { ko: '인도네시아', en: 'Indonesia', local: 'Indonesia', flag: '🇮🇩' },
+            { ko: '캄보디아', en: 'Cambodia', local: 'កម្ពុជា', flag: '🇰🇭' },
+            { ko: '라오스', en: 'Laos', local: 'ລາວ', flag: '🇱🇦' },
+            { ko: '미얀마', en: 'Myanmar', local: 'မြန်မာ', flag: '🇲🇲' },
+            { ko: '몽골', en: 'Mongolia', local: 'Монгол', flag: '🇲🇳' },
+            { ko: '중국', en: 'China', local: '中国', flag: '🇨🇳' },
+            { ko: '우즈베키스탄', en: 'Uzbekistan', local: "O'zbekiston", flag: '🇺🇿' },
+            { ko: '키르기스스탄', en: 'Kyrgyzstan', local: 'Кыргызстан', flag: '🇰🇬' },
+            { ko: '파키스탄', en: 'Pakistan', local: 'پاکستان', flag: '🇵🇰' },
+            { ko: '네팔', en: 'Nepal', local: 'नेपाल', flag: '🇳🇵' },
+            { ko: '스리랑카', en: 'Sri Lanka', local: 'ශ්‍රී ලංකා', flag: '🇱🇰' },
+            { ko: '방글라데시', en: 'Bangladesh', local: 'বাংলাদেশ', flag: '🇧🇩' },
+            { ko: '동티모르', en: 'Timor Leste', local: 'Timor Leste', flag: '🇹🇱' },
+        ];
+
+        let selectedCountry = null;
+
+        function renderCountries(countriesToRender = countries) {
+            const container = document.getElementById('countriesContainer');
+            const noResults = document.getElementById('noResults');
+            
+            if (countriesToRender.length === 0) {
+                container.innerHTML = '';
+                noResults.style.display = 'block';
+                return;
+            }
+
+            noResults.style.display = 'none';
+            container.innerHTML = '';
+
+            countriesToRender.forEach((country, index) => {
+                const button = document.createElement('button');
+                button.className = 'country-button';
+                if (selectedCountry && selectedCountry.ko === country.ko) {
+                    button.classList.add('selected');
+                }
+                
+                button.onclick = () => selectCountry(country);
+                
+                button.innerHTML = `
+                    <div class="flag">${country.flag}</div>
+                    <div class="country-info">
+                        <div class="country-ko">${country.ko}</div>
+                        <div class="country-en">${country.en}</div>
+                        ${country.local ? `<div class="country-local">${country.local}</div>` : ''}
+                    </div>
+                `;
+                
+                container.appendChild(button);
+            });
+        }
+
+        function selectCountry(country) {
+            selectedCountry = country;
+            renderCountries(getFilteredCountries());
+            
+            const confirmButton = document.getElementById('confirmButton');
+            confirmButton.disabled = false;
+            
+            showToast(`${country.flag} ${country.ko} 선택됨`);
+        }
+
+        function filterCountries() {
+            const searchInput = document.getElementById('searchInput');
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            const filtered = getFilteredCountries();
+            renderCountries(filtered);
+        }
+
+        function getFilteredCountries() {
+            const searchInput = document.getElementById('searchInput');
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            if (!searchTerm) return countries;
+            
+            return countries.filter(country => 
+                country.ko.toLowerCase().includes(searchTerm) ||
+                country.en.toLowerCase().includes(searchTerm) ||
+                (country.local && country.local.toLowerCase().includes(searchTerm))
+            );
+        }
+
+        function confirmSelection() {
+            if (!selectedCountry) return;
+            
+            showToast(`✅ ${selectedCountry.flag} ${selectedCountry.ko}로 설정되었습니다`);
+            
+            // 여기에 실제 앱에서는 선택된 국가 정보를 저장하고 다음 페이지로 이동
+            setTimeout(() => {
+                // 예: window.location.href = '/home';
+                console.log('Selected country:', selectedCountry);
+            }, 1500);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        // 초기 렌더링
+        renderCountries();
+    </script>
+</body>
+</html>
