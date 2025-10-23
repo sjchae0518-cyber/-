@@ -729,7 +729,11 @@
                     // 장시간근로 문제 클릭 시 해당 페이지로 이동
                     else if (issue === 'overwork') {
                         window.location.href = '장시간_노동문제.html';
-                    } 
+                    }
+                    // 산업재해 문제 클릭 시 해당 페이지로 이동
+                    else if (issue === 'accident') {
+                        window.location.href = '산업재해_문제해결.html';
+                    }
                     else {
                         showToast(`${issueTitle} 상세 정보 페이지로 이동합니다.`);
                     }
