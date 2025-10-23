@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dom Dom - 기숙사 찾기</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f0f0f0;
+            max-width: 430px;
+            margin: 0 auto;
+            overflow-x: hidden;
+            padding-bottom: 20px;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .logo {
+            font-size: 42px;
+            font-weight: 700;
+            color: #6BA3D4;
+            letter-spacing: 1px;
+            font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+        }
+
+        .logo-subtitle {
+            font-size: 12px;
+            color: #6BA3D4;
+            margin-top: 5px;
+        }
+
+        .home-button {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+            background: none;
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .home-button:hover {
+            color: #6BA3D4;
+        }
+
+        .page-info {
+            background-color: #ffffff;
+            padding: 20px;
+            margin: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .page-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .page-description {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+            background-color: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #6BA3D4;
+        }
+
+        .section {
+            background-color: #ffffff;
+            padding: 20px;
+            margin: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-card {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .info-card:hover {
+            background-color: #e8f4f8;
+            transform: translateY(-2px);
+        }
+
+        .info-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-card-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-card-content {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .highlight-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #856404;
+            margin-bottom: 8px;
+        }
+
+        .highlight-text {
+            font-size: 13px;
+            color: #856404;
+            line-height: 1.5;
+        }
+
+        .dormitory-card {
+            background-color: #ffffff;
+            border: 2px solid #e5e7eb;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .dormitory-card:hover {
+            border-color: #6BA3D4;
+            box-shadow: 0 4px 12px rgba(107, 163, 212, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .dormitory-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .dormitory-icon {
+            font-size: 32px;
+        }
+
+        .dormitory-title {
+            flex: 1;
+        }
+
+        .dormitory-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .dormitory-location {
+            font-size: 12px;
+            color: #6BA3D4;
+            font-weight: 600;
+        }
+
+        .dormitory-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .info-item {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .info-label {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .dormitory-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .feature-tag {
+            padding: 4px 10px;
+            background-color: #e8f4f8;
+            color: #6BA3D4;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .dormitory-description {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .view-detail-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #6BA3D4;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .view-detail-btn:hover {
+            background-color: #5a92c3;
+        }
+
+        .contact-section {
+            padding: 0 20px 30px 20px;
+        }
+
+        .contact-button {
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .contact-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .contact-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .contact-phone {
+            font-size: 16px;
+            font-weight: 700;
+            color: #6BA3D4;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .toast.show {
+            opacity: 0.9;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            overflow-y: auto;
+        }
+
+        .modal.show {
+            display: block;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            max-width: 430px;
+            margin: 20px auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background-color: #6BA3D4;
+            color: white;
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .modal-subtitle {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .modal-body {
+            padding: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .detail-section {
+            margin-bottom: 20px;
+        }
+
+        .detail-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-content {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .detail-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .detail-list li {
+            padding: 10px 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #333;
+            display: flex;
+            align-items: start;
+            gap: 8px;
+        }
+
+        .detail-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-list li::before {
+            content: '•';
+            color: #6BA3D4;
+            font-weight: 700;
+            font-size: 18px;
+            line-height: 1.2;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .required {
+            color: #dc3545;
+            margin-left: 3px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #6BA3D4;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: white;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #6BA3D4;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            min-height: 100px;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: #6BA3D4;
+        }
+
+        .form-help {
+            font-size: 11px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #6BA3D4;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background-color: #5a92c3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(107, 163, 212, 0.3);
+        }
+
+        .important-highlight {
+            background-color: #fee2e2;
+            border-left: 4px solid #dc3545;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #7f1d1d;
+            margin-bottom: 15px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background-color: #6BA3D4;
+            border-color: #6BA3D4;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <div class="logo">Dom Dom</div>
+            <div class="logo-subtitle">외국인 노동자 도우미 앱</div>
+        </div>
+        <button class="home-button" onclick="goHome()">
+            ← 홈으로
+        </button>
+    </div>
+
+    <div class="page-info">
+        <div class="page-title">
+            <span>🏠</span>
+            <span>기숙사 찾기</span>
+        </div>
+        <div class="page-description">
+            💡 <strong>안내:</strong> 외국인 노동자를 위한 <strong style="color: #6BA3D4;">저렴하고 안전한</strong> 기숙사 정보를 제공합니다. 무료 상담도 가능합니다!
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="switchTab('list')">기숙사 목록</button>
+            <button class="tab-btn" onclick="switchTab('apply')">신청하기</button>
+        </div>
+
+        <!-- 기숙사 목록 탭 -->
+        <div id="listTab" class="tab-content active">
+            <div class="section-title">📍 지역별 기숙사</div>
+            
+            <div class="highlight-box">
+                <div class="highlight-title">🎯 선택 가이드</div>
+                <div class="highlight-text">
+                    기숙사는 근무지와 가까운 곳을 선택하는 것이 좋습니다. 각 기숙사를 클릭하면 자세한 정보를 볼 수 있습니다.
+                </div>
+            </div>
+
+            <!-- 충남 청양군 기숙사 -->
+            <div class="dormitory-card" onclick="showDetail('청양')">
+                <div class="dormitory-header">
+                    <div class="dormitory-icon">🏢</div>
+                    <div class="dormitory-title">
+                        <div class="dormitory-name">외국인 계절근로자 기숙사</div>
+                        <div class="dormitory-location">📍 충청남도 청양군</div>
+                    </div>
+                </div>
+
+                <div class="dormitory-info">
+                    <div class="info-item">
+                        <div class="info-label">월세</div>
+                        <div class="info-value">30만원</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">보증금</div>
+                        <div class="info-value">30만원</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">수용인원</div>
+                        <div class="info-value">34명</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">최대거주</div>
+                        <div class="info-value">8개월</div>
+                    </div>
+                </div>
+
+                <div class="dormitory-features">
+                    <span class="feature-tag">✨ 공용주방</span>
+                    <span class="feature-tag">🧺 세탁실</span>
+                    <span class="feature-tag">❄️ 에어컨</span>
+                    <span class="feature-tag">🚿 개별욕실</span>
+                    <span class="feature-tag">📚 한국어교육</span>
+                </div>
+
+                <div class="dormitory-description">
+                    계절근로자 전용 기숙사로 현재 라오스 근로자 약 30명 거주 중. 4인실 8개, 1인실 2개로 구성되어 있으며, 무료 한국어 교육 제공.
+                </div>
+
+                <button class="view-detail-btn" onclick="event.stopPropagation(); showDetail('청양')">
+                    자세히 보기 →
+                </button>
+            </div>
+
+            <!-- 전북 고창 기숙사 -->
+            <div class="dormitory-card" onclick="showDetail('고창')">
+                <div class="dormitory-header">
+                    <div class="dormitory-icon">🏢</div>
+                    <div class="dormitory-title">
+                        <div class="dormitory-name">외국인 농업근로자 기숙사</div>
+                        <div class="dormitory-location">📍 전라북도 고창군</div>
+                    </div>
+                </div>
+
+                <div class="dormitory-info">
+                    <div class="info-item">
+                        <div class="info-label">월세</div>
+                        <div class="info-value">20만원</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">보증금</div>
+                        <div class="info-value">30만원</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">수용인원</div>
+                        <div class="info-value">48명</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">최대거주</div>
+                        <div class="info-value">8개월</div>
+                    </div>
+                </div>
+
+                <div class="dormitory-features">
+                    <span class="feature-tag">🍳 공용취사장</span>
+                    <span class="feature-tag">🚿 샤워실</span>
+                    <span class="feature-tag">🧺 세탁실</span>
+                    <span class="feature-tag">🏃 다목적실</span>
+                    <span class="feature-tag">🔒 CCTV</span>
+                    <span class="feature-tag">💬 통역지원</span>
+                </div>
+
+                <div class="dormitory-description">
+                    고창군 소재 농업근로자 전용. 지상 4층 건물로 2인실 24개 운영. 월세 20만원으로 저렴하며 부식비 별도 5만원. 통역 및 고충상담 지원.
+                </div>
+
+                <button class="view-detail-btn" onclick="event.stopPropagation(); showDetail('고창')">
+                    자세히 보기 →
+                </button>
+            </div>
+
+            <!-- 경기 안산 외국인근로자지원센터 -->
+            <div class="dormitory-card" onclick="showDetail('안산')">
+                <div class="dormitory-header">
+                    <div class="dormitory-icon">🏢</div>
+                    <div class="dormitory-title">
+                        <div class="dormitory-name">안산시 외국인근로자 쉼터</div>
+                        <div class="dormitory-location">📍 경기도 안산시</div>
+                    </div>
+                </div>
+
+                <div class="dormitory-info">
+                    <div class="info-item">
+                        <div class="info-label">월세</div>
+                        <div class="info-value">무료</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">보증금</div>
+                        <div class="info-value">없음</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">수용인원</div>
+                        <div class="info-value">20명</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">최대거주</div>
+                        <div class="info-value">3개월</div>
+                    </div>
+                </div>
+
+                <div class="dormitory-features">
+                    <span class="feature-tag">💰 무료</span>
+                    <span class="feature-tag">🆘 긴급지원</span>
+                    <span class="feature-tag">⚖️ 법률상담</span>
+                    <span class="feature-tag">🏥 의료지원</span>
+                    <span class="feature-tag">📚 한국어교육</span>
+                </div>
+
+                <div class="dormitory-description">
+                    사업장 이탈, 산재, 임금체불 등으로 어려움을 겪는 외국인 근로자를 위한 긴급 쉼터. 무료 숙식 제공 및 법률·의료 지원.
+                </div>
+
+                <button class="view-detail-btn" onclick="event.stopPropagation(); showDetail('안산')">
+                    자세히 보기 →
+                </button>
+            </div>
+
+            <!-- 서울 외국인근로자센터 -->
+            <div class="dormitory-card" onclick="showDetail('서울')">
+                <div class="dormitory-header">
+                    <div class="dormitory-icon">🏢</div>
+                    <div class="dormitory-title">
+                        <div class="dormitory-name">서울외국인근로자센터 쉼터</div>
+                        <div class="dormitory-location">📍 서울특별시 영등포구</div>
+                    </div>
+                </div>
+
+                <div class="dormitory-info">
+                    <div class="info-item">
+                        <div class="info-label">월세</div>
+                        <div class="info-value">무료</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">보증금</div>
+                        <div class="info-value">없음</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">수용인원</div>
+                        <div class="info-value">15명</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">최대거주</div>
+                        <div class="info-value">3개월</div>
+                    </div>
+                </div>
+
+                <div class="dormitory-features">
+                    <span class="feature-tag">💰 무료</span>
+                    <span class="feature-tag">🆘 위기지원</span>
+                    <span class="feature-tag">⚖️ 법률상담</span>
+                    <span class="feature-tag">💼 취업지원</span>
+                    <span class="feature-tag">🌍 13개국어</span>
+                </div>
+
+                <div class="dormitory-description">
+                    임금체불, 산재, 폭행 등 긴급 상황의 외국인 근로자 지원. 13개 언어 통역, 무료 법률상담, 취업연계 서비스 제공.
+                </div>
+
+                <button class="view-detail-btn" onclick="event.stopPropagation(); showDetail('서울')">
+                    자세히 보기 →
+                </button>
+            </div>
+        </div>
+
+        <!-- 신청하기 탭 -->
+        <div id="applyTab" class="tab-content">
+            <div class="section-title">✍️ 기숙사 입주 신청</div>
+            
+            <div class="important-highlight">
+                ⚠️ <strong>필수 확인사항</strong><br>
+                신청 전에 반드시 근무지와 가까운 기숙사를 선택하세요. 입주 가능 여부는 담당자가 확인 후 연락드립니다.
+            </div>
+
+            <form id="dormitoryForm" onsubmit="submitForm(event)">
+                <!-- 기본 정보 -->
+                <div class="form-group">
+                    <label class="form-label">이름 <span class="required">*</span></label>
+                    <input type="text" class="form-input" name="name" placeholder="예: 홍길동" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">국적 <span class="required">*</span></label>
+                    <select class="form-select" name="nationality" required>
+                        <option value="">선택해주세요</option>
+                        <option value="네팔">네팔</option>
+                        <option value="베트남">베트남</option>
+                        <option value="필리핀">필리핀</option>
+                        <option value="태국">태국</option>
+                        <option value="인도네시아">인도네시아</option>
+                        <option value="캄보디아">캄보디아</option>
+                        <option value="미얀마">미얀마</option>
+                        <option value="라오스">라오스</option>
+                        <option value="중국">중국</option>
+                        <option value="몽골">몽골</option>
+                        <option value="우즈베키스탄">우즈베키스탄</option>
+                        <option value="방글라데시">방글라데시</option>
+                        <option value="파키스탄">파키스탄</option>
+                        <option value="스리랑카">스리랑카</option>
+                        <option value="기타">기타</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">전화번호 <span class="required">*</span></label>
+                    <input type="tel" class="form-input" name="phone" placeholder="예: 010-1234-5678" required>
+                    <div class="form-help">한국 전화번호를 입력해주세요</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">이메일</label>
+                    <input type="email" class="form-input" name="email" placeholder="예: example@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">외국인등록번호 <span class="required">*</span></label>
+                    <input type="text" class="form-input" name="foreignId" placeholder="예: 123456-1234567" required>
+                </div>
+
+                <!-- 근무 정보 -->
+                <div class="form-group">
+                    <label class="form-label">현재 근무지 <span class="required">*</span></label>
+                    <input type="text" class="form-input" name="workplace" placeholder="회사명 또는 농장명" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">근무지 주소 <span class="required">*</span></label>
+                    <input type="text" class="form-input" name="workAddress" placeholder="상세 주소 입력" required>
+                    <div class="form-help">기숙사는 근무지와 가까운 곳을 선택해주세요</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">고용주 이름</label>
+                    <input type="text" class="form-input" name="employer" placeholder="고용주 성함">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">고용주 연락처</label>
+                    <input type="tel" class="form-input" name="employerPhone" placeholder="고용주 전화번호">
+                </div>
+
+                <!-- 기숙사 선택 -->
+                <div class="form-group">
+                    <label class="form-label">희망 기숙사 <span class="required">*</span></label>
+                    <select class="form-select" name="dormitory" required>
+                        <option value="">선택해주세요</option>
+                        <option value="충남청양">충남 청양군 - 외국인 계절근로자 기숙사</option>
+                        <option value="전북고창">전북 고창군 - 외국인 농업근로자 기숙사</option>
+                        <option value="경기안산">경기 안산시 - 외국인근로자 쉼터 (긴급)</option>
+                        <option value="서울영등포">서울 영등포구 - 서울외국인근로자센터 쉼터 (긴급)</option>
+                    </select>
+                    <div class="form-help">근무지와 가장 가까운 곳을 선택하세요</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">입주 희망일 <span class="required">*</span></label>
+                    <input type="date" class="form-input" name="moveInDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">거주 예정 기간</label>
+                    <select class="form-select" name="stayPeriod">
+                        <option value="1개월">1개월</option>
+                        <option value="2개월">2개월</option>
+                        <option value="3개월">3개월</option>
+                        <option value="4개월">4개월</option>
+                        <option value="5개월">5개월</option>
+                        <option value="6개월">6개월</option>
+                        <option value="7개월">7개월</option>
+                        <option value="8개월">8개월</option>
+                        <option value="미정">미정</option>
+                    </select>
+                </div>
+
+                <!-- 추가 정보 -->
+                <div class="form-group">
+                    <label class="form-label">비자 종류</label>
+                    <select class="form-select" name="visaType">
+                        <option value="">선택해주세요</option>
+                        <option value="E-9">E-9 (비전문취업)</option>
+                        <option value="E-10">E-10 (선원취업)</option>
+                        <option value="H-2">H-2 (방문취업)</option>
+                        <option value="F-4">F-4 (재외동포)</option>
+                        <option value="계절근로">계절근로 (C-4)</option>
+                        <option value="기타">기타</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">신청 사유 및 특이사항</label>
+                    <textarea class="form-textarea" name="reason" placeholder="기숙사가 필요한 이유, 건강상태, 특별히 요청하고 싶은 사항 등을 자유롭게 작성해주세요.&#10;&#10;예시:&#10;- 현재 거주지에서 회사까지 너무 멀어서 출퇴근이 어렵습니다&#10;- 임금체불로 인해 현재 거주지 월세를 낼 수 없습니다&#10;- 건강문제로 1층 방을 희망합니다"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">긴급 상황 여부</label>
+                    <select class="form-select" name="emergency">
+                        <option value="아니오">아니오</option>
+                        <option value="예">예 - 임금체불</option>
+                        <option value="예">예 - 산업재해</option>
+                        <option value="예">예 - 폭행/학대</option>
+                        <option value="예">예 - 사업장이탈</option>
+                        <option value="예">예 - 기타 긴급상황</option>
+                    </select>
+                    <div class="form-help">긴급 상황인 경우 우선 배정됩니다</div>
+                </div>
+
+                <button type="submit" class="submit-btn">신청서 제출하기</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">❓ 자주 묻는 질문</div>
+        
+        <div class="info-card" onclick="showInfo('비용')">
+            <div class="info-card-title">
+                <span>💰</span>
+                <span>기숙사 비용은 얼마인가요?</span>
+            </div>
+            <div class="info-card-content">
+                기숙사마다 다르지만 월 20~30만원 수준입니다
+                <br><strong style="color: #6BA3D4;">자세히 보기 →</strong>
+            </div>
+        </div>
+
+        <div class="info-card" onclick="showInfo('신청자격')">
+            <div class="info-card-title">
+                <span>📋</span>
+                <span>누구나 신청할 수 있나요?</span>
+            </div>
+            <div class="info-card-content">
+                합법적으로 일하는 외국인 근로자라면 신청 가능합니다
+                <br><strong style="color: #6BA3D4;">자세히 보기 →</strong>
+            </div>
+        </div>
+
+        <div class="info-card" onclick="showInfo('긴급')">
+            <div class="info-card-title">
+                <span>🆘</span>
+                <span>긴급하게 필요한데 어떻게 하나요?</span>
+            </div>
+            <div class="info-card-content">
+                임금체불, 산재, 폭행 등 긴급 상황은 즉시 상담하세요
+                <br><strong style="color: #6BA3D4;">자세히 보기 →</strong>
+            </div>
+        </div>
+
+        <div class="info-card" onclick="showInfo('계약')">
+            <div class="info-card-title">
+                <span>📝</span>
+                <span>계약 기간은 어떻게 되나요?</span>
+            </div>
+            <div class="info-card-content">
+                대부분 3~8개월이며, 연장 가능합니다
+                <br><strong style="color: #6BA3D4;">자세히 보기 →</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="contact-section">
+        <div class="section-title" style="margin-bottom: 15px; padding: 0 0 0 20px;">📞 기숙사 관련 상담</div>
+        <a href="tel:1644-0644" class="contact-button">
+            <span class="contact-title">외국인력 상담센터 (기숙사 문의)</span>
+            <span class="contact-phone">☎ 1644-0644</span>
+        </a>
+        <a href="tel:1577-1366" class="contact-button">
+            <span class="contact-title">한국산업인력공단 (EPS 고용센터)</span>
+            <span class="contact-phone">☎ 1577-1366</span>
+        </a>
+        <a href="tel:1345" class="contact-button">
+            <span class="contact-title">법무부 출입국·외국인정책 안내</span>
+            <span class="contact-phone">☎ 1345</span>
+        </a>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <!-- 상세정보 모달 -->
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="modal-close" onclick="closeModal('detailModal')">&times;</button>
+                <div class="modal-title" id="modalTitle"></div>
+                <div class="modal-subtitle" id="modalSubtitle"></div>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- FAQ 모달 -->
+    <div class="modal" id="faqModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="modal-close" onclick="closeModal('faqModal')">&times;</button>
+                <div class="modal-title" id="faqTitle"></div>
+                <div class="modal-subtitle" id="faqSubtitle"></div>
+            </div>
+            <div class="modal-body" id="faqBody"></div>
+        </div>
+    </div>
+
+    <script>
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+
+        function switchTab(tab) {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabBtns.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            if (tab === 'list') {
+                tabBtns[0].classList.add('active');
+                document.getElementById('listTab').classList.add('active');
+            } else {
+                tabBtns[1].classList.add('active');
+                document.getElementById('applyTab').classList.add('active');
+            }
+        }
+
+        const dormitoryData = {
+            '청양': {
+                title: '충남 청양군 외국인 계절근로자 기숙사',
+                subtitle: '농업 계절근로자 전용 숙소',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">🏢 기본 정보</div>
+                        <div class="detail-content">
+                            <strong>위치:</strong> 충청남도 청양군<br>
+                            <strong>규모:</strong> 지상 2층, 연면적 약 775㎡<br>
+                            <strong>수용인원:</strong> 총 34명 (4인실 8개, 1인실 2개)<br>
+                            <strong>현재상태:</strong> 라오스 공공형 계절근로자 약 30명 거주 중
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">💰 비용 안내</div>
+                        <ul class="detail-list">
+                            <li>보증금: 30만원 (퇴실 시 반환)</li>
+                            <li>월세: 30만원</li>
+                            <li>최대 거주기간: 8개월</li>
+                            <li>전기·수도·가스: 별도 부담</li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">✨ 시설 및 편의</div>
+                        <ul class="detail-list">
+                            <li>공용 주방 (냉장고, 가스레인지 완비)</li>
+                            <li>세탁실 (세탁기, 건조기 제공)</li>
+                            <li>관리실 (24시간 관리)</li>
+                            <li>각 방 에어컨 설치</li>
+                            <li>개별 욕실 완비</li>
+                            <li>Wi-Fi 제공</li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">📚 추가 지원</div>
+                        <div class="detail-content">
+                            <strong>무료 한국어 교육 제공!</strong><br>
+                            실용 회화 중심의 한국어 교육을 입주자 및 청양군 내 외국인 근로자 모두에게 무료로 제공합니다.
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">📞 문의 및 신청</div>
+                        <div class="detail-content">
+                            청양군청 일자리경제과<br>
+                            전화: 041-940-2544<br>
+                            운영시간: 평일 09:00~18:00
+                        </div>
+                    </div>
+                `
+            },
+            '고창': {
+                title: '전북 고창군 외국인 농업근로자 기숙사',
+                subtitle: '농업법인 고용 근로자 전용',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">🏢 기본 정보</div>
+                        <div class="detail-content">
+                            <strong>위치:</strong> 전라북도 고창군<br>
+                            <strong>규모:</strong> 지상 4층, 총 면적 약 950㎡<br>
+                            <strong>수용인원:</strong> 총 48명 (2인실 24개)<br>
+                            <strong>대상:</strong> 고창군 소재 농업인/농업법인 고용 외국인 근로자
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">💰 비용 안내</div>
+                        <ul class="detail-list">
+                            <li>보증금: 30만원 (퇴실 시 반환)</li>
+                            <li>이용료: 월 20만원</li>
+                            <li>부식비: 월 5만원</li>
+                            <li>최대 거주기간: 8개월</li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">🏗️ 시설 구성</div>
+                        <div class="detail-content">
+                            <strong>1층:</strong><br>
+                            • 공동 취사장 (인덕션, 냉장고, 밥솥, 정수기)<br>
+                            • 샤워실 및 세탁실<br>
+                            • 다목적실<br>
+                            • 외부 세척장<br><br>
+                            
+                            <strong>2~4층:</strong><br>
+                            • 2인실 숙소 (에어컨, CCTV 설치)<br>
+                            • 각 층 공용 공간<br>
+                            • 사물함 완비
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">🤝 지원 서비스</div>
+                        <ul class="detail-list">
+                            <li>통역 서비스 제공</li>
+                            <li>고충 상담 지원</li>
+                            <li>근태 관리 시스템</li>
+                            <li>인력 수급 연결</li>
+                            <li>원콜 예약 서비스</li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">📞 문의 및 신청</div>
+                        <div class="detail-content">
+                            고창군청 농업정책과<br>
+                            전화: 063-560-2642<br>
+                            운영시간: 평일 09:00~18:00
+                        </div>
+                    </div>
+                `
+            },
+            '안산': {
+                title: '경기 안산시 외국인근로자 쉼터',
+                subtitle: '긴급 지원이 필요한 외국인 근로자 전용',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">🏢 기본 정보</div>
+                        <div class="detail-content">
+                            <strong>위치:</strong> 경기도 안산시<br>
+                            <strong>수용인원:</strong> 약 20명<br>
+                            <strong>비용:</strong> 무료 (숙식 제공)<br>
+                            <strong>최대 거주기간:</strong> 3개월 (연장 가능)
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">🎯 입소 대상</div>
+                        <ul class="detail-list">
+                            <li>임금체불로 거주지를 잃은 근로자</li>
+                            <li>산업재해로 치료가 필요한 근로자</li>
+                            <li>사업장 내 폭행·학대 피해자</li>
+                            <li>사업장 이탈 후 법적 도움이 필요한 근로자</li>
+                            <li>기타 긴급 보호가 필요한 외국인 근로자</li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">🛡️ 제공 서비스</div>
+                        <ul class="detail-list">
+                            <li>무료 숙식 제공 (3식 제공)</li>
+                            <li>무료 법률 상담 및 소송 지원</li>
+                            <li>의료 지원 (병원 동행, 진료비 지원)</li>
+                            <li>한국어 교육 및 문화 프로그램</li>
+                            <li>취업 정보 제공 및 연계</li>
+                            <li>심리 상담 서비스</li>
+                            <li>귀국 지원 (필요시)</li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">⚠️ 입소 절차</div>
+                        <div class="detail-content">
+                            1. 전화 상담 (긴급 상황 설명)<br>
+                            2. 필요 서류 준비 (외국인등록증, 근로계약서 등)<br>
+                            3. 면담 및 입소 심사<br>
+                            4. 입소 승인 및 입주<br><br>
+                            ※ 긴급 상황의 경우 당일 입소 가능
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">📞 긴급 문의</div>
+                        <div class="detail-content">
+                            안산시 외국인주민센터<br>
+                            전화: 1577-0129 (24시간)<br>
+                            주소: 경기도 안산시 단원구 화정로 26<br><br>
+                            <strong style="color: #dc3545;">※ 긴급 상황 시 언제든 연락 가능합니다</strong>
+                        </div>
+                    </div>
+                `
+            },
+            '서울': {
+                title: '서울 외국인근로자센터 쉼터',
+                subtitle: '위기 상황 외국인 근로자 긴급 보호',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">🏢 기본 정보</div>
+                        <div class="detail-content">
+                            <strong>위치:</strong> 서울특별시 영등포구<br>
+                            <strong>수용인원:</strong> 약 15명<br>
+                            <strong>비용:</strong> 무료 (숙식 제공)<br>
+                            <strong>최대 거주기간:</strong> 3개월 (상황에 따라 연장)
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">🎯 입소 대상</div>
+                        <ul class="detail-list">
+                            <li>임금체불, 산재, 폭행 등 긴급 상황의 외국인 근로자</li>
+                            <li>사업장 이탈 후 법적 지원이 필요한 경우</li>
+                            <li>주거 문제로 긴급 보호가 필요한 경우</li>
+                            <li>인권침해 피해로 안전이 필요한 경우</li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">🌍 언어 지원</div>
+                        <div class="detail-content">
+                            <strong>13개 언어 통역 서비스!</strong><br>
+                            영어, 중국어, 베트남어, 태국어, 필리핀어, 몽골어, 네팔어, 캄보디아어, 미얀마어, 우즈베크어, 인도네시아어, 러시아어, 방글라데시어
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">🛡️ 제공 서비스</div>
+                        <ul class="detail-list">
+                            <li>무료 숙식 제공</li>
+                            <li>무료 법률 상담 (노무사, 변호사 연계)</li>
+                            <li>의료 지원 및 병원 동행</li>
+                            <li>노동 분쟁 해결 지원</li>
+                            <li>취업 정보 제공 및 연계</li>
+                            <li>한국어 교육</li>
+                            <li>심리 상담 서비스</li>
+                            <li>귀국 지원 (필요시)</li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">💼 취업 지원</div>
+                        <div class="detail-content">
+                            사업장 변경이 필요한 경우, 새로운 일자리를 찾을 수 있도록 적극 지원합니다. 구인업체 정보 제공 및 면접 동행 서비스를 제공합니다.
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">📞 긴급 연락처</div>
+                        <div class="detail-content">
+                            서울외국인근로자센터<br>
+                            전화: 02-2632-9966 (24시간)<br>
+                            긴급: 010-5108-9966<br>
+                            주소: 서울시 영등포구 경인로 38<br><br>
+                            <strong style="color: #dc3545;">※ 24시간 언제든 상담 가능합니다</strong>
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        const faqData = {
+            '비용': {
+                title: '기숙사 비용',
+                subtitle: '월세, 보증금, 관리비 안내',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">💰 지역별 비용</div>
+                        <ul class="detail-list">
+                            <li><strong>충남 청양:</strong> 보증금 30만원 / 월세 30만원</li>
+                            <li><strong>전북 고창:</strong> 보증금 30만원 / 월세 20만원 + 부식비 5만원</li>
+                            <li><strong>경기 안산 (긴급):</strong> 무료</li>
+                            <li><strong>서울 영등포 (긴급):</strong> 무료</li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">💡 추가 비용</div>
+                        <div class="detail-content">
+                            <strong>일반적으로 포함되는 것:</strong><br>
+                            • 기본 시설 이용료<br>
+                            • 공용 공간 관리비<br>
+                            • Wi-Fi 사용료<br><br>
+
+                            <strong>별도 부담하는 것:</strong><br>
+                            • 전기·수도·가스 (사용량에 따라)<br>
+                            • 개인 식료품<br>
+                            • 세탁 세제 등 개인 물품
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">📝 보증금 반환</div>
+                        <div class="detail-content">
+                            보증금은 퇴실 시 전액 반환됩니다. 단, 시설 파손이나 미납 요금이 있는 경우 차감될 수 있습니다.
+                        </div>
+                    </div>
+                `
+            },
+            '신청자격': {
+                title: '신청 자격',
+                subtitle: '누가 신청할 수 있나요?',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">✅ 신청 가능한 경우</div>
+                        <ul class="detail-list">
+                            <li>합법적인 체류 자격을 가진 외국인 근로자</li>
+                            <li>E-9, E-10, H-2, F-4 등 취업 비자 소지자</li>
+                            <li>계절근로 (C-4) 비자 소지자</li>
+                            <li>해당 지역 농업·어업·제조업 종사자</li>
+                            <li>근로계약서가 있는 합법 고용 상태</li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">🎯 우선 배정 대상</div>
+                        <ul class="detail-list">
+                            <li>긴급 보호가 필요한 경우 (임금체불, 산재, 폭행)</li>
+                            <li>여성 근로자</li>
+                            <li>장기 근무 예정자</li>
+                            <li>주거 환경이 열악한 경우</li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">📋 필요 서류</div>
+                        <ul class="detail-list">
+                            <li>외국인등록증 사본</li>
+                            <li>근로계약서 사본</li>
+                            <li>재직증명서 (또는 고용확인서)</li>
+                            <li>신청서 (센터에서 제공)</li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">⚠️ 주의사항</div>
+                        <div class="detail-content">
+                            불법 체류자는 신청할 수 없습니다. 다만, 긴급 쉼터의 경우 법적 문제 해결을 위해 임시 보호가 가능할 수 있으니 상담하세요.
+                        </div>
+                    </div>
+                `
+            },
+            '긴급': {
+                title: '긴급 상황 대응',
+                subtitle: '즉시 도움이 필요한 경우',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">🆘 긴급 상황이란?</div>
+                        <ul class="detail-list">
+                            <li>임금을 받지 못해 집에서 쫓겨날 위기</li>
+                            <li>산업재해로 치료가 필요하지만 갈 곳이 없음</li>
+                            <li>사업장에서 폭행·학대를 당함</li>
+                            <li>여권·신분증을 빼앗김</li>
+                            <li>강제 노동을 당하고 있음</li>
+                            <li>오늘 당장 잠잘 곳이 없음</li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">📞 즉시 연락할 곳</div>
+                        <div class="detail-content">
+                            <strong>1. 긴급 쉼터 (24시간)</strong><br>
+                            • 안산 외국인근로자센터: 1577-0129<br>
+                            • 서울 외국인근로자센터: 02-2632-9966<br>
+                            • 긴급 핸드폰: 010-5108-9966<br><br>
+
+                            <strong>2. 경찰 (범죄 피해)</strong><br>
+                            • 112 (폭행, 감금, 위협 시)<br><br>
+
+                            <strong>3. 외국인력상담센터</strong><br>
+                            • 1644-0644 (13개 언어 통역)
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">⚡ 긴급 입소 절차</div>
+                        <div class="detail-content">
+                            1. <strong>즉시 전화</strong> - 상황 설명<br>
+                            2. <strong>안전 확보</strong> - 위험한 곳에서 벗어나기<br>
+                            3. <strong>신속 면담</strong> - 전화 또는 방문<br>
+                            4. <strong>당일 입소</strong> - 긴급한 경우 즉시 가능<br><br>
+
+                            ※ 서류가 없어도 일단 연락하세요!<br>
+                            ※ 돈이 없어도 괜찮습니다!
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">🛡️ 받을 수 있는 도움</div>
+                        <ul class="detail-list">
+                            <li>즉시 안전한 숙소 제공</li>
+                            <li>무료 식사 제공</li>
+                            <li>의료 지원 (병원 동행)</li>
+                            <li>무료 법률 상담</li>
+                            <li>경찰 신고 동행</li>
+                            <li>노동청 신고 지원</li>
+                        </ul>
+                    </div>
+                `
+            },
+            '계약': {
+                title: '계약 및 거주 기간',
+                subtitle: '얼마나 살 수 있나요?',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-title">⏰ 거주 기간</div>
+                        <ul class="detail-list">
+                            <li><strong>일반 기숙사:</strong> 최대 8개월 (연장 협의 가능)</li>
+                            <li><strong>긴급 쉼터:</strong> 최대 3개월 (상황에 따라 연장)</li>
+                            <li><strong>계절근로자:</strong> 근로 계약 기간과 동일</li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">📝 계약 내용</div>
+                        <div class="detail-content">
+                            입주 시 기숙사 이용 계약서를 작성합니다:<br><br>
+                            • 입주 기간<br>
+                            • 비용 (보증금, 월세)<br>
+                            • 시설 이용 규칙<br>
+                            • 퇴실 조건<br>
+                            • 보증금 반환 조건<br><br>
+                            
+                            ※ 계약서는 본인 언어로 번역본을 받을 수 있습니다
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">🔄 연장 방법</div>
+                        <div class="detail-content">
+                            기간 만료 1개월 전에 연장 신청을 하면 됩니다. 근무 상황, 공실 여부 등을 고려하여 결정됩니다.
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-title">🚪 중도 퇴실</div>
+                        <div class="detail-content">
+                            부득이하게 일찍 나가야 하는 경우:<br>
+                            • 최소 2주 전 통보<br>
+                            • 보증금은 전액 반환<br>
+                            • 남은 월세는 협의<br>
+                            • 시설 파손이 없어야 함
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        function showDetail(type) {
+            const data = dormitoryData[type];
+            if (!data) return;
+
+            document.getElementById('modalTitle').textContent = data.title;
+            document.getElementById('modalSubtitle').textContent = data.subtitle;
+            document.getElementById('modalBody').innerHTML = data.content;
+            
+            document.getElementById('detailModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function showInfo(type) {
+            const data = faqData[type];
+            if (!data) return;
+
+            document.getElementById('faqTitle').textContent = data.title;
+            document.getElementById('faqSubtitle').textContent = data.subtitle;
+            document.getElementById('faqBody').innerHTML = data.content;
+            
+            document.getElementById('faqModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        function submitForm(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+            
+            console.log('신청 데이터:', data);
+            
+            showToast('✅ 기숙사 신청이 완료되었습니다!\n담당자가 확인 후 연락드리겠습니다.');
+            
+            setTimeout(() => {
+                event.target.reset();
+                switchTab('list');
+            }, 2000);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // 모달 외부 클릭 시 닫기
+        document.getElementById('detailModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal('detailModal');
+            }
+        });
+
+        document.getElementById('faqModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal('faqModal');
+            }
+        });
+    </script>
+</body>
+</html>
