@@ -722,8 +722,12 @@
                     const issue = this.getAttribute('data-issue');
                     const issueTitle = this.querySelector('.grid-text').textContent.trim();
                     
+                    // 근로계약서 문제 클릭 시 해당 페이지로 이동
+                    if (issue === 'contract') {
+                        window.location.href = '근로계약서_문제.html';
+                    }
                     // 임금체불 문제 클릭 시 해당 페이지로 이동
-                    if (issue === 'wage') {
+                    else if (issue === 'wage') {
                         window.location.href = '임금체불.html';
                     } 
                     // 장시간근로 문제 클릭 시 해당 페이지로 이동
