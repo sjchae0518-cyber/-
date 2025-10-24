@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dom Dom - 근로계약서 문제</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif; background-color: #f0f0f0; max-width: 430px; margin: 0 auto; overflow-x: hidden; padding-bottom: 20px; }
+        .header { background-color: #ffffff; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .logo-container { text-align: center; margin-bottom: 15px; }
+        .logo { font-size: 42px; font-weight: 700; color: #6BA3D4; letter-spacing: 1px; font-family: 'Arial Rounded MT Bold', Arial, sans-serif; }
+        .logo-subtitle { font-size: 12px; color: #6BA3D4; margin-top: 5px; }
+        .home-button { display: flex; align-items: center; gap: 5px; cursor: pointer; color: #333; font-size: 14px; font-weight: 600; background: none; border: none; transition: all 0.3s; }
+        .home-button:hover { color: #6BA3D4; }
+        .home-button svg { width: 24px; height: 24px; }
+        .page-info { background-color: #ffffff; padding: 20px; margin: 15px 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .page-title { font-size: 22px; font-weight: 700; color: #333; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .page-description { font-size: 13px; color: #666; line-height: 1.5; background-color: #f8f9fa; padding: 12px; border-radius: 8px; border-left: 4px solid #6BA3D4; }
+        .section { background-color: #ffffff; padding: 20px; margin: 15px 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .section-title { font-size: 18px; font-weight: 700; color: #333; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .info-card { background-color: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 12px; cursor: pointer; transition: all 0.3s; }
+        .info-card:hover { background-color: #e8f4f8; transform: translateY(-2px); }
+        .info-card:last-child { margin-bottom: 0; }
+        .warning-box { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .warning-title { font-size: 14px; font-weight: 700; color: #856404; margin-bottom: 8px; }
+        .warning-text { font-size: 13px; color: #856404; line-height: 1.5; }
+        .contact-section { padding: 0 20px 30px 20px; }
+        .contact-button { width: 100%; background-color: #ffffff; border-radius: 12px; padding: 20px; border: none; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s; display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .contact-button:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+        .contact-button:last-child { margin-bottom: 0; }
+        .contact-title { font-size: 13px; font-weight: 600; color: #333; }
+        .contact-phone { font-size: 16px; font-weight: 700; color: #6BA3D4; }
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background-color: #333; color: white; padding: 12px 24px; border-radius: 8px; font-size: 14px; z-index: 1000; opacity: 0; transition: opacity 0.3s; }
+        .toast.show { opacity: 0.9; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <div class="logo">Dom Dom</div>
+            <div class="logo-subtitle">외국인 노동자 도우미 앱</div>
+        </div>
+        <button class="home-button" onclick="goHome()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span>홈으로</span>
+        </button>
+    </div>
+
+    <div class="page-info">
+        <div class="page-title"><span>📝</span><span>근로계약서 문제 해결</span></div>
+        <div class="page-description">💡 <strong>안내:</strong> 근로계약서는 노동자의 권리를 보호하는 중요한 문서입니다. 계약서 작성과 관련된 문제를 해결할 수 있도록 도와드립니다!</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">📖 근로계약서란?</div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">📋 근로계약서의 의미</div>
+            <div style="font-size: 13px; color: #666; line-height: 1.5;">근로자와 사업주가 근로 조건(임금, 근로시간, 휴일 등)에 대해 합의하고 서로 약속한 내용을 문서로 작성한 것입니다.</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">⚖️ 근로계약서의 중요성</div>
+            <div style="font-size: 13px; color: #666; line-height: 1.5;">근로계약서는 법적 효력이 있는 문서로, 나중에 문제가 생겼을 때 노동자의 권리를 보호하는 중요한 증거가 됩니다.</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">⚠️ 자주 발생하는 문제</div>
+        <div class="warning-box">
+            <div class="warning-title">🚨 이런 경우는 불법입니다!</div>
+            <div class="warning-text">근로계약서를 작성하지 않거나, 계약서와 다르게 일을 시키거나, 계약서 사본을 주지 않는 것은 모두 법 위반입니다.</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">📄 근로계약서를 안 써줘요</div>
+            <div style="font-size: 13px; color: #666; line-height: 1.5;">사업주는 근로자를 고용할 때 반드시 근로계약서를 작성해야 합니다. 계약서를 작성하지 않으면 500만원 이하의 벌금을 받습니다.</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">📋 사본을 안 줘요</div>
+            <div style="font-size: 13px; color: #666; line-height: 1.5;">사업주는 근로계약서를 작성한 후 노동자에게 반드시 사본을 1부 교부해야 합니다. 주지 않으면 500만원 이하의 벌금을 받습니다.</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">❌ 계약서와 다르게 일을 시켜요</div>
+            <div style="font-size: 13px; color: #666; line-height: 1.5;">계약서에 명시된 근로 조건을 위반하는 것은 불법입니다. 임금, 근로시간, 업무 내용 등이 계약서와 다르면 신고할 수 있습니다.</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">🔄 계약서를 일방적으로 변경해요</div>
+            <div style="font-size: 13px; color: #666; line-height: 1.5;">근로계약 내용을 변경하려면 반드시 노동자의 동의가 필요합니다. 일방적인 변경은 무효이며, 원래 계약 조건이 유지됩니다.</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">✅ 근로계약서에 꼭 들어가야 할 내용</div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">1️⃣ 임금</div>
+            <div style="font-size: 13px; color: #666;">월급 또는 시급, 지급 방법, 지급 날짜</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">2️⃣ 근로시간과 휴게시간</div>
+            <div style="font-size: 13px; color: #666;">하루 몇 시간, 주 몇 시간 일하는지, 쉬는 시간은 얼마인지</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">3️⃣ 휴일과 휴가</div>
+            <div style="font-size: 13px; color: #666;">주휴일, 유급휴가, 연차휴가</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">4️⃣ 근무 장소와 업무 내용</div>
+            <div style="font-size: 13px; color: #666;">어디서 어떤 일을 하는지</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">5️⃣ 계약 기간</div>
+            <div style="font-size: 13px; color: #666;">언제부터 언제까지 일하는지 (기간제 근로자의 경우)</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🛡️ 나의 권리</div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">📄 근로계약서 요구할 권리</div>
+            <div style="font-size: 13px; color: #666; line-height: 1.5;">노동자는 언제든지 사업주에게 근로계약서 작성 및 교부를 요구할 수 있습니다.</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">💼 계약서 없어도 보호받을 권리</div>
+            <div style="font-size: 13px; color: #666; line-height: 1.5;">근로계약서가 없어도 실제로 일을 했다면 근로기준법의 보호를 받을 수 있습니다. 증거(급여명세서, 문자, 통화기록 등)를 보관하세요.</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">🪪 외국인도 동일한 권리</div>
+            <div style="font-size: 13px; color: #666; line-height: 1.5;">외국인 노동자도 한국인과 똑같이 근로계약서를 작성받고 근로기준법의 보호를 받을 권리가 있습니다.</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">⚡ 문제 해결 방법</div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">1️⃣ 사업주에게 요청</div>
+            <div style="font-size: 13px; color: #666; line-height: 1.5;">먼저 사업주에게 근로계약서 작성 또는 사본 교부를 정중하게 요청하세요. 문자나 이메일로 기록을 남기는 것이 좋습니다.</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">2️⃣ 고용노동부에 신고</div>
+            <div style="font-size: 13px; color: #666; line-height: 1.5;">사업주가 계속 거부하면 고용노동부(1350)에 신고할 수 있습니다. 근로감독관이 조사하고 시정 조치를 합니다.</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">3️⃣ 증거 자료 확보</div>
+            <div style="font-size: 13px; color: #666; line-height: 1.5;">급여명세서, 근무 일지, 사업주와의 문자/카톡 대화, 통장 입금 내역 등 근로 사실을 입증할 수 있는 모든 자료를 보관하세요.</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">4️⃣ 전문가 상담</div>
+            <div style="font-size: 13px; color: #666; line-height: 1.5;">외국인력상담센터나 노무사를 통해 무료 상담을 받을 수 있습니다.</div>
+        </div>
+    </div>
+
+    <div class="contact-section">
+        <div class="section-title" style="margin-bottom: 15px; padding: 0 0 0 20px;">📞 상담 및 신고 기관</div>
+        <button class="contact-button" onclick="makeCall('1350')">
+            <span class="contact-title">고용노동부 고객상담센터</span>
+            <span class="contact-phone">☎ 1350</span>
+        </button>
+        <button class="contact-button" onclick="makeCall('1644-0644')">
+            <span class="contact-title">외국인력 상담센터</span>
+            <span class="contact-phone">☎ 1644-0644</span>
+        </button>
+        <button class="contact-button" onclick="makeCall('1577-1588')">
+            <span class="contact-title">대한법률구조공단 (무료 법률지원)</span>
+            <span class="contact-phone">☎ 1577-1588</span>
+        </button>
+        <button class="contact-button" onclick="makeCall('1331')">
+            <span class="contact-title">국가인권위원회</span>
+            <span class="contact-phone">☎ 1331</span>
+        </button>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        function makeCall(number) {
+            showToast(`${number}로 전화를 겁니다`);
+        }
+
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
