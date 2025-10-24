@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dom Dom - 성희롱·성폭력 대응</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif; background-color: #f0f0f0; max-width: 430px; margin: 0 auto; overflow-x: hidden; padding-bottom: 20px; }
+        .header { background-color: #ffffff; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .logo-container { text-align: center; margin-bottom: 15px; }
+        .logo { font-size: 42px; font-weight: 700; color: #6BA3D4; letter-spacing: 1px; font-family: 'Arial Rounded MT Bold', Arial, sans-serif; }
+        .logo-subtitle { font-size: 12px; color: #6BA3D4; margin-top: 5px; }
+        .home-button { display: flex; align-items: center; gap: 5px; cursor: pointer; color: #333; font-size: 14px; font-weight: 600; background: none; border: none; transition: all 0.3s; }
+        .home-button:hover { color: #6BA3D4; }
+        .home-button svg { width: 24px; height: 24px; }
+        .page-info { background-color: #ffffff; padding: 20px; margin: 15px 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .page-title { font-size: 22px; font-weight: 700; color: #333; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .page-description { font-size: 13px; color: #666; line-height: 1.5; background-color: #f8f9fa; padding: 12px; border-radius: 8px; border-left: 4px solid #6BA3D4; }
+        .section { background-color: #ffffff; padding: 20px; margin: 15px 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .section-title { font-size: 18px; font-weight: 700; color: #333; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .info-card { background-color: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 12px; cursor: pointer; transition: all 0.3s; }
+        .info-card:hover { background-color: #e8f4f8; transform: translateY(-2px); }
+        .info-card:last-child { margin-bottom: 0; }
+        .emergency-box { background-color: #fef2f2; border: 2px solid #dc3545; padding: 20px; border-radius: 12px; margin-bottom: 15px; text-align: center; }
+        .emergency-title { font-size: 16px; font-weight: 700; color: #dc3545; margin-bottom: 12px; }
+        .emergency-button { width: 100%; padding: 16px; background-color: #dc3545; color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: 700; cursor: pointer; transition: all 0.3s; margin-bottom: 8px; }
+        .emergency-button:hover { background-color: #b02a37; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4); }
+        .emergency-button:last-child { margin-bottom: 0; }
+        .warning-box { background-color: #fee2e2; border-left: 4px solid #dc3545; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .warning-title { font-size: 14px; font-weight: 700; color: #7f1d1d; margin-bottom: 8px; }
+        .warning-text { font-size: 13px; color: #7f1d1d; line-height: 1.5; }
+        .contact-section { padding: 0 20px 30px 20px; }
+        .contact-button { width: 100%; background-color: #ffffff; border-radius: 12px; padding: 20px; border: none; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s; display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .contact-button:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+        .contact-button:last-child { margin-bottom: 0; }
+        .contact-title { font-size: 13px; font-weight: 600; color: #333; }
+        .contact-phone { font-size: 16px; font-weight: 700; color: #6BA3D4; }
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background-color: #333; color: white; padding: 12px 24px; border-radius: 8px; font-size: 14px; z-index: 1000; opacity: 0; transition: opacity 0.3s; }
+        .toast.show { opacity: 0.9; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <div class="logo">Dom Dom</div>
+            <div class="logo-subtitle">외국인 노동자 도우미 앱</div>
+        </div>
+        <button class="home-button" onclick="goHome()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span>홈으로</span>
+        </button>
+    </div>
+
+    <div class="page-info">
+        <div class="page-title"><span>🛡️</span><span>성희롱·성폭력 대응</span></div>
+        <div class="page-description">💡 <strong>중요:</strong> 성희롱과 성폭력은 <strong style="color: #dc3545;">범죄</strong>입니다. 당신의 잘못이 아닙니다. 법이 당신을 보호합니다!</div>
+    </div>
+
+    <div class="section">
+        <div class="emergency-box">
+            <div class="emergency-title">🚨 지금 위험한 상황이라면</div>
+            <button class="emergency-button" onclick="makeCall('112')">
+                ☎️ 112 경찰 긴급신고
+            </button>
+            <button class="emergency-button" onclick="makeCall('1366')">
+                ☎️ 1366 여성긴급전화 (24시간)
+            </button>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">📖 성희롱·성폭력이란?</div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">⚠️ 직장 내 성희롱</div>
+            <div style="font-size: 13px; color: #666; line-height: 1.5;">원하지 않는 성적 언행으로 불쾌감을 주거나 고용상 불이익을 주는 행위입니다. 성적 농담, 외모 평가, 불필요한 신체 접촉 등이 포함됩니다.</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">🚨 성폭력</div>
+            <div style="font-size: 13px; color: #666; line-height: 1.5;">상대방의 의사에 반하여 가해지는 모든 신체적·언어적·정신적 폭력입니다. 강간, 강제추행, 몰카 등이 포함되며 형법상 범죄입니다.</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🔍 이런 것들이 피해입니다</div>
+        <div class="warning-box">
+            <div class="warning-title">⚠️ 당신의 잘못이 아닙니다!</div>
+            <div class="warning-text">어떤 상황에서든 성희롱·성폭력은 <strong style="color: #dc3545;">가해자의 잘못</strong>입니다.</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">💬 언어적 성희롱</div>
+            <div style="font-size: 13px; color: #666;">성적 농담, 음담패설, "몸매가 좋네" 같은 외모 평가, 사생활 질문</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">🤚 신체적 성희롱</div>
+            <div style="font-size: 13px; color: #666;">불필요한 신체 접촉, 회식 자리에서 옆에 앉히기, 술 따르게 하기</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">👁️ 시각적 성희롱</div>
+            <div style="font-size: 13px; color: #666;">음란물 보여주기, 특정 신체 부위를 집요하게 쳐다보기, 몰래 촬영</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">🚫 성폭력</div>
+            <div style="font-size: 13px; color: #666;">강제 추행, 성폭행, 위력에 의한 추행 등 상대방의 의사에 반한 모든 성적 행위</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">⚡ 피해 발생 시 즉시 대응</div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">1️⃣ 안전 확보</div>
+            <div style="font-size: 13px; color: #666;">위험한 상황에서 즉시 벗어나세요. 안전이 최우선입니다!</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">2️⃣ 증거 확보</div>
+            <div style="font-size: 13px; color: #666;">문자, 메신저 대화, CCTV, 녹음, 목격자 등 모든 증거를 보관하세요. 성폭력 피해 시 씻지 말고 72시간 이내 병원 방문하세요.</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">3️⃣ 즉시 신고</div>
+            <div style="font-size: 13px; color: #666;">경찰(112), 여성긴급전화(1366), 또는 회사에 신고하세요. 여러 곳에 동시에 신고할 수 있습니다.</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">4️⃣ 상담 및 지원</div>
+            <div style="font-size: 13px; color: #666;">전문 상담기관의 도움을 받으세요. 혼자 견디지 마세요. 모든 지원은 무료입니다.</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">❓ 자주 묻는 질문</div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">📝 어디에 신고하나요?</div>
+            <div style="font-size: 13px; color: #666; line-height: 1.5;">경찰서(112), 여성긴급전화(1366), 회사 내부 고충처리 담당자, 고용노동부(1350), 국가인권위원회(1331), 외국인력상담센터(1644-0644)에 신고할 수 있습니다.</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">😨 신고하면 회사가 해고하지 않나요?</div>
+            <div style="font-size: 13px; color: #666; line-height: 1.5;">신고를 이유로 한 해고나 불이익은 불법입니다. 법으로 보호받으며, 위반 시 사업주는 3년 이하 징역 또는 3000만원 이하 벌금을 받습니다.</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">🪪 신고하면 비자에 영향이 있나요?</div>
+            <div style="font-size: 13px; color: #666; line-height: 1.5;">아니요! 성범죄 신고는 비자에 전혀 영향을 주지 않습니다. 성희롱·성폭력 피해 시 사업장 변경도 가능합니다.</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">💰 돈이 없어도 도움을 받을 수 있나요?</div>
+            <div style="font-size: 13px; color: #666; line-height: 1.5;">네! 의료 지원, 법률 지원, 심리 상담, 생활 지원을 모두 무료로 받을 수 있습니다. 신분증이나 건강보험이 없어도 가능합니다.</div>
+        </div>
+        <div class="info-card">
+            <div style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px;">🌏 한국어를 못해도 괜찮나요?</div>
+            <div style="font-size: 13px; color: #666; line-height: 1.5;">네! 13개 언어로 무료 통역 서비스를 제공받을 수 있습니다. 외국인여성 긴급상담(02-1670-1366)으로 전화하세요.</div>
+        </div>
+    </div>
+
+    <div class="contact-section">
+        <div class="section-title" style="margin-bottom: 15px; padding: 0 0 0 20px;">📞 상담 및 신고 기관</div>
+        <button class="contact-button" onclick="makeCall('112')">
+            <span class="contact-title">경찰 긴급신고 (24시간)</span>
+            <span class="contact-phone">☎ 112</span>
+        </button>
+        <button class="contact-button" onclick="makeCall('1366')">
+            <span class="contact-title">여성긴급전화 (24시간)</span>
+            <span class="contact-phone">☎ 1366</span>
+        </button>
+        <button class="contact-button" onclick="makeCall('02-1670-1366')">
+            <span class="contact-title">외국인여성 긴급상담 (13개 언어)</span>
+            <span class="contact-phone">☎ 02-1670-1366</span>
+        </button>
+        <button class="contact-button" onclick="makeCall('1350')">
+            <span class="contact-title">고용노동부 (직장 내 성희롱)</span>
+            <span class="contact-phone">☎ 1350</span>
+        </button>
+        <button class="contact-button" onclick="makeCall('1644-0644')">
+            <span class="contact-title">외국인력 상담센터</span>
+            <span class="contact-phone">☎ 1644-0644</span>
+        </button>
+        <button class="contact-button" onclick="makeCall('1577-1588')">
+            <span class="contact-title">대한법률구조공단 (무료 법률지원)</span>
+            <span class="contact-phone">☎ 1577-1588</span>
+        </button>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        function makeCall(number) {
+            showToast(`${number}로 전화를 겁니다`);
+        }
+
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
