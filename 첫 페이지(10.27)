@@ -1,0 +1,146 @@
+<script type="text/babel">
+  const { useState, useRef, useEffect } = React;
+
+  function VerificationPage() {
+    const [employerName, setEmployerName] = useState('');
+    const [workerName, setWorkerName] = useState('');
+    const [currentOrganization, setCurrentOrganization] = useState('');
+    const [workerPhone, setWorkerPhone] = useState('');
+    const [employerPhone, setEmployerPhone] = useState('');
+    const [verificationCode, setVerificationCode] = useState('');
+    const [uploadedFile, setUploadedFile] = useState(null);
+    const [surveyType, setSurveyType] = useState('');
+
+    const employerCanvasRef = useRef(null);
+    const workerCanvasRef = useRef(null);
+    const [isDrawingEmployer, setIsDrawingEmployer] = useState(false);
+    const [isDrawingWorker, setIsDrawingWorker] = useState(false);
+
+    const startDrawing = (canvasRef, setIsDrawing) => (e) => {
+      setIsDrawing(true);
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext('2d');
+      const rect = canvas.getBoundingClientRect();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    };
+
+    const draw = (canvasRef, isDrawing) => (e) => {
+      if (!isDrawing) return;
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext('2d');
+      const rect = canvas.getBoundingClientRect();
+      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+      ctx.strokeStyle = '#000';
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+    };
+
+    const stopDrawing = (setIsDrawing) => () => setIsDrawing(false);
+
+    const clearCanvas = (canvasRef) => () => {
+      const ctx = canvasRef.current.getContext('2d');
+      ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    };
+
+    const handleFileUpload = (e) => {
+      const file = e.target.files[0];
+      if (file) setUploadedFile(file);
+    };
+
+    useEffect(() => {
+      [employerCanvasRef, workerCanvasRef].forEach(ref => {
+        if (ref.current) {
+          const canvas = ref.current;
+          canvas.width = canvas.offsetWidth;
+          canvas.height = canvas.offsetHeight;
+        }
+      });
+    }, []);
+
+    return (
+      <div style={{ backgroundColor: '#f0f0f0', minHeight: '100vh' }}>
+        <div style={{ maxWidth: '430px', margin: '0 auto' }}>
+          <div style={{ backgroundColor: '#fff', padding: '20px', textAlign: 'center' }}>
+            <div style={{ fontSize: '42px', fontWeight: '700', color: '#6BA3D4' }}>Dom Dom</div>
+            <div style={{ fontSize: '12px', color: '#6BA3D4' }}>외국인 노동자 도우미 앱</div>
+          </div>
+
+          <div style={{ backgroundColor: '#fff', padding: '20px', margin: '20px', borderRadius: '12px' }}>
+            <h1 style={{ fontSize: '18px', fontWeight: '700', color: '#333' }}>
+              🔄 상호평가제는 근무지를 변경할 경우 필수적으로 실시해야 하는 사항입니다.
+            </h1>
+            <p style={{ fontSize: '13px', color: '#666' }}>
+              근무지 변경 여부 확인 절차 이후 이용 가능합니다.<br />📝 다음 질문에 답해주십시오.
+            </p>
+          </div>
+
+          <div style={{ backgroundColor: '#fff', padding: '20px', margin: '0 20px 20px', borderRadius: '12px' }}>
+            <div style={{ marginBottom: '15px' }}>
+              <label>고용주 이름</label>
+              <input value={employerName} onChange={(e) => setEmployerName(e.target.value)} placeholder="이름 입력" style={{ width: '100%', padding: '10px' }}/>
+            </div>
+
+            <div style={{ marginBottom: '15px' }}>
+              <label>노동자 이름</label>
+              <input value={workerName} onChange={(e) => setWorkerName(e.target.value)} placeholder="이름 입력" style={{ width: '100%', padding: '10px' }}/>
+            </div>
+
+            <div style={{ marginBottom: '15px' }}>
+              <label>현재 근무지 주소</label>
+              <input value={currentOrganization} onChange={(e) => setCurrentOrganization(e.target.value)} placeholder="주소 입력" style={{ width: '100%', padding: '10px' }}/>
+            </div>
+
+            <div style={{ marginBottom: '15px' }}>
+              <label>📄 노동계약서 파일 업로드</label>
+              <input type="file" onChange={handleFileUpload}/>
+              {uploadedFile && <p>{uploadedFile.name}</p>}
+            </div>
+
+            <div style={{ marginBottom: '15px' }}>
+              <label>📞 고용주 전화번호</label>
+              <input value={employerPhone} onChange={(e) => setEmployerPhone(e.target.value)} placeholder="전화번호" style={{ width: '100%', padding: '10px' }}/>
+            </div>
+
+            <div style={{ marginBottom: '15px' }}>
+              <label>📞 노동자 전화번호</label>
+              <input value={workerPhone} onChange={(e) => setWorkerPhone(e.target.value)} placeholder="전화번호" style={{ width: '100%', padding: '10px' }}/>
+            </div>
+
+            <div style={{ marginBottom: '15px' }}>
+              <label>💬 인증번호 입력</label>
+              <input value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} placeholder="인증번호" style={{ width: '100%', padding: '10px' }}/>
+            </div>
+
+            <div style={{ marginBottom: '15px' }}>
+              <p>✨ 근무지 변경이 사실이라면 아래 서명하시오.</p>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <canvas ref={employerCanvasRef}
+                  onMouseDown={startDrawing(employerCanvasRef, setIsDrawingEmployer)}
+                  onMouseMove={draw(employerCanvasRef, isDrawingEmployer)}
+                  onMouseUp={stopDrawing(setIsDrawingEmployer)}
+                  style={{ border: '1px solid #ddd', width: '100%', height: '100px' }}
+                />
+                <canvas ref={workerCanvasRef}
+                  onMouseDown={startDrawing(workerCanvasRef, setIsDrawingWorker)}
+                  onMouseMove={draw(workerCanvasRef, isDrawingWorker)}
+                  onMouseUp={stopDrawing(setIsDrawingWorker)}
+                  style={{ border: '1px solid #ddd', width: '100%', height: '100px' }}
+                />
+              </div>
+            </div>
+
+            <div style={{ textAlign: 'center' }}>
+              <button style={{ padding: '10px 20px', backgroundColor: '#6BA3D4', color: '#fff', border: 'none', borderRadius: '10px' }}>
+                확인
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById("root")).render(<VerificationPage />);
+</script>
