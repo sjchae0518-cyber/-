@@ -435,10 +435,13 @@
             const surveyTypeText = selectedSurveyType === 'worker' ? '노동자' : '고용주';
             showToast(`${surveyTypeText} 설문조사를 시작합니다.`);
             
-            // 실제로는 설문조사 페이지로 이동
+            // 선택한 설문 유형에 따라 다른 페이지로 이동
             setTimeout(() => {
-                // window.location.href = '/survey?type=' + selectedSurveyType;
-                showToast('설문조사 페이지로 이동합니다...');
+                if (selectedSurveyType === 'worker') {
+                    window.location.href = '상호평가제03work.html';
+                } else {
+                    window.location.href = '상호평가제03employer.html';
+                }
             }, 1500);
         }
 
