@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dom Dom - Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #f0f0f0;
+            max-width: 430px;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 42px;
+            font-weight: 700;
+            color: #6BA3D4;
+            letter-spacing: 1px;
+            font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+        }
+
+        .logo-subtitle {
+            font-size: 12px;
+            color: #6BA3D4;
+            margin-top: 5px;
+        }
+
+        .icon-bar {
+            background-color: #ffffff;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            padding: 15px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .top-icon {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #333;
+        }
+
+        .top-icon:hover {
+            transform: translateY(-2px);
+            color: #6BA3D4;
+        }
+
+        .chart-section {
+            background-color: #ffffff;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 12px;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .calendar-container {
+            margin-bottom: 20px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .calendar-header {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .calendar-week {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            width: 100%;
+        }
+
+        .work-hours-summary {
+            margin-top: 15px;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hours-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .hours-value {
+            font-size: 16px;
+            color: #6BA3D4;
+            font-weight: 700;
+        }
+
+        .calendar-day {
+            text-align: center;
+            padding: 4px 2px;
+            border-radius: 6px;
+            background-color: transparent;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-width: 0;
+        }
+
+        .calendar-day:hover {
+            background-color: #f8f8f8;
+        }
+
+        .calendar-day.today .day-number {
+            background-color: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .day-name {
+            font-size: 10px;
+            font-weight: 500;
+            margin-bottom: 2px;
+            color: #666;
+        }
+
+        .day-number {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .day-hours {
+            font-size: 9px;
+            margin-top: 3px;
+            color: #6BA3D4;
+            font-weight: 600;
+        }
+
+        .work-timer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .timer-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .timer-display {
+            font-size: 42px;
+            font-weight: 700;
+            color: #6BA3D4;
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .timer-status {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .timer-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .timer-button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .timer-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .timer-button.start {
+            background-color: #6BA3D4;
+            color: white;
+        }
+
+        .timer-button.stop {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .timer-button.break {
+            background-color: #ffc107;
+            color: #333;
+        }
+
+        .timer-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .korean-section {
+            background-color: #ffffff;
+            padding: 20px;
+            margin: 20px;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .korean-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .korean-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .korean-big-text {
+            font-size: 48px;
+            font-weight: 700;
+            color: #6BA3D4;
+        }
+
+        .korean-small-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .grid-container {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 35px;
+        }
+
+        .grid-item {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .grid-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            background-color: #f9f9f9;
+        }
+
+        .grid-icon {
+            font-size: 40px;
+            line-height: 1;
+        }
+
+        .grid-text {
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #333;
+            min-height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bottom-buttons {
+            padding: 0 20px 30px 20px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .bottom-button {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+            text-decoration: none;
+            color: #333;
+            border: none;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .bottom-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            background-color: #f9f9f9;
+        }
+
+        .button-title {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .button-phone {
+            font-size: 16px;
+            font-weight: 700;
+            color: #6BA3D4;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .toast.show {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">Dom Dom</div>
+        <div class="logo-subtitle">App Para sa Manggagawang Dayuhan</div>
+    </div>
+
+    <div class="icon-bar">
+        <svg class="top-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+        <svg class="top-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+    </div>
+
+    <div class="chart-section">
+        <div class="calendar-container">
+            <div class="calendar-header" style="cursor: pointer; display: flex; align-items: center; justify-content: space-between;" onclick="goToWorkRecord()">
+                <span>Talaan ng Trabaho ng Linggong Ito</span>
+                <span style="font-size: 14px; color: #6BA3D4;">→</span>
+            </div>
+            <div class="calendar-week" id="calendarWeek">
+                <!-- Dynamically generated by JavaScript -->
+            </div>
+            <div class="work-hours-summary">
+                <div>
+                    <div class="hours-label">Kabuuang Oras ng Linggong Ito</div>
+                    <div class="hours-value" id="weeklyTotal">0 oras</div>
+                </div>
+                <div style="text-align: right;">
+                    <div class="hours-label">Average na Oras</div>
+                    <div class="hours-value" id="dailyAverage">0 oras</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="work-timer">
+            <div class="timer-label">Kasalukuyang Oras ng Trabaho</div>
+            <div class="timer-display" id="timerDisplay">00:00:00</div>
+            <div class="timer-status" id="timerStatus">Naghihintay na Magsimula</div>
+            <div class="timer-buttons">
+                <button class="timer-button start" id="startBtn" onclick="startWork()">Simulan</button>
+                <button class="timer-button stop" id="stopBtn" onclick="stopWork()" disabled>Tapusin</button>
+                <button class="timer-button break" id="breakBtn" onclick="takeBreak()" disabled>Pahinga</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="korean-section">
+        <div class="korean-left">
+            <div class="korean-big-text">한글</div>
+            <div class="korean-small-text">Mag-aral ng Korean</div>
+        </div>
+        <div style="font-size: 50px;">📑</div>
+    </div>
+
+    <div class="grid-container">
+        <div class="grid-item" data-issue="contract">
+            <div class="grid-icon">📝</div>
+            <div class="grid-text">Kontrata sa<br>Trabaho</div>
+        </div>
+
+        <div class="grid-item" data-issue="wage">
+            <div class="grid-icon">💸</div>
+            <div class="grid-text">Hindi Bayad<br>na Sahod</div>
+        </div>
+
+        <div class="grid-item" data-issue="overwork">
+            <div class="grid-icon">⏰</div>
+            <div class="grid-text">Sobrang<br>Oras ng Trabaho</div>
+        </div>
+
+        <div class="grid-item" data-issue="accident">
+            <div class="grid-icon">🏥</div>
+            <div class="grid-text">Aksidente sa<br>Industriya</div>
+        </div>
+
+        <div class="grid-item" data-issue="passport">
+            <div class="grid-icon">🪪</div>
+            <div class="grid-text">Kinuha ang<br>Pasaporte</div>
+        </div>
+
+        <div class="grid-item" data-issue="deportation">
+            <div class="grid-icon">✈️</div>
+            <div class="grid-text">Ilegal na<br>Pananatili</div>
+        </div>
+
+        <div class="grid-item" data-issue="harassment">
+            <div class="grid-icon">🚨</div>
+            <div class="grid-text">Pang-aabuso<br>at Assault</div>
+        </div>
+
+        <div class="grid-item" data-issue="housing">
+            <div class="grid-icon">🏚️</div>
+            <div class="grid-text">Masamang<br>Tirahan</div>
+        </div>
+
+        <div class="grid-item" data-issue="union">
+            <div class="grid-icon">🤝</div>
+            <div class="grid-text">Paghihigpit sa<br>Unyon</div>
+        </div>
+
+        <div class="grid-item" data-issue="dormitory">
+            <div class="grid-icon">🏠</div>
+            <div class="grid-text">Maghanap ng<br>Dormitoryo</div>
+        </div>
+
+        <div class="grid-item" data-issue="review">
+            <div class="grid-icon">⭐</div>
+            <div class="grid-text">Mutual<br>Evaluation</div>
+        </div>
+
+        <div class="grid-item" data-issue="lawyer">
+            <div class="grid-icon">⚖️</div>
+            <div class="grid-text">Kumonekta sa<br>Abogado</div>
+        </div>
+
+        <div class="grid-item" data-issue="tax">
+            <div class="grid-icon">📊</div>
+            <div class="grid-text">Buwis at<br>Insurance</div>
+        </div>
+
+        <div class="grid-item" data-issue="jobs">
+            <div class="grid-icon">💼</div>
+            <div class="grid-text">Maghanap ng<br>Trabaho</div>
+        </div>
+    </div>
+
+    <div class="bottom-buttons">
+        <button class="bottom-button" onclick="makeCall('1350')">
+            <span class="button-title">Ministry of Employment & Labor</span>
+            <span class="button-phone">☎ 1350</span>
+        </button>
+        <button class="bottom-button" onclick="makeCall('1644-0644')">
+            <span class="button-title">Foreign Worker Support Center</span>
+            <span class="button-phone">☎ 1644-0644</span>
+        </button>
+        <button class="bottom-button" onclick="makeCall('1345')">
+            <span class="button-title">Immigration & Foreign Policy</span>
+            <span class="button-phone">☎ 1345</span>
+        </button>
+        <button class="bottom-button" onclick="makeCall('1366')">
+            <span class="button-title">Women Emergency Hotline</span>
+            <span class="button-phone">☎ 1366</span>
+        </button>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Timer variables
+        let timerInterval = null;
+        let startTime = null;
+        let elapsedTime = 0;
+        let isWorking = false;
+        let isOnBreak = false;
+
+        // Weekly work hours data (example)
+        const weeklyData = {
+            0: 0,    // Linggo
+            1: 8.5,  // Lunes (nakaraang araw)
+            2: 7.8,  // Martes (nakaraang araw)
+            3: 0,    // Miyerkules (ngayon - hindi pa nasukat)
+            4: 0,    // Huwebes (hinaharap)
+            5: 0,    // Biyernes (hinaharap)
+            6: 0     // Sabado (hinaharap)
+        };
+
+        // Update work hours summary
+        function updateWorkHoursSummary() {
+            const total = Object.values(weeklyData).reduce((sum, hours) => sum + hours, 0);
+            const workedDays = Object.values(weeklyData).filter(hours => hours > 0).length;
+            const average = workedDays > 0 ? (total / workedDays) : 0;
+
+            document.getElementById('weeklyTotal').textContent = total.toFixed(1) + ' oras';
+            document.getElementById('dailyAverage').textContent = average.toFixed(1) + ' oras';
+        }
+
+        // Initialize calendar on page load
+        function initCalendar() {
+            const calendarWeek = document.getElementById('calendarWeek');
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const dayNames = ['Lin', 'Lun', 'Mar', 'Miy', 'Huw', 'Biy', 'Sab'];
+            
+            // Find this week's Sunday
+            const startOfWeek = new Date(today);
+            startOfWeek.setDate(today.getDate() - today.getDay());
+
+            for (let i = 0; i < 7; i++) {
+                const currentDay = new Date(startOfWeek);
+                currentDay.setDate(startOfWeek.getDate() + i);
+                currentDay.setHours(0, 0, 0, 0);
+                
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'calendar-day';
+                
+                // Mark today
+                if (currentDay.getTime() === today.getTime()) {
+                    dayDiv.classList.add('today');
+                }
+                
+                const dayOfWeek = currentDay.getDay();
+                const hoursText = weeklyData[dayOfWeek] > 0 ? `<div class="day-hours">${weeklyData[dayOfWeek]}h</div>` : '<div class="day-hours" style="visibility: hidden;">0h</div>';
+                
+                dayDiv.innerHTML = `
+                    <div class="day-name">${dayNames[i]}</div>
+                    <div class="day-number">${currentDay.getDate()}</div>
+                    ${hoursText}
+                `;
+                
+                calendarWeek.appendChild(dayDiv);
+            }
+
+            // Update work hours summary
+            updateWorkHoursSummary();
+        }
+
+        // Format time function
+        function formatTime(milliseconds) {
+            const totalSeconds = Math.floor(milliseconds / 1000);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        // Update timer
+        function updateTimer() {
+            if (isWorking && !isOnBreak) {
+                const currentTime = Date.now();
+                const currentElapsed = elapsedTime + (currentTime - startTime);
+                document.getElementById('timerDisplay').textContent = formatTime(currentElapsed);
+            }
+        }
+
+        // Start work
+        function startWork() {
+            if (!isWorking) {
+                isWorking = true;
+                startTime = Date.now();
+                timerInterval = setInterval(updateTimer, 1000);
+                
+                document.getElementById('timerStatus').textContent = '⏰ Tumatakbo';
+                document.getElementById('startBtn').disabled = true;
+                document.getElementById('stopBtn').disabled = false;
+                document.getElementById('breakBtn').disabled = false;
+                
+                showToast('Nagsimula ang pagsukat ng oras ng trabaho.');
+            }
+        }
+
+        // Stop work
+        function stopWork() {
+            if (isWorking) {
+                if (!isOnBreak) {
+                    elapsedTime += (Date.now() - startTime);
+                }
+                
+                clearInterval(timerInterval);
+                isWorking = false;
+                isOnBreak = false;
+                
+                const finalTime = formatTime(elapsedTime);
+                
+                document.getElementById('timerStatus').textContent = `✅ Tapos na (Kabuuan ${finalTime})`;
+                document.getElementById('startBtn').disabled = false;
+                document.getElementById('stopBtn').disabled = true;
+                document.getElementById('breakBtn').disabled = true;
+                
+                showToast(`Tumigil ang pagsukat ng oras ng trabaho. (Kabuuan ${finalTime})`);
+                
+                // Reset timer (after 3 seconds)
+                setTimeout(() => {
+                    elapsedTime = 0;
+                    document.getElementById('timerDisplay').textContent = '00:00:00';
+                    document.getElementById('timerStatus').textContent = 'Naghihintay na Magsimula';
+                }, 3000);
+            }
+        }
+
+        // Take break
+        function takeBreak() {
+            if (isWorking) {
+                if (isOnBreak) {
+                    // End break
+                    isOnBreak = false;
+                    startTime = Date.now();
+                    timerInterval = setInterval(updateTimer, 1000);
+                    
+                    document.getElementById('timerStatus').textContent = '⏰ Tumatakbo';
+                    document.getElementById('breakBtn').textContent = 'Pahinga';
+                    document.getElementById('breakBtn').className = 'timer-button break';
+                    
+                    showToast('Tapos na ang pahinga, muling nagsimula ang trabaho.');
+                } else {
+                    // Start break
+                    isOnBreak = true;
+                    elapsedTime += (Date.now() - startTime);
+                    clearInterval(timerInterval);
+                    
+                    document.getElementById('timerStatus').textContent = '☕ Nagpapahinga';
+                    document.getElementById('breakBtn').textContent = 'Ituloy';
+                    document.getElementById('breakBtn').className = 'timer-button start';
+                    
+                    showToast('Oras ng pahinga.');
+                }
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        function makeCall(number) {
+            showToast(`Tumatawag sa ${number}...`);
+        }
+
+        // Go to work record page
+        function goToWorkRecord() {
+            window.location.href = '노동기록.html';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initCalendar();
+            
+            document.querySelectorAll('.grid-item').forEach(function(item) {
+                item.addEventListener('click', function() {
+                    const issue = this.getAttribute('data-issue');
+                    const issueTitle = this.querySelector('.grid-text').textContent.trim();
+                    
+                    // Navigate to respective pages
+                    if (issue === 'contract') {
+                        window.location.href = '근로계약서_문제.html';
+                    }
+                    else if (issue === 'wage') {
+                        window.location.href = '임금체불.html';
+                    } 
+                    else if (issue === 'overwork') {
+                        window.location.href = '장시간_노동문제.html';
+                    }
+                    else if (issue === 'accident') {
+                        window.location.href = '산업재해_문제해결.html';
+                    }
+                    else if (issue === 'passport') {
+                        window.location.href = '여권신분증_압수문제.html';
+                    }
+                    else if (issue === 'deportation') {
+                        window.location.href = '불법 체류.html';
+                    }
+                    else if (issue === 'harassment') {
+                        window.location.href = '성폭력 대응방법 페이지.html';
+                    }
+                    else if (issue === 'housing') {
+                        window.location.href = '열악한 주거 환경.html';
+                    }
+                    else if (issue === 'union') {
+                        window.location.href = '노동조합.html';
+                    }
+                    else if (issue === 'dormitory') {
+                        window.location.href = '기숙사_찾기.html';
+                    }
+                    else if (issue === 'review') {
+                        window.location.href = '상호평가제_실행가능.html';
+                    }
+                    else if (issue === 'lawyer') {
+                        window.location.href = '노무사 연결 페이지.html';
+                    }
+                    else if (issue === 'tax') {
+                        window.location.href = '세금, 보험.html';
+                    }
+                    else if (issue === 'jobs') {
+                        window.location.href = '일자리 찾기.html';
+                    }
+                    else {
+                        showToast(`Pupunta sa pahina ng detalye ng ${issueTitle}.`);
+                    }
+                });
+            });
+
+            // Korean learning section click - navigate to Korean quiz page
+            document.querySelector('.korean-section').addEventListener('click', function() {
+                window.location.href = '한국어퀴즈.html';
+            });
+
+            document.querySelectorAll('.top-icon').forEach(function(icon, index) {
+                icon.addEventListener('click', function() {
+                    if (index === 0) {
+                        // Globe icon - navigate to country selection page
+                        window.location.href = '국가선택.html';
+                    } else {
+                        // User icon - navigate to personal info page
+                        window.location.href = '개인정보.html';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
