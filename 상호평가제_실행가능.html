@@ -54,7 +54,6 @@
       const [employerPhone, setEmployerPhone] = useState('');
       const [verificationCode, setVerificationCode] = useState('');
       const [uploadedFile, setUploadedFile] = useState(null);
-      const [surveyType, setSurveyType] = useState('');
       
       const employerCanvasRef = useRef(null);
       const workerCanvasRef = useRef(null);
@@ -292,7 +291,7 @@
               </div>
 
               {/* 서명 캔버스 */}
-              <div style={{ marginBottom: '15px' }}>
+              <div style={{ marginBottom: '20px' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
@@ -341,78 +340,19 @@
                 </div>
               </div>
 
-              {/* 확인 버튼 */}
-              <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-                <button style={{ 
-                  padding: '10px 24px', 
-                  border: '2px solid #6BA3D4', 
-                  borderRadius: '20px', 
-                  backgroundColor: '#ffffff', 
-                  color: '#6BA3D4', 
-                  fontSize: '14px', 
-                  fontWeight: '600', 
-                  cursor: 'pointer',
-                  transition: 'all 0.3s'
-                }}>
-                  확인
-                </button>
-              </div>
-
-              {/* 설문 유형 선택 */}
-              <div style={{ marginBottom: '20px' }}>
-                <p style={{ fontSize: '14px', fontWeight: '600', color: '#333', textAlign: 'center', marginBottom: '12px' }}>
-                  설문 유형을 선택해주세요
-                </p>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                  <button
-                    onClick={() => setSurveyType('worker')}
-                    style={{
-                      padding: '14px',
-                      borderRadius: '12px',
-                      border: surveyType === 'worker' ? '2px solid #6BA3D4' : '2px solid #e5e7eb',
-                      backgroundColor: surveyType === 'worker' ? '#6BA3D4' : '#ffffff',
-                      color: surveyType === 'worker' ? '#ffffff' : '#333',
-                      fontSize: '14px',
-                      fontWeight: '600',
-                      cursor: 'pointer',
-                      transition: 'all 0.3s'
-                    }}
-                  >
-                    노동자 설문하기
-                  </button>
-                  <button
-                    onClick={() => setSurveyType('employer')}
-                    style={{
-                      padding: '14px',
-                      borderRadius: '12px',
-                      border: surveyType === 'employer' ? '2px solid #6BA3D4' : '2px solid #e5e7eb',
-                      backgroundColor: surveyType === 'employer' ? '#6BA3D4' : '#ffffff',
-                      color: surveyType === 'employer' ? '#ffffff' : '#333',
-                      fontSize: '14px',
-                      fontWeight: '600',
-                      cursor: 'pointer',
-                      transition: 'all 0.3s'
-                    }}
-                  >
-                    고용주 설문하기
-                  </button>
-                </div>
-              </div>
-
               {/* 다음 버튼 */}
               <div style={{ textAlign: 'center' }}>
                 <button
-                  disabled={!surveyType}
                   style={{
                     padding: '14px 40px',
                     borderRadius: '20px',
                     border: 'none',
-                    backgroundColor: surveyType ? '#6BA3D4' : '#d1d5db',
+                    backgroundColor: '#6BA3D4',
                     color: '#ffffff',
                     fontSize: '15px',
                     fontWeight: '700',
-                    cursor: surveyType ? 'pointer' : 'not-allowed',
-                    boxShadow: surveyType ? '0 2px 8px rgba(107, 163, 212, 0.3)' : 'none',
+                    cursor: 'pointer',
+                    boxShadow: '0 2px 8px rgba(107, 163, 212, 0.3)',
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '8px',
