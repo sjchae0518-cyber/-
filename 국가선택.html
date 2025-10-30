@@ -359,10 +359,36 @@
             
             showToast(`✅ ${selectedCountry.flag} ${selectedCountry.ko}로 설정되었습니다`);
             
-            // 여기에 실제 앱에서는 선택된 국가 정보를 저장하고 다음 페이지로 이동
+            // 국가별 인덱스 페이지 매핑
+            const countryIndexMap = {
+                '🇰🇷': 'index.html',           // 한국
+                '🇺🇸': 'index_us.html',         // 미국
+                '🇵🇭': 'index_ph.html',         // 필리핀
+                '🇹🇭': 'index_th.html',         // 태국
+                '🇻🇳': 'index_vn.html',         // 베트남
+                '🇮🇩': 'index_id.html',         // 인도네시아
+                '🇰🇭': 'index_kh.html',         // 캄보디아
+                '🇱🇦': 'index_la.html',         // 라오스
+                '🇲🇲': 'index_mm.html',         // 미얀마
+                '🇲🇳': 'index_mn.html',         // 몽골
+                '🇨🇳': 'index_cn.html',         // 중국
+                '🇺🇿': 'index_uz.html',         // 우즈베키스탄
+                '🇰🇬': 'index_kg.html',         // 키르기스스탄
+                '🇵🇰': 'index_pk.html',         // 파키스탄
+                '🇳🇵': 'index_np.html',         // 네팔
+                '🇱🇰': 'index_lk.html',         // 스리랑카
+                '🇧🇩': 'index_bd.html',         // 방글라데시
+                '🇹🇱': 'index_tl.html'          // 동티모르
+            };
+            
+            // 선택된 국가 정보 저장
+            localStorage.setItem('selectedCountry', JSON.stringify(selectedCountry));
+            
+            // 해당 국가의 인덱스 페이지로 이동
+            const targetPage = countryIndexMap[selectedCountry.flag] || 'index.html';
+            
             setTimeout(() => {
-                // 홈 페이지로 돌아가기
-                window.location.href = 'index.html';
+                window.location.href = targetPage;
             }, 1500);
         }
 
