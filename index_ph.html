@@ -389,14 +389,20 @@
     </div>
 
     <div class="icon-bar">
-        <svg class="top-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-        </svg>
-        <svg class="top-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-        </svg>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer;" onclick="location.href='국가선택.html'">
+            <svg class="top-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            <span style="font-size: 9px; color: #666; font-weight: 500;">Language</span>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer;" onclick="location.href='개인정보.html'">
+            <svg class="top-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span style="font-size: 9px; color: #666; font-weight: 500;">Login</span>
+        </div>
     </div>
 
     <div class="chart-section">
@@ -774,18 +780,6 @@
             // Korean learning section click - navigate to Korean quiz page
             document.querySelector('.korean-section').addEventListener('click', function() {
                 window.location.href = '한국어퀴즈.html';
-            });
-
-            document.querySelectorAll('.top-icon').forEach(function(icon, index) {
-                icon.addEventListener('click', function() {
-                    if (index === 0) {
-                        // Globe icon - navigate to country selection page
-                        window.location.href = '국가선택.html';
-                    } else {
-                        // User icon - navigate to personal info page
-                        window.location.href = '개인정보.html';
-                    }
-                });
             });
         });
     </script>
