@@ -109,6 +109,10 @@
         }
       };
 
+      const handleNext = () => {
+        window.location.href = '상호평가제 두번째 화면.html';
+      };
+
       useEffect(() => {
         [employerCanvasRef, workerCanvasRef].forEach(ref => {
           if (ref.current) {
@@ -343,6 +347,7 @@
               {/* 다음 버튼 */}
               <div style={{ textAlign: 'center' }}>
                 <button
+                  onClick={handleNext}
                   style={{
                     padding: '14px 40px',
                     borderRadius: '20px',
