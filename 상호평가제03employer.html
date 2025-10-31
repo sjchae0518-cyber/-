@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dom Dom - 직원 평가</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f0f0f0;
+            max-width: 430px;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 42px;
+            font-weight: 700;
+            color: #6BA3D4;
+            letter-spacing: 1px;
+            font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+        }
+
+        .logo-subtitle {
+            font-size: 12px;
+            color: #6BA3D4;
+            margin-top: 5px;
+        }
+
+        .icon-bar {
+            background-color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .left-icons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .home-button {
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #333;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .home-button:hover {
+            color: #6BA3D4;
+        }
+
+        .top-icon {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #333;
+        }
+
+        .top-icon:hover {
+            transform: translateY(-2px);
+            color: #6BA3D4;
+        }
+
+        .main-content {
+            padding: 20px;
+        }
+
+        .info-section {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .info-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .info-description {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .info-icon {
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .question-section {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .question-number {
+            font-size: 16px;
+            font-weight: 700;
+            color: #6BA3D4;
+            margin-bottom: 12px;
+        }
+
+        .question-title {
+            font-size: 15px;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .question-note {
+            font-size: 12px;
+            color: #6BA3D4;
+            margin-top: 12px;
+            padding: 10px;
+            background-color: #f0f8ff;
+            border-radius: 6px;
+            border-left: 3px solid #6BA3D4;
+        }
+
+        .rating-scale {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .rating-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .rating-option:hover {
+            background-color: #e9ecef;
+        }
+
+        .rating-option.selected {
+            background-color: #e3f2fd;
+            border-color: #6BA3D4;
+        }
+
+        .rating-option input[type="radio"] {
+            margin-top: 3px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .rating-label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 13px;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .rating-point {
+            font-weight: 700;
+            color: #6BA3D4;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 18px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            background-color: #218838;
+        }
+
+        .submit-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-bar {
+            background-color: #ffffff;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .progress-text {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #6BA3D4;
+            transition: width 0.3s;
+            border-radius: 4px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+            max-width: 90%;
+        }
+
+        .toast.show {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">Dom Dom</div>
+        <div class="logo-subtitle">외국인 노동자 도우미 앱</div>
+    </div>
+
+    <div class="icon-bar">
+        <div class="left-icons">
+            <button class="home-button" onclick="goHome()">
+                <span>←</span>
+                <span>홈으로</span>
+            </button>
+        </div>
+        <div style="display: flex; gap: 15px;">
+            <svg class="top-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            <svg class="top-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="info-section">
+            <div class="info-title">✅ 직원 행동관찰형 업무능력 평가 설문 (고용주용)</div>
+            <div class="info-description">
+                <span class="info-icon">🕐</span> <strong>평가 기준:</strong> 최근 3개월간 관찰된 구체적 행동
+            </div>
+            <div class="info-description">
+                <span class="info-icon">📊</span> <strong>응답 방식:</strong> 각 문항의 행동 예시에 근거하여 1~5점 선택
+            </div>
+            <div class="info-description">
+                <span class="info-icon">💬</span> <strong>주의:</strong> 느낌·인상 평가 금지. 반드시 관찰된 행동 기준으로 판단
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-text">진행률: <span id="progressText">0/10</span></div>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div id="questionsContainer"></div>
+
+        <button class="submit-button" id="submitBtn" onclick="submitSurvey()">제출하기</button>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const questions = [
+            {
+                number: 1,
+                title: "협업 및 동료 지원 (Collaboration)",
+                description: "👉 이 문항은 동료나 타 부서와 협력하는 실제 행동 빈도를 평가하기 위한 문항입니다.",
+                options: [
+                    { point: 1, text: "동료 요청을 무시하거나 거절함." },
+                    { point: 2, text: "요청 있을 때만 소극적으로 돕는다." },
+                    { point: 3, text: "요청 시 성실히 돕고 일정 조율에 협조한다." },
+                    { point: 4, text: "필요를 먼저 인식해 자발적으로 지원한다." },
+                    { point: 5, text: "협업 구조를 개선하거나 다른 구성원을 돕는 역할을 자주 수행한다." }
+                ]
+            },
+            {
+                number: 2,
+                title: "업무 마감 준수 (Deadline Management)",
+                description: "👉 이 문항은 시간 약속과 일정 관리 능력을 평가하기 위한 문항입니다.",
+                options: [
+                    { point: 1, text: "마감을 자주 놓치며 사전 보고 없음." },
+                    { point: 2, text: "마감 준수율 50~70%. 지연 후 사후 보고." },
+                    { point: 3, text: "마감 준수율 80~90%. 필요 시 사전 조율." },
+                    { point: 4, text: "대부분의 일정을 정확히 맞춤. 리스크 공유함." },
+                    { point: 5, text: "항상 제시간 또는 조기 완료. 일정 관리 능력이 모범적임." }
+                ]
+            },
+            {
+                number: 3,
+                title: "업무 품질 (Work Quality)",
+                description: "👉 이 문항은 산출물의 완성도, 정확성, 재작업률을 평가하기 위한 문항입니다.",
+                options: [
+                    { point: 1, text: "오류 잦고 재작업 빈번." },
+                    { point: 2, text: "품질 편차 크고 감독 필요." },
+                    { point: 3, text: "기준 충족, 가끔 수정 필요." },
+                    { point: 4, text: "안정적 품질 유지, 자율적 검수 가능." },
+                    { point: 5, text: "고품질 산출물 제공, 개선 아이디어 제시." }
+                ]
+            },
+            {
+                number: 4,
+                title: "문제 해결력 (Problem Solving)",
+                description: "👉 이 문항은 문제 인식 후 원인 분석 및 개선 시도를 평가하기 위한 문항입니다.",
+                options: [
+                    { point: 1, text: "문제를 회피하거나 타인에 의존." },
+                    { point: 2, text: "단순 문제만 해결, 근본적 해결 부족." },
+                    { point: 3, text: "일반 문제 해결 및 공유." },
+                    { point: 4, text: "복잡한 문제의 원인 분석·개선 실행." },
+                    { point: 5, text: "근본 원인 제거 및 프로세스 개선 주도." }
+                ]
+            },
+            {
+                number: 5,
+                title: "피드백 수용 및 개선 (Feedback Responsiveness)",
+                description: "👉 이 문항은 피드백에 대한 태도와 반영 행동을 평가하기 위한 문항입니다.",
+                options: [
+                    { point: 1, text: "피드백을 거부하거나 방어적임." },
+                    { point: 2, text: "수용은 하지만 행동 변화 없음." },
+                    { point: 3, text: "일부 반영하나 일시적." },
+                    { point: 4, text: "대부분 즉시 반영하고 개선을 보임." },
+                    { point: 5, text: "피드백을 선제적으로 요청하고 체계화함." }
+                ]
+            },
+            {
+                number: 6,
+                title: "적응력 및 변화 대응 (Adaptability)",
+                description: "👉 이 문항은 새로운 환경, 시스템, 절차에 대한 적응 행동을 평가하기 위한 문항입니다.",
+                options: [
+                    { point: 1, text: "변화에 반복적으로 저항." },
+                    { point: 2, text: "소극적 수용, 타인 지시 후 행동." },
+                    { point: 3, text: "일정 기간 후 적응." },
+                    { point: 4, text: "빠르게 학습하고 다른 사람도 돕는다." },
+                    { point: 5, text: "변화를 주도하거나 개선 아이디어를 제시한다." }
+                ]
+            },
+            {
+                number: 7,
+                title: "의사소통 명확성 (Communication Clarity)",
+                description: "👉 이 문항은 정보 전달의 정확성, 경청 태도, 피드백 활용을 평가하기 위한 문항입니다.",
+                options: [
+                    { point: 1, text: "전달 내용 누락·오해 자주 발생." },
+                    { point: 2, text: "지시나 보고가 불명확." },
+                    { point: 3, text: "기본적 보고 체계 준수." },
+                    { point: 4, text: "명확한 커뮤니케이션 유지, 상호 피드백 원활." },
+                    { point: 5, text: "팀 간 정보 흐름을 개선·조율함." }
+                ]
+            },
+            {
+                number: 8,
+                title: "책임감 및 신뢰도 (Accountability)",
+                description: "👉 이 문항은 업무에 대한 주인의식과 결과 책임을 평가하기 위한 문항입니다.",
+                options: [
+                    { point: 1, text: "문제 발생 시 책임 회피." },
+                    { point: 2, text: "실수 후 소극적 수정 시도." },
+                    { point: 3, text: "본인 업무 범위 내 책임 완수." },
+                    { point: 4, text: "문제 발생 시 즉시 조치 및 공유." },
+                    { point: 5, text: "전사적 시각으로 리스크를 예방하고 책임감 있게 대응." }
+                ]
+            },
+            {
+                number: 9,
+                title: "리더십 및 주도성 (Initiative & Leadership)",
+                description: "👉 이 문항은 자율적 실행력과 주변에 긍정적 영향력을 평가하기 위한 문항입니다.",
+                options: [
+                    { point: 1, text: "지시 없이는 행동하지 않음." },
+                    { point: 2, text: "한정된 영역 내에서만 행동." },
+                    { point: 3, text: "자율적으로 업무를 수행함." },
+                    { point: 4, text: "개선 기회를 찾아 제안·실행함." },
+                    { point: 5, text: "팀 목표를 주도하고 타인을 이끈다." }
+                ]
+            },
+            {
+                number: 10,
+                title: "조직 기여도 (Organizational Contribution)",
+                description: "👉 이 문항은 개인 업무 외 조직 성과에 기여한 행동을 평가하기 위한 문항입니다.",
+                options: [
+                    { point: 1, text: "조직 목표에 무관심." },
+                    { point: 2, text: "요청 있을 때만 참여." },
+                    { point: 3, text: "본인 업무 외에도 일정 부분 참여." },
+                    { point: 4, text: "자발적으로 타 팀의 병목을 해결." },
+                    { point: 5, text: "조직 단위 성과 향상에 직접 기여." }
+                ]
+            }
+        ];
+
+        let answers = {};
+
+        function renderAllQuestions() {
+            const container = document.getElementById('questionsContainer');
+            
+            container.innerHTML = questions.map((question, index) => `
+                <div class="question-section">
+                    <div class="question-number">${question.number}. ${question.title}</div>
+                    <div class="rating-scale">
+                        ${question.options.map((option, i) => `
+                            <div class="rating-option" id="option_${index}_${i}" onclick="selectRating(${index}, ${i})">
+                                <input type="radio" id="q${index}_${i}" name="q${index}" value="${i}">
+                                <label for="q${index}_${i}" class="rating-label">
+                                    <span class="rating-point">${option.point}점:</span> ${option.text}
+                                </label>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="question-note">${question.description}</div>
+                </div>
+            `).join('');
+
+            updateProgress();
+        }
+
+        function selectRating(questionIndex, optionIndex) {
+            answers[questionIndex] = optionIndex;
+            
+            // 모든 옵션의 선택 상태 제거
+            document.querySelectorAll(`input[name="q${questionIndex}"]`).forEach(radio => {
+                radio.checked = false;
+                radio.parentElement.classList.remove('selected');
+            });
+            
+            // 선택된 옵션 활성화
+            document.getElementById(`q${questionIndex}_${optionIndex}`).checked = true;
+            document.getElementById(`option_${questionIndex}_${optionIndex}`).classList.add('selected');
+            
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const answeredCount = Object.keys(answers).length;
+            const totalCount = questions.length;
+            const percentage = (answeredCount / totalCount) * 100;
+            
+            document.getElementById('progressText').textContent = `${answeredCount}/${totalCount}`;
+            document.getElementById('progressFill').style.width = `${percentage}%`;
+            
+            // 모든 질문에 답변했는지 확인
+            const submitBtn = document.getElementById('submitBtn');
+            if (answeredCount === totalCount) {
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.disabled = true;
+            }
+        }
+
+        function submitSurvey() {
+            if (Object.keys(answers).length < questions.length) {
+                showToast('모든 질문에 답변해주세요.');
+                return;
+            }
+            
+            showToast('평가가 제출되었습니다. 감사합니다!');
+            
+            setTimeout(() => {
+                window.location.href = '상호평가제04.html';
+            }, 1500);
+        }
+
+        function goHome() {
+            if (Object.keys(answers).length > 0) {
+                if (confirm('작성 중인 내용이 사라집니다. 홈으로 이동하시겠습니까?')) {
+                    showToast('홈으로 이동합니다.');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1000);
+                }
+            } else {
+                showToast('홈으로 이동합니다.');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderAllQuestions();
+            
+            document.querySelectorAll('.top-icon').forEach(function(icon, index) {
+                icon.addEventListener('click', function() {
+                    const labels = ['언어 설정', '계정'];
+                    showToast(labels[index] + ' 페이지로 이동합니다.');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
