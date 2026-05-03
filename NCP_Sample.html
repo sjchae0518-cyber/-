@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NCP 환자 영양 상담</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Malgun Gothic', sans-serif; background: #f5f5f3; color: #1a1a1a; font-size: 14px; }
+
+    .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 0; height: 100vh; min-height: 600px; }
+    .pane { overflow-y: auto; padding: 1rem; }
+    .left { border-right: 1px solid #e5e5e3; background: #fff; }
+    .right { background: #f5f5f3; }
+
+    .pane-title { font-size: 12px; font-weight: 600; color: #888; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 1rem; padding-bottom: 8px; border-bottom: 1px solid #e5e5e3; }
+    .sec { margin-bottom: 1rem; }
+    .sec-label { font-size: 11px; font-weight: 600; color: #666; margin-bottom: 6px; padding: 3px 8px; background: #f0f0ee; border-radius: 4px; display: inline-block; }
+    .card { background: #fff; border: 1px solid #e5e5e3; border-radius: 10px; padding: .875rem 1rem; }
+
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+    .f { display: flex; flex-direction: column; gap: 3px; margin-bottom: 8px; }
+    .f:last-child { margin-bottom: 0; }
+    .f label { font-size: 11px; color: #888; font-weight: 500; }
+    .f input, .f select, .f textarea {
+      font-size: 12px; padding: 6px 8px;
+      border: 1px solid #ddd; border-radius: 6px;
+      background: #fff; color: #1a1a1a; width: 100%;
+      font-family: inherit;
+    }
+    .f textarea { resize: vertical; min-height: 56px; line-height: 1.5; }
+    .f input:focus, .f select:focus, .f textarea:focus { outline: none; border-color: #378ADD; box-shadow: 0 0 0 2px rgba(55,138,221,.12); }
+    .f input[readonly] { background: #f5f5f3; color: #666; }
+
+    .divider { border: none; border-top: 1px solid #e5e5e3; margin: .75rem 0; }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+    .tag { padding: 3px 9px; border-radius: 99px; font-size: 11px; cursor: pointer; border: 1px solid #ddd; background: transparent; color: #666; font-family: inherit; transition: all .15s; }
+    .tag:hover { border-color: #aaa; }
+    .tag.on { background: #e6f1fb; color: #185FA5; border-color: transparent; }
+
+    .btn-row { display: flex; gap: 6px; justify-content: flex-end; margin-top: .75rem; }
+    .btn-save { background: #185FA5; color: #fff; border: none; border-radius: 6px; padding: 7px 18px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; }
+    .btn-save:hover { background: #0c447c; }
+    .btn-reset { background: transparent; color: #333; border: 1px solid #ccc; border-radius: 6px; padding: 7px 14px; font-size: 12px; cursor: pointer; font-family: inherit; }
+    .btn-reset:hover { background: #f5f5f3; }
+
+    .search-wrap { position: relative; margin-bottom: .75rem; }
+    .search-wrap input { width: 100%; padding: 7px 10px 7px 30px; font-size: 12px; border: 1px solid #ddd; border-radius: 6px; background: #fff; color: #1a1a1a; font-family: inherit; }
+    .search-wrap input:focus { outline: none; border-color: #378ADD; }
+    .s-icon { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); width: 13px; height: 13px; color: #aaa; pointer-events: none; }
+
+    .count-badge { background: #e5e5e3; color: #666; font-size: 11px; padding: 2px 7px; border-radius: 99px; margin-left: 6px; }
+
+    .rec-card { background: #fff; border: 1px solid #e5e5e3; border-radius: 10px; padding: .75rem 1rem; margin-bottom: .5rem; cursor: pointer; transition: border-color .15s; }
+    .rec-card:hover { border-color: #aaa; }
+    .rec-card.active { border-color: #185FA5; }
+    .rec-top { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .avatar { width: 30px; height: 30px; border-radius: 50%; background: #e6f1fb; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: #185FA5; flex-shrink: 0; }
+    .rec-name { font-size: 13px; font-weight: 600; color: #1a1a1a; }
+    .rec-pid { font-size: 11px; color: #aaa; font-weight: 400; }
+    .rec-meta { font-size: 11px; color: #888; line-height: 1.5; }
+
+    .badge { display: inline-flex; align-items: center; padding: 2px 7px; border-radius: 99px; font-size: 10px; font-weight: 600; }
+    .b-info { background: #e6f1fb; color: #185FA5; }
+    .b-warn { background: #faeeda; color: #854F0B; }
+    .b-danger { background: #fcebeb; color: #A32D2D; }
+    .b-ok { background: #eaf3de; color: #3B6D11; }
+
+    .detail-block { background: #fff; border: 1px solid #e5e5e3; border-radius: 10px; padding: .875rem 1rem; margin-bottom: .75rem; }
+    .detail-block .block-title { font-size: 11px; color: #888; font-weight: 500; margin-bottom: 8px; }
+    .dl { display: grid; grid-template-columns: 90px 1fr; font-size: 12px; gap: 4px 8px; align-items: start; }
+    .dl dt { color: #888; }
+    .dl dd { color: #1a1a1a; word-break: break-all; }
+
+    .empty { text-align: center; padding: 2.5rem 1rem; color: #aaa; font-size: 12px; line-height: 1.7; }
+    .detail-sep { border: none; border-top: 1px solid #e5e5e3; margin: .75rem 0; }
+    .detail-sub-title { font-size: 12px; font-weight: 500; color: #888; margin-bottom: .75rem; }
+    .detail-avatar { width: 36px; height: 36px; border-radius: 50%; background: #e6f1fb; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: #185FA5; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+  <!-- ===== 왼쪽: 입력 폼 ===== -->
+  <div class="pane left">
+    <div class="pane-title">신규 상담 입력</div>
+
+    <!-- 기본 정보 -->
+    <div class="sec">
+      <div class="sec-label">기본 정보</div>
+      <div class="card">
+        <div class="row2">
+          <div class="f"><label>환자번호</label><input id="pid" placeholder="P-2024-0001"/></div>
+          <div class="f"><label>이름</label><input id="pname" placeholder="홍길동"/></div>
+        </div>
+        <div class="row3">
+          <div class="f"><label>생년월일</label><input type="date" id="pbirth"/></div>
+          <div class="f"><label>성별</label>
+            <select id="pgender"><option value="">선택</option><option>남</option><option>여</option></select>
+          </div>
+          <div class="f"><label>병동</label>
+            <select id="pward"><option value="">선택</option><option>내과</option><option>외과</option><option>외래</option><option>중환자실</option></select>
+          </div>
+        </div>
+        <div class="row3">
+          <div class="f"><label>신장 (cm)</label><input type="number" id="pheight" placeholder="170"/></div>
+          <div class="f"><label>체중 (kg)</label><input type="number" id="pweight" placeholder="65"/></div>
+          <div class="f"><label>BMI</label><input id="pbmi" placeholder="자동계산" readonly/></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 주진단 및 주증상 -->
+    <div class="sec">
+      <div class="sec-label">주진단 및 주증상</div>
+      <div class="card">
+        <div class="f"><label>주진단명</label><input id="diag" placeholder="예: 제2형 당뇨병, 고혈압 등"/></div>
+        <div class="f"><label>관련 진단</label>
+          <div class="tags" id="dtags">
+            <button class="tag" onclick="toggleTag(this)">당뇨병</button>
+            <button class="tag" onclick="toggleTag(this)">고혈압</button>
+            <button class="tag" onclick="toggleTag(this)">신장질환</button>
+            <button class="tag" onclick="toggleTag(this)">간질환</button>
+            <button class="tag" onclick="toggleTag(this)">암</button>
+            <button class="tag" onclick="toggleTag(this)">심장질환</button>
+            <button class="tag" onclick="toggleTag(this)">빈혈</button>
+            <button class="tag" onclick="toggleTag(this)">소화기질환</button>
+            <button class="tag" onclick="toggleTag(this)">갑상선질환</button>
+          </div>
+        </div>
+        <hr class="divider"/>
+        <div class="f"><label>주요 증상</label>
+          <div class="tags" id="stags">
+            <button class="tag" onclick="toggleTag(this)">식욕부진</button>
+            <button class="tag" onclick="toggleTag(this)">체중감소</button>
+            <button class="tag" onclick="toggleTag(this)">부종</button>
+            <button class="tag" onclick="toggleTag(this)">구역·구토</button>
+            <button class="tag" onclick="toggleTag(this)">설사</button>
+            <button class="tag" onclick="toggleTag(this)">변비</button>
+            <button class="tag" onclick="toggleTag(this)">연하곤란</button>
+            <button class="tag" onclick="toggleTag(this)">피로감</button>
+          </div>
+        </div>
+        <div class="f" style="margin-top:6px;"><label>증상 메모</label>
+          <textarea id="smemo" placeholder="증상 상세 내용..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- 식이 섭취 기록 -->
+    <div class="sec">
+      <div class="sec-label">식이 섭취 기록</div>
+      <div class="card">
+        <div class="row2">
+          <div class="f"><label>식사 섭취율 (%)</label><input type="number" id="intake_pct" placeholder="예: 50"/></div>
+          <div class="f"><label>식이 형태</label>
+            <select id="diet_type">
+              <option value="">선택</option>
+              <option>일반식</option><option>당뇨식</option><option>저염식</option>
+              <option>저단백식</option><option>유동식</option><option>경관식</option><option>TPN</option>
+            </select>
+          </div>
+        </div>
+        <div class="f"><label>식사일지 / 섭취 내용</label>
+          <textarea id="food_diary" placeholder="아침·점심·저녁 섭취 내용, 간식, 음수량 등..."></textarea>
+        </div>
+        <div class="f"><label>식이 특이사항</label>
+          <input id="food_note" placeholder="알레르기, 기피 식품, 종교적 제한 등"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- 영양 평가 및 목표 -->
+    <div class="sec">
+      <div class="sec-label">영양 평가 및 목표</div>
+      <div class="card">
+        <div class="row2">
+          <div class="f"><label>영양 위험도</label>
+            <select id="nrisk">
+              <option value="">선택</option>
+              <option>저위험</option><option>중등도 위험</option><option>고위험</option>
+            </select>
+          </div>
+          <div class="f"><label>영양 중재 방법</label>
+            <select id="ninter">
+              <option value="">선택</option>
+              <option>식이상담</option><option>경구 보충</option><option>경관영양</option><option>정맥영양</option>
+            </select>
+          </div>
+        </div>
+        <div class="row3">
+          <div class="f"><label>목표 칼로리 (kcal)</label><input type="number" id="g_kcal" placeholder="1800"/></div>
+          <div class="f"><label>목표 단백질 (g)</label><input type="number" id="g_prot" placeholder="70"/></div>
+          <div class="f"><label>목표 수분 (ml)</label><input type="number" id="g_fluid" placeholder="1500"/></div>
+        </div>
+        <div class="f"><label>영양 평가 소견</label>
+          <textarea id="n_opinion" placeholder="영양 상태 평가 및 중재 계획..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- 상담 내용 및 메모 -->
+    <div class="sec">
+      <div class="sec-label">상담 내용 및 메모</div>
+      <div class="card">
+        <div class="row2">
+          <div class="f"><label>상담 일자</label><input type="date" id="c_date"/></div>
+          <div class="f"><label>다음 상담 예정일</label><input type="date" id="c_next"/></div>
+        </div>
+        <div class="f"><label>상담 내용</label>
+          <textarea id="c_content" placeholder="환자와의 상담 내용을 입력하세요..."></textarea>
+        </div>
+        <div class="f"><label>영양사 메모</label>
+          <textarea id="c_memo" placeholder="특이사항, 추후 관찰 내용 등..."></textarea>
+        </div>
+        <div class="btn-row">
+          <button class="btn-reset" onclick="resetForm()">초기화</button>
+          <button class="btn-save" onclick="saveRecord()">저장</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 오른쪽: 목록 + 상세 ===== -->
+  <div class="pane right">
+    <div class="pane-title">
+      상담 기록 조회
+      <span class="count-badge" id="rec-count">0건</span>
+    </div>
+
+    <div class="search-wrap">
+      <svg class="s-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="6.5" cy="6.5" r="4"/><line x1="10" y1="10" x2="14" y2="14"/>
+      </svg>
+      <input placeholder="환자명 또는 환자번호 검색..." id="search" oninput="renderList()"/>
+    </div>
+
+    <div id="list-area"></div>
+    <div id="detail-area"></div>
+  </div>
+</div>
+
+<script>
+  let records = [];
+  let selectedId = null;
+
+  // 오늘 날짜 기본값
+  document.getElementById('c_date').value = new Date().toISOString().split('T')[0];
+
+  // BMI 자동 계산
+  document.getElementById('pheight').addEventListener('input', calcBmi);
+  document.getElementById('pweight').addEventListener('input', calcBmi);
+  function calcBmi() {
+    const h = parseFloat(document.getElementById('pheight').value);
+    const w = parseFloat(document.getElementById('pweight').value);
+    document.getElementById('pbmi').value = (h && w) ? (w / Math.pow(h / 100, 2)).toFixed(1) : '';
+  }
+
+  function toggleTag(el) { el.classList.toggle('on'); }
+
+  function getTags(id) {
+    return Array.from(document.querySelectorAll('#' + id + ' .tag.on')).map(t => t.textContent);
+  }
+
+  function gv(id) { return (document.getElementById(id) || {}).value || ''; }
+
+  function resetForm() {
+    ['pid','pname','pbirth','pgender','pward','pheight','pweight','pbmi',
+     'diag','smemo','intake_pct','diet_type','food_diary','food_note',
+     'nrisk','ninter','g_kcal','g_prot','g_fluid','n_opinion',
+     'c_date','c_next','c_content','c_memo'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    document.getElementById('c_date').value = new Date().toISOString().split('T')[0];
+    document.querySelectorAll('.tag.on').forEach(t => t.classList.remove('on'));
+  }
+
+  function saveRecord() {
+    const pid = gv('pid'), pname = gv('pname');
+    if (!pid || !pname) { alert('환자번호와 이름을 입력해주세요.'); return; }
+    const r = {
+      id: Date.now(), pid, pname,
+      birth: gv('pbirth'), gender: gv('pgender'), ward: gv('pward'),
+      height: gv('pheight'), weight: gv('pweight'), bmi: gv('pbmi'),
+      diag: gv('diag'), dtags: getTags('dtags'), stags: getTags('stags'), smemo: gv('smemo'),
+      intake_pct: gv('intake_pct'), diet_type: gv('diet_type'),
+      food_diary: gv('food_diary'), food_note: gv('food_note'),
+      nrisk: gv('nrisk'), ninter: gv('ninter'),
+      g_kcal: gv('g_kcal'), g_prot: gv('g_prot'), g_fluid: gv('g_fluid'), n_opinion: gv('n_opinion'),
+      c_date: gv('c_date'), c_next: gv('c_next'), c_content: gv('c_content'), c_memo: gv('c_memo'),
+      saved_at: new Date().toLocaleString('ko-KR')
+    };
+    records.unshift(r);
+    resetForm();
+    renderList();
+    showDetail(r.id);
+  }
+
+  function riskBadge(r) {
+    if (!r) return '-';
+    if (r === '고위험') return '<span class="badge b-danger">' + r + '</span>';
+    if (r === '중등도 위험') return '<span class="badge b-warn">' + r + '</span>';
+    return '<span class="badge b-ok">' + r + '</span>';
+  }
+
+  function renderList() {
+    const q = gv('search').toLowerCase();
+    const filtered = records.filter(r =>
+      r.pname.toLowerCase().includes(q) || r.pid.toLowerCase().includes(q)
+    );
+    document.getElementById('rec-count').textContent = filtered.length + '건';
+    if (!filtered.length) {
+      document.getElementById('list-area').innerHTML =
+        '<div class="empty">저장된 상담 기록이 없습니다.<br/>왼쪽에서 입력 후 저장하세요.</div>';
+      document.getElementById('detail-area').innerHTML = '';
+      return;
+    }
+    document.getElementById('list-area').innerHTML = filtered.map(r => `
+      <div class="rec-card ${selectedId === r.id ? 'active' : ''}" onclick="showDetail(${r.id})">
+        <div class="rec-top">
+          <div class="avatar">${r.pname.charAt(0)}</div>
+          <div style="flex:1;">
+            <div class="rec-name">${r.pname} <span class="rec-pid">${r.pid}</span></div>
+            <div class="rec-meta">${r.gender || '-'} · ${r.ward || '-'} · ${r.c_date || '-'}</div>
+          </div>
+          ${riskBadge(r.nrisk)}
+        </div>
+        <div class="rec-meta">${r.diag || '진단 미입력'}${r.diet_type ? ' · ' + r.diet_type : ''}</div>
+      </div>
+    `).join('');
+  }
+
+  function showDetail(id) {
+    selectedId = id;
+    renderList();
+    const r = records.find(x => x.id === id);
+    if (!r) { document.getElementById('detail-area').innerHTML = ''; return; }
+
+    document.getElementById('detail-area').innerHTML = `
+      <hr class="detail-sep"/>
+      <div class="detail-sub-title">상세 정보</div>
+
+      <div class="detail-block">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <div class="detail-avatar">${r.pname.charAt(0)}</div>
+          <div>
+            <div style="font-size:14px;font-weight:600;">${r.pname}
+              <span style="font-size:11px;color:#aaa;font-weight:400;">${r.pid}</span>
+            </div>
+            <div style="font-size:11px;color:#888;">${r.gender || '-'} · ${r.birth || '-'} · ${r.ward || '-'}</div>
+          </div>
+        </div>
+        <dl class="dl">
+          <dt>신장/체중</dt>
+          <dd>${r.height ? r.height + 'cm' : '-'} / ${r.weight ? r.weight + 'kg' : '-'}${r.bmi ? ' (BMI ' + r.bmi + ')' : ''}</dd>
+        </dl>
+      </div>
+
+      <div class="detail-block">
+        <div class="block-title">주진단 및 주증상</div>
+        <dl class="dl">
+          <dt>주진단</dt><dd>${r.diag || '-'}</dd>
+          ${r.dtags.length ? '<dt>관련 진단</dt><dd>' + r.dtags.join(', ') + '</dd>' : ''}
+          ${r.stags.length ? '<dt>주요 증상</dt><dd>' + r.stags.join(', ') + '</dd>' : ''}
+          ${r.smemo ? '<dt>증상 메모</dt><dd>' + r.smemo + '</dd>' : ''}
+        </dl>
+      </div>
+
+      <div class="detail-block">
+        <div class="block-title">식이 섭취 기록</div>
+        <dl class="dl">
+          <dt>식이 형태</dt><dd>${r.diet_type || '-'}</dd>
+          <dt>섭취율</dt><dd>${r.intake_pct ? r.intake_pct + '%' : '-'}</dd>
+          ${r.food_diary ? '<dt>식사일지</dt><dd>' + r.food_diary + '</dd>' : ''}
+          ${r.food_note ? '<dt>특이사항</dt><dd>' + r.food_note + '</dd>' : ''}
+        </dl>
+      </div>
+
+      <div class="detail-block">
+        <div class="block-title">영양 평가 및 목표</div>
+        <dl class="dl">
+          <dt>영양 위험도</dt><dd>${riskBadge(r.nrisk)}</dd>
+          <dt>중재 방법</dt><dd>${r.ninter || '-'}</dd>
+          <dt>목표 칼로리</dt><dd>${r.g_kcal ? r.g_kcal + ' kcal' : '-'}</dd>
+          <dt>목표 단백질</dt><dd>${r.g_prot ? r.g_prot + ' g' : '-'}</dd>
+          <dt>목표 수분</dt><dd>${r.g_fluid ? r.g_fluid + ' ml' : '-'}</dd>
+          ${r.n_opinion ? '<dt>평가 소견</dt><dd>' + r.n_opinion + '</dd>' : ''}
+        </dl>
+      </div>
+
+      <div class="detail-block">
+        <div class="block-title">상담 내용 및 메모</div>
+        <dl class="dl">
+          <dt>상담 일자</dt><dd>${r.c_date || '-'}</dd>
+          <dt>다음 상담</dt><dd>${r.c_next || '-'}</dd>
+          ${r.c_content ? '<dt>상담 내용</dt><dd>' + r.c_content + '</dd>' : ''}
+          ${r.c_memo ? '<dt>메모</dt><dd>' + r.c_memo + '</dd>' : ''}
+        </dl>
+        <div style="font-size:10px;color:#aaa;margin-top:8px;">저장: ${r.saved_at}</div>
+      </div>
+    `;
+  }
+
+  renderList();
+</script>
+</body>
+</html>
